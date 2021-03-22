@@ -1,0 +1,137 @@
+import React from 'react';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import { Formik } from 'formik';
+import moment from 'moment';
+import * as Yup from 'yup';
+
+const FundingSessionForm = ({ session }) => {
+  const userValidationSchema = Yup.object({
+    name: Yup.string()
+      .required('Please provide a name'),
+    description: Yup.string()
+      .required('Please provide a description'),
+  });
+
+  const initialValues = {
+    name: session?.name || '',
+    description: session?.description || '',
+    start: moment(session?.start || new Date()).format('YYYY-MM-DD'),
+    end: moment(session?.end || new Date()).format('YYYY-MM-DD'),
+    collectives: (session?.collectives || []).map((collective) => `https://opencollective.com/${collective.slug}`).join('\n'),
+    matchedFunds: session?.matchedFunds || 0,
+  };
+
+  const handleSubmit = async (values) => {
+    if (session?._id) values._id = session._id;
+    const body = JSON.stringify(values);
+    const res = await fetch('/api/funding-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body,
+    });
+    if (res.status === 200) {
+      alert('done');
+    }
+  };
+
+  return (
+    <Formik
+      validationSchema={userValidationSchema}
+      initialValues={initialValues}
+      onSubmit={handleSubmit}
+    >
+      {({
+        errors,
+        touched,
+        isSubmitting,
+        values,
+        handleChange,
+        // eslint-disable-next-line no-shadow
+        handleSubmit,
+      }) => (
+        <Form noValidate onSubmit={handleSubmit}>
+          <Form.Group controlId="name">
+            <Form.Label>Session Name</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              placeholder="Session Title"
+              value={values.name}
+              onChange={handleChange}
+              isValid={touched.name && !errors.name}
+              isInvalid={touched.name && errors.name}
+            />
+            <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="matchedFunds">
+            <Form.Label>Matched Funds</Form.Label>
+            <Form.Control
+              required
+              type="number"
+              placeholder="in USD"
+              value={values.matchedFunds}
+              onChange={handleChange}
+              isValid={touched.matchedFunds && !errors.matchedFunds}
+              isInvalid={touched.matchedFunds && errors.matchedFunds}
+            />
+            <Form.Control.Feedback type="invalid">{errors.matchedFunds}</Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="description">
+            <Form.Label>Session description</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={3}
+              value={values.description}
+              onChange={handleChange}
+              isValid={touched.description && !errors.description}
+              isInvalid={touched.description && errors.description}
+            />
+            <Form.Control.Feedback type="invalid">{errors.description}</Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="start">
+            <Form.Label>Start Date</Form.Label>
+            <Form.Control
+              type="date"
+              name="start"
+              placeholder="Start Date"
+              value={values.start}
+              onChange={handleChange}
+              isValid={touched.start && !errors.start}
+              isInvalid={touched.start && errors.start}
+            />
+            <Form.Control.Feedback type="invalid">{errors.start}</Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="end">
+            <Form.Label>End Date</Form.Label>
+            <Form.Control
+              type="date"
+              name="end"
+              placeholder="End Date"
+              value={values.end}
+              onChange={handleChange}
+              isValid={touched.end && !errors.end}
+              isInvalid={touched.end && errors.end}
+            />
+            <Form.Control.Feedback type="invalid">{errors.end}</Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="collectives">
+            <Form.Label>URLS of collectives (https://opencollective.com/slug) seperated by a newline</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={3}
+              value={values.collectives}
+              onChange={handleChange}
+              isValid={touched.description && !errors.description}
+              isInvalid={touched.description && errors.description}
+            />
+            <Form.Control.Feedback type="invalid">{errors.description}</Form.Control.Feedback>
+          </Form.Group>
+          <Button variant="primary" disabled={isSubmitting} type="submit">{session?._id ? 'Update Session' : 'Create Session'}</Button>
+        </Form>
+      )}
+    </Formik>
+  );
+};
+
+export default FundingSessionForm;
