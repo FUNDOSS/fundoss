@@ -86,3 +86,14 @@ footer{
 .collective-content{
     img {@extend .img-fluid}
 }
+
+
+#primary-nav .navbar-nav a.nav-link {
+    color:$purple-brand;
+    font-weight: 700;
+    //font-size: 1rem;
+    text-transform: uppercase;
+    svg {
+        color:$gray-500;
+    }
+}

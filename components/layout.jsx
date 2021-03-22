@@ -7,6 +7,7 @@ import CartButton from './cart/CartButton';
 import Cart from './cart/Cart';
 import Logo from '../svg/logo.svg';
 import Footer from './Footer';
+import Icons from './icons';
 
 const Layout = ({
   children, title = 'This is the default title', user, hidefooter, cart,
@@ -21,11 +22,11 @@ const Layout = ({
       <Navbar bg="light" expand="lg" fixed="top">
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Brand href="/"><Logo /></Navbar.Brand>
-        <Navbar.Collapse id="basic-navbar-nav">
+        <Navbar.Collapse id="primary-nav">
           <Nav className="mr-auto">
-            <Nav.Link href="/about">About</Nav.Link>
-            <Nav.Link href="/faq">FAQ</Nav.Link>
-            <Nav.Link href="/quadratic-funding">How democratic funding works</Nav.Link>
+            <Nav.Link href="/about"><Icons.Code size={20} /> About</Nav.Link>
+            <Nav.Link href="/faq"><Icons.Question size={20} /> FAQ</Nav.Link>
+            <Nav.Link href="/quadratic-funding"><Icons.Buoy size={20} /> How democratic funding works</Nav.Link>
           </Nav>
         </Navbar.Collapse>
         { cart ? <CartButton itemCount={cart?.length} /> : null }
