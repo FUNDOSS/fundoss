@@ -14,7 +14,6 @@ import Icons from '../icons';
 const CheckoutForm = ({ user }) => {
   const stripe = useStripe();
   const elements = useElements();
-  const [cardError, setCardError] = useState();
   const checkoutValidationSchema = Yup.object({
     cardholderName: Yup.string()
       .required('Please enter the name on your card'),
@@ -105,8 +104,7 @@ const CheckoutForm = ({ user }) => {
                   <StripeTestCards />
                   <CardElement onChange={() => { 
                     setStatus({cardError:null})
-                    console.log(status.cardError)
-                    } } className={'form-control'+(status?.cardError ? ' is-invalid' : '')} isValid={!cardError} isInvalid={cardError} />
+                    } } className={'form-control'+(status?.cardError ? ' is-invalid' : '')} />
                   <div className="invalid-feedback">{status?.cardError}</div>
                 </Form.Group>
               </Col>

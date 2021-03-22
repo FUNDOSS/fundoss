@@ -1,4 +1,4 @@
-import Router from 'next/router';
+import React from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { Formik } from 'formik';
@@ -15,7 +15,7 @@ export const LoginForm = () => {
       .required('Please provide a email')
       .email('Invalid email format'),
     password: Yup.string()
-      .required('Please provide a password');
+      .required('Please provide a password'),
   })
   
   const initialValues = {
@@ -28,7 +28,6 @@ export const LoginForm = () => {
       email: values.email,
       password: values.password,
     };
-    const form = this;
     const res = await fetch('/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -46,7 +45,7 @@ export const LoginForm = () => {
         validationSchema = {userValidationSchema}
         initialValues={initialValues}
         onSubmit={handleSubmit}
-        >{({ errors, touched, isSubmitting, handleSubmit, values,handleBlur,isValid, handleChange, status}) => (
+        >{({ errors, touched, isSubmitting, handleSubmit, values, handleChange}) => (
           <Form noValidate onSubmit={handleSubmit} >
               <Form.Group controlId="email">
                   <Form.Label >Your Email </Form.Label>

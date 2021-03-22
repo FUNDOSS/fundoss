@@ -12,7 +12,7 @@ const CollectiveDonationCard = ({ collective }) => {
   const [amount, setAmount] = useState(30);
   const [cartAmount, setCartAmount] = useState();
   
-  const onCartChange = (e) => {
+  const onCartChange = () => {
     setAmount(Cart.collectives[collective._id] || 30 );
     setCartAmount(Cart.collectives[collective._id] );
   } 

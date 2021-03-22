@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Router from 'next/router';
@@ -8,7 +8,6 @@ import { useCurrentUser } from '../../hooks/index';
 
 export const SignupForm = () => {
   const [user, { mutate }] = useCurrentUser();
-  const [errorMsg, setErrorMsg] = useState('');
   useEffect(() => {
     if (user) Router.replace('/');
   }, [user]);
