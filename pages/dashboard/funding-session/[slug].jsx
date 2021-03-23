@@ -17,7 +17,7 @@ const EditSessionPage = ({ user, session }) => {
 
   return (
     <Layout title="FundOSS | Dashboard" user={user}>
-      <Container style={{ 'padding-top': '40px' }}>
+      <Container style={{ paddingTop: '40px' }}>
         <h1>Edit Session</h1>
         <Row>
           <Col md={{ offset: 2, span: 8 }}>
