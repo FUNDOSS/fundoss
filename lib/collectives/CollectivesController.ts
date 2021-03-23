@@ -39,9 +39,13 @@ export async function getCollective(slug:string):Promise<any> {
 
   try {
     const data = await client.request(query, variables);
+    data.collective.members = data.collective.members.nodes
+      .map((member) => member.account.imageUrl);
+    data.collective.lastUpdate = new Date();
+    data.collective.slug = slug;
     return Collective.create(data.collective);
   } catch (error) {
-    return { error, slug };
+    return { error: error.response.errors[0].message, slug };
   }
 }
 

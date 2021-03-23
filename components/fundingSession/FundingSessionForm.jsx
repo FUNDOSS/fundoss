@@ -4,8 +4,9 @@ import Button from 'react-bootstrap/Button';
 import { Formik } from 'formik';
 import moment from 'moment';
 import * as Yup from 'yup';
+import { Alert, Col, Row } from 'react-bootstrap';
 
-const FundingSessionForm = ({ session }) => {
+const FundingSessionForm = ({ sessionData }) => {
   const userValidationSchema = Yup.object({
     name: Yup.string()
       .required('Please provide a name'),
@@ -13,17 +14,20 @@ const FundingSessionForm = ({ session }) => {
       .required('Please provide a description'),
   });
 
-  const initialValues = {
-    name: session?.name || '',
-    description: session?.description || '',
+  const toFormValues = (session) => ({
+    ...session,
+    matchedFunds: session?.matchedFunds || 75000,
+    averageDonationEst: session?.averageDonationEst || 20,
+    numberDonationEst: session?.numberDonationEst || 5000,
     start: moment(session?.start || new Date()).format('YYYY-MM-DD'),
     end: moment(session?.end || new Date()).format('YYYY-MM-DD'),
     collectives: (session?.collectives || []).map((collective) => `https://opencollective.com/${collective.slug}`).join('\n'),
-    matchedFunds: session?.matchedFunds || 0,
-  };
+  });
 
-  const handleSubmit = async (values) => {
-    if (session?._id) values._id = session._id;
+  const initialValues = toFormValues(sessionData);
+
+  const handleSubmit = async (values, { setStatus, setValues }) => {
+    if (sessionData?._id) values._id = sessionData._id;
     const body = JSON.stringify(values);
     const res = await fetch('/api/funding-session', {
       method: 'POST',
@@ -31,7 +35,12 @@ const FundingSessionForm = ({ session }) => {
       body,
     });
     if (res.status === 200) {
-      alert('done');
+      setStatus({ saved: true });
+      const result = await res.json();
+      console.log(result);
+      setValues(toFormValues(result.session));
+    } else {
+      setStatus({ error: res.json() });
     }
   };
 
@@ -49,6 +58,7 @@ const FundingSessionForm = ({ session }) => {
         handleChange,
         // eslint-disable-next-line no-shadow
         handleSubmit,
+        status,
       }) => (
         <Form noValidate onSubmit={handleSubmit}>
           <Form.Group controlId="name">
@@ -64,19 +74,54 @@ const FundingSessionForm = ({ session }) => {
             />
             <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
           </Form.Group>
-          <Form.Group controlId="matchedFunds">
-            <Form.Label>Matched Funds</Form.Label>
-            <Form.Control
-              required
-              type="number"
-              placeholder="in USD"
-              value={values.matchedFunds}
-              onChange={handleChange}
-              isValid={touched.matchedFunds && !errors.matchedFunds}
-              isInvalid={touched.matchedFunds && errors.matchedFunds}
-            />
-            <Form.Control.Feedback type="invalid">{errors.matchedFunds}</Form.Control.Feedback>
-          </Form.Group>
+          <Row>
+            <Col>
+              <Form.Group controlId="matchedFunds">
+                <Form.Label>Matched Funds</Form.Label>
+                <Form.Control
+                  required
+                  type="number"
+                  placeholder="in USD"
+                  value={values.matchedFunds}
+                  onChange={handleChange}
+                  isValid={touched.matchedFunds && !errors.matchedFunds}
+                  isInvalid={touched.matchedFunds && errors.matchedFunds}
+                />
+                <Form.Control.Feedback type="invalid">{errors.matchedFunds}</Form.Control.Feedback>
+              </Form.Group>
+            </Col>
+            <Col>
+              <Form.Group controlId="averageDonationEst">
+                <Form.Label>Average donation estimate</Form.Label>
+                <Form.Control
+                  required
+                  type="number"
+                  placeholder="in USD"
+                  value={values.averageDonationEst}
+                  onChange={handleChange}
+                  isValid={touched.averageDonationEst && !errors.averageDonationEst}
+                  isInvalid={touched.averageDonationEst && errors.averageDonationEst}
+                />
+                <Form.Control.Feedback type="invalid">{errors.averageDonationEst}</Form.Control.Feedback>
+              </Form.Group>
+            </Col>
+            <Col>
+              <Form.Group controlId="numberDonationEst">
+                <Form.Label># donations estimate</Form.Label>
+                <Form.Control
+                  required
+                  type="number"
+                  placeholder="in USD"
+                  value={values.numberDonationEst}
+                  onChange={handleChange}
+                  isValid={touched.numberDonationEst && !errors.numberDonationEst}
+                  isInvalid={touched.numberDonationEst && errors.numberDonationEst}
+                />
+                <Form.Control.Feedback type="invalid">{errors.numberDonationEst}</Form.Control.Feedback>
+              </Form.Group>
+            </Col>
+          </Row>
+
           <Form.Group controlId="description">
             <Form.Label>Session description</Form.Label>
             <Form.Control
@@ -122,13 +167,24 @@ const FundingSessionForm = ({ session }) => {
               rows={3}
               value={values.collectives}
               onChange={handleChange}
-              isValid={touched.description && !errors.description}
-              isInvalid={touched.description && errors.description}
+              isValid={touched.collectives && !errors.collectives}
+              isInvalid={touched.collectives && errors.collectives}
             />
-            <Form.Control.Feedback type="invalid">{errors.description}</Form.Control.Feedback>
+            <Form.Control.Feedback type="invalid">{errors.collectives}</Form.Control.Feedback>
           </Form.Group>
-          <Button variant="primary" disabled={isSubmitting} type="submit">{session?._id ? 'Update Session' : 'Create Session'}</Button>
+          {values.collectiveImportErrors && Object.keys(values.collectiveImportErrors).length ? (
+            <Alert variant="danger"><Alert.Heading>Previous Import Errors</Alert.Heading>
+              {Object.keys(values.collectiveImportErrors).map(
+                (key) => <p key={key}>https://opencollective.com/{key} {values.collectiveImportErrors[key]}</p>, 
+              )}
+            </Alert>
+          ) : null}
+
+          {status?.saved ? (<Alert variant="success">Session saved!</Alert>) : null}
+          {status?.error ? (<Alert variant="danger">{status.error.message}</Alert>) : null}
+          <Button variant="primary" disabled={isSubmitting} type="submit">{values?._id ? 'Update Session' : 'Create Session'}</Button>
         </Form>
+
       )}
     </Formik>
   );

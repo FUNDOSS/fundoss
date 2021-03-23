@@ -39,6 +39,12 @@ const FundingSessionSchema = new Schema({
   matchedFunds: {
     type: Number,
   },
+  averageDonationEst: {
+    type: Number,
+  },
+  numberDonationEst: {
+    type: Number,
+  },
   description: {
     type: String,
   },
@@ -46,6 +52,10 @@ const FundingSessionSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Collective',
   }],
+  collectiveImportErrors: {
+    type: Map,
+    of: Schema.Types.Mixed,
+  },
 });
 
 FundingSessionSchema.plugin(mongooseSlugPlugin, { tmpl: '<%=name%>' });

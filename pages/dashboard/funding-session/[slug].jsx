@@ -21,7 +21,7 @@ const EditSessionPage = ({ user, session }) => {
         <h1>Edit Session</h1>
         <Row>
           <Col md={{ offset: 2, span: 8 }}>
-            <FundingSessionForm session={session} />
+            <FundingSessionForm sessionData={session} />
           </Col>
         </Row>
       </Container>
@@ -32,7 +32,6 @@ const EditSessionPage = ({ user, session }) => {
 export async function getServerSideProps({ req, res, query }) {
   await middleware.run(req, res);
   const session = await FundingSessions.getBySlug(query.slug);
-  console.log(session);
   return { props: { user: serializable(req.user), session: serializable(session) } };
 }
 

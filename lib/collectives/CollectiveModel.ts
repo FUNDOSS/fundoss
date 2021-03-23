@@ -16,6 +16,9 @@ const CollectiveSchema = new Schema({
   slug: {
     type: String,
   },
+  lastUpdate: {
+    type: Date,
+  },
   name: {
     type: String,
   },
