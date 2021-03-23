@@ -10,7 +10,7 @@ const getCollectivesFromInput = async (session) => {
   );
   const collectives = allCollectives.filter((collective: any) => !collective.error);
   const collectiveImportErrors = allCollectives.filter((collective: any) => collective.error)
-    .reduce((obj, value) => ({ ...obj, [value.slug]: value.error }), {});
+    .reduce((obj, value:any) => ({ ...obj as object, [value.slug]: value.error }), {});
 
   return { collectives, collectiveImportErrors };
 };
@@ -18,16 +18,14 @@ const getCollectivesFromInput = async (session) => {
 export async function insertSession(session):Promise<IFundingSession> {
   await dbConnect();
   if (session.collectives) session = { ...session, ...await getCollectivesFromInput(session) };
-  console.log(session.collectives);
   return FundingSession.create(session);
 }
 
 export async function editSession(session:IFundingSessionInput):Promise<any> {
   await dbConnect();
-
   if (session.collectives) session = { ...session, ...await getCollectivesFromInput(session) };
-  console.log(session.collectives);
-  return FundingSession.findByIdAndUpdate({ _id: session._id }, session, { new: true }).exec();
+  await FundingSession.updateOne({ _id: session._id }, session);
+  return FundingSession.findOne({ _id: session._id });
 }
 
 export async function getCurrentSession():Promise<IFundingSession> {
