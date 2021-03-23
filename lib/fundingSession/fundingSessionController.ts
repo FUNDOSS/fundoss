@@ -34,6 +34,12 @@ export async function getCurrentSession():Promise<IFundingSession> {
   return session;
 }
 
+export async function getCurrentSessionId():Promise<string> {
+  await dbConnect();
+  const session = await FundingSession.findOne().select('_id');
+  return session._id;
+}
+
 export async function getAll():Promise<IFundingSession[]> {
   await dbConnect();
   const sessions = await FundingSession.find();
@@ -56,6 +62,8 @@ export default class Users {
     static insert = insertSession
 
     static getCurrent = getCurrentSession
+
+    static getCurrentId = getCurrentSessionId
 
     static getAll = getAll
 

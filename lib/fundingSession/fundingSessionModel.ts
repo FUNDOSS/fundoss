@@ -56,6 +56,9 @@ const FundingSessionSchema = new Schema({
     type: Map,
     of: Schema.Types.Mixed,
   },
+  totals: {
+    type: Schema.Types.Mixed,
+  },
 });
 
 FundingSessionSchema.plugin(mongooseSlugPlugin, { tmpl: '<%=name%>' });

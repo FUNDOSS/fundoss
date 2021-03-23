@@ -2,6 +2,8 @@ import Payment from './paymentModel';
 import Donation from './donationModel';
 import dbConnect from '../dbConnect';
 import FundingSessions from '../../lib/fundingSession/fundingSessionController';
+import Collectives from '../../lib/collectives/CollectivesController';
+import fundingSessionModel from '../fundingSession/fundingSessionModel';
 
 export async function insertPayment(payment) {
   await dbConnect();
@@ -30,12 +32,32 @@ export async function updatePayment(payment) {
               fee: Math.ceil((amt / payment.amount) * fee * 100) / 100,
             },
           );
+
+          const collectiveTotals = (await Donation.find(
+            { collective: collectiveId, session: payment.session },
+          )).reduce((acc, don) => ({
+            donations: acc.donations + 1,
+            amount: acc.amount + don.amount,
+          }), { donations: 0, amount: 0 });
+
+          await Collectives.updateTotals(collectiveId, payment.session, collectiveTotals);
           return donation._id;
         }),
     );
+
+    const sessionTotals = (await Donation.find(
+      { session: payment.session },
+    )).reduce((acc, don) => ({
+      donations: acc.donations + 1,
+      amount: acc.amount + don.amount,
+    }), { donations: 0, amount: 0 });
+
+    await fundingSessionModel.updateOne({ _id: payment.session }, { totals: sessionTotals });
+
     payment.donations = donations;
     payment.fee = fee;
   }
+
   return Payment.updateOne({ _id: payment._id }, payment);
 }
 

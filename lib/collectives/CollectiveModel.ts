@@ -46,6 +46,10 @@ const CollectiveSchema = new Schema({
   members: {
     type: Schema.Types.Mixed,
   },
+  totals: {
+    type: Map,
+    of: Schema.Types.Mixed,
+  },
 });
 
 export default mongoose.models.Collective || mongoose.model<ICollective>('Collective', CollectiveSchema);
