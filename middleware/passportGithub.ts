@@ -22,7 +22,6 @@ passport.use(new GithubStrategy(
         cb(null, existingUser);
       } else {
         const userInput:IUserInput = {
-          email: githubProfile.emails?.[0].value,
           name: githubProfile.displayName,
           username: githubProfile.username,
           avatar: githubProfile.photos?.[0].value,
@@ -31,15 +30,13 @@ passport.use(new GithubStrategy(
           githubrefreshtoken: refreshToken,
           role: process.env.ADMINS.split(',').indexOf(githubProfile.username) !== -1 ? 'admin' : 'user',
         };
-        if (!userInput.email) {
-          const emails = await axios.get('https://api.github.com/user/emails', {
-            headers: {
-              Authorization: `token ${accessToken}`,
-            },
-          });
-          userInput.email = emails.data
-            .reduce((acc, email) => (email.primary ? acc = email.email : null));
-        }
+        const emails = await axios.get('https://api.github.com/user/emails', {
+          headers: {
+            Authorization: `token ${accessToken}`,
+          },
+        });
+        userInput.email = emails.data
+          .reduce((acc, email) => (email.primary ? acc = email.email : null));
         const user = await Users.insert(userInput);
         cb(null, user);
       }
