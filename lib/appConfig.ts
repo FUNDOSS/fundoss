@@ -25,7 +25,7 @@ const appConfig: AppConfig = {
     clientID: process.env.GITHUB_CLIENTID,
     clientSecret: process.env.GITHUB_CLIENTSECRET,
     ...getOAuthUrls(hostingURL, 'github'),
-    scope: 'user:email',
+    scope: ['user:email'],
   },
 };
 

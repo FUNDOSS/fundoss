@@ -1,4 +1,5 @@
 import { Strategy as GithubStrategy } from 'passport-github';
+import axios from 'axios';
 import passport from 'passport';
 import appConfig from '../lib/appConfig';
 import Users from '../lib/user/usersController';
@@ -15,25 +16,35 @@ passport.deserializeUser((req, id, done) => {
 passport.use(new GithubStrategy(
   appConfig.github,
   async (accessToken, refreshToken, githubProfile: any, cb) => {
-    const userInput:IUserInput = {
-      email: githubProfile.emails?.[0].value,
-      name: githubProfile.displayName,
-      username: githubProfile.username,
-      avatar: githubProfile.photos?.[0].value,
-      githubid: githubProfile.id,
-      githubaccestoken: accessToken,
-      githubrefreshtoken: refreshToken,
-      role: process.env.ADMINS.split(',').indexOf(githubProfile.username) !== -1 ? 'admin' : 'user',
-    };
-
-    const existingUser:IUser = await Users.findByGithubId(githubProfile.id);
-    if (existingUser) {
-      userInput._id = existingUser._id;
-      await Users.update(userInput);
-      cb(null, userInput);
-    } else {
-      const user = await Users.insert(userInput);
-      cb(null, user);
+    try {
+      const existingUser:IUser = await Users.findByGithubId(githubProfile.id);
+      if (existingUser) {
+        cb(null, existingUser);
+      } else {
+        const userInput:IUserInput = {
+          email: githubProfile.emails?.[0].value,
+          name: githubProfile.displayName,
+          username: githubProfile.username,
+          avatar: githubProfile.photos?.[0].value,
+          githubid: githubProfile.id,
+          githubaccestoken: accessToken,
+          githubrefreshtoken: refreshToken,
+          role: process.env.ADMINS.split(',').indexOf(githubProfile.username) !== -1 ? 'admin' : 'user',
+        };
+        if (!userInput.email) {
+          const emails = await axios.get('https://api.github.com/user/emails', {
+            headers: {
+              Authorization: `token ${accessToken}`,
+            },
+          });
+          userInput.email = emails.data
+            .reduce((acc, email) => (email.primary ? acc = email.email : null));
+        }
+        const user = await Users.insert(userInput);
+        cb(null, user);
+      }
+    } catch (e) {
+      cb(e);
     }
   },
 ));
