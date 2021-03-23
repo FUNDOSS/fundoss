@@ -12,13 +12,11 @@ handler.get((req: NextApiRequest, res: NextApiResponse) => {
     return { statusCode: 404 };
   }
 
-  const redirect = Buffer.from( state as string , 'base64').toString();
+  const redirect = Buffer.from(state as string, 'base64').toString();
   return passport.authenticate(provider, {
     failureRedirect: '/',
-    successRedirect: redirect,
   })(req, res, () => {
-    res.status(200).json({ success: true });
-    return true;
+    res.redirect(redirect);
   });
 });
 
