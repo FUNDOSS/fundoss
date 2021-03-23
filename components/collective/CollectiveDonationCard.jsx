@@ -25,8 +25,8 @@ const CollectiveDonationCard = ({ collective }) => {
   return (
     <Card>
       <Card.Body>
-        <h3 className="display-4 text-success text-center">$14,030</h3>
-        <p className="text-center">estimated amount raised from 354 contributors</p>
+        <h3 className="display-4 text-success text-center">${collective.totals?.amount}</h3>
+        <p className="text-center">estimated amount raised from {collective.totals?.donations} contributors</p>
         <Nav variant="tabs" fill activeKey={tab} onSelect={setTab}>
           <Nav.Item>
             <Nav.Link eventKey="set">Set Amount</Nav.Link>
