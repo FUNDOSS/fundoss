@@ -1,25 +1,25 @@
 import React, { useState, useEffect } from 'react';
+import { Badge } from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Button from 'react-bootstrap/Button';
 import Cart, { cartEvents } from '../cart/Cart';
 import Icons from '../icons';
-import { Badge } from 'react-bootstrap';
 
 const CollectiveDonationCard = ({ collective }) => {
   const [tab, setTab] = useState('set');
   const [amount, setAmount] = useState(30);
   const [cartAmount, setCartAmount] = useState();
-  
+
   const onCartChange = () => {
-    setAmount(Cart.collectives[collective._id] || 30 );
-    setCartAmount(Cart.collectives[collective._id] );
-  } 
+    setAmount(Cart.collectives[collective._id] || 30);
+    setCartAmount(Cart.collectives[collective._id]);
+  };
 
   useEffect(() => {
     onCartChange();
-    cartEvents.on('cartChange', onCartChange );
+    cartEvents.on('cartChange', onCartChange);
   }, []);
 
   return (
@@ -60,23 +60,25 @@ const CollectiveDonationCard = ({ collective }) => {
               <h3 className="display-4 text-success text-center">$155</h3>
               <p className="text-center">estimated match</p>
               {
-                amount >=2 ? (
-                  <>{cartAmount != amount ? (
-                  <Button 
-                    variant="primary" 
-                    onClick={() => Cart.addItem(collective, amount)} 
-                    block
-                  >
-                    <Icons.Cart size={18} /> {!cartAmount ? 'Add to Cart' : 'Update Cart'}
-                  </Button>) : (
-                    <Button 
-                    variant="primary" 
-                    onClick={() => Cart.show()} 
-                    block
+                amount >= 2 ? (
+                  <>{cartAmount !== amount ? (
+                    <Button
+                      variant="primary"
+                      onClick={() => Cart.addItem(collective, amount)}
+                      block
                     >
-                    <Icons.Check size={18} /> In cart <Badge variant="danger">${cartAmount}</Badge>
-                  </Button>
-                  )}</>
+                      <Icons.Cart size={18} /> {!cartAmount ? 'Add to Cart' : 'Update Cart'}
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="primary"
+                      onClick={() => Cart.show()}
+                      block
+                    >
+                      <Icons.Check size={18} /> In cart <Badge variant="danger">${cartAmount}</Badge>
+                    </Button>
+                  )}
+                  </>
                 ) : (
                   <Button variant="light" block>Select an amount</Button>
                 )

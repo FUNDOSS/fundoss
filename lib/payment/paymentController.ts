@@ -61,7 +61,7 @@ export async function getPayments() {
 
 export async function getPaymentsByUser(userId:string) {
   await dbConnect();
-  return Payment.find({user: userId, status: 'succeeded'}).select('user amount donations fee status time')
+  return Payment.find({ user: userId, status: 'succeeded' }).select('user amount donations fee status time')
     .populate({ path: 'user', select: 'avatar username' })
     .populate({
       path: 'donations',
@@ -73,7 +73,6 @@ export async function getPaymentsByUser(userId:string) {
     .sort('field -time')
     .limit(20);
 }
-
 
 export default class Payments {
     static insert = insertPayment

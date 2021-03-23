@@ -48,16 +48,15 @@ const CheckoutForm = ({ user }) => {
     );
 
     if (error) {
-      console.log(error)
-      setStatus({cardError : error.message})
+      setStatus({ cardError: error.message });
     } else if (paymentIntent) {
-      setStatus({paymentStatus : paymentIntent.status})
+      setStatus({ paymentStatus: paymentIntent.status });
       payment.status = paymentIntent.status;
       await fetchPostJSON('/api/checkout', { payment });
       router.push('/thanks');
     }
   };
-  
+
   return (
     <Formik
       validationSchema={checkoutValidationSchema}
@@ -73,10 +72,10 @@ const CheckoutForm = ({ user }) => {
         handleSubmit,
         values,
         status,
-        setStatus
+        setStatus,
       }) => {
         const [total, setTotal] = useState(Cart.getTotal());
-        
+
         useEffect(() => {
           setTotal(Cart.getTotal());
           cartEvents.on('cartChange', () => setTotal(Cart.total));
@@ -102,9 +101,12 @@ const CheckoutForm = ({ user }) => {
                 </Form.Group>
                 <Form.Group>
                   <StripeTestCards />
-                  <CardElement onChange={() => { 
-                    setStatus({cardError:null})
-                    } } className={'form-control'+(status?.cardError ? ' is-invalid' : '')} />
+                  <CardElement
+                    onChange={() => {
+                      setStatus({ cardError: null });
+                    }}
+                    className={`form-control${status?.cardError ? ' is-invalid' : ''}`}
+                  />
                   <div className="invalid-feedback">{status?.cardError}</div>
                 </Form.Group>
               </Col>
@@ -190,7 +192,9 @@ const CheckoutForm = ({ user }) => {
                       <Form.Control as="select" onChange={handleChange} value={values.billing_details?.address?.country}>
                         <option>Country</option>
                         {CountryCodes.getAll().map(
-                          (ct) => ct.iso2 ? <option value={ct.iso2} key={ct.iso2}>{ct.countryName}</option> : null
+                          (ct) => (ct.iso2 ? (
+                            <option value={ct.iso2} key={ct.iso2}>{ct.countryName}</option>
+                          ) : null),
                         )}
                       </Form.Control>
 
@@ -198,8 +202,8 @@ const CheckoutForm = ({ user }) => {
                     </Form.Group>
                   </Col>
                 </Row>
-                {status?.paymentStatus == 'succeeded' ? (
-                   <Button block variant="success"><Icons.Check size={16} /> Payment succeeded</Button>
+                {status?.paymentStatus === 'succeeded' ? (
+                  <Button block variant="success"><Icons.Check size={16} /> Payment succeeded</Button>
                 ) : (
                   <>{ isSubmitting ? (
                     <Button block variant="light"><Spinner animation="border" size="sm" /> Processing Payment</Button>
@@ -211,7 +215,8 @@ const CheckoutForm = ({ user }) => {
                       disabled={isSubmitting}
                     >  Pay {formatAmountForDisplay(total, 'USD')}
                     </Button>
-                  )}</>
+                  )}
+                  </>
                 )}
               </Col>
             </Row>

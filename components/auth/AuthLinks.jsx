@@ -12,33 +12,37 @@ const AuthLinks = ({ user, router }) => {
     router.push('/');
   };
   return (
-    <>{ user ? (<>
-      { !user._id ? (
-        <>
-          <GithubLoginButton />
-        </>
-      ) : (
-        <NavDropdown
-          title={(
-            <>
-              <Image width="20" height="20" src={user?.avatar} roundedCircle fluid />
-              {` Hi ${user?.name || user?.username}`}
-            </>
-      )}>
-          <NavDropdown.Item href="/account">
-            Account
-          </NavDropdown.Item>
-          <NavDropdown.Item onClick={handleLogout}>
-            Sign out
-          </NavDropdown.Item>
-          {user.role === 'admin' ? (
-            <NavDropdown.Item href="/dashboard">
-              Dashboard
-            </NavDropdown.Item>
-          ) : null }
-        </NavDropdown>
+    <>{ user ? (
+      <>
+        { !user._id ? (
+          <>
+            <GithubLoginButton />
+          </>
+        ) : (
+          <NavDropdown
+            title={(
+              <>
+                <Image width="20" height="20" src={user?.avatar} roundedCircle fluid />
+                {` Hi ${user?.name || user?.username}`}
+              </>
       )}
-    </>) :null}</>
+          >
+            <NavDropdown.Item href="/account">
+              Account
+            </NavDropdown.Item>
+            <NavDropdown.Item onClick={handleLogout}>
+              Sign out
+            </NavDropdown.Item>
+            {user.role === 'admin' ? (
+              <NavDropdown.Item href="/dashboard">
+                Dashboard
+              </NavDropdown.Item>
+            ) : null }
+          </NavDropdown>
+        )}
+      </>
+    ) : null}
+    </>
   );
 };
 

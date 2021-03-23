@@ -29,7 +29,7 @@ const CollectiveCard = ({ collective }) => {
             { imageUrl ? <Image src={imageUrl} roundedCircle fluid /> : null }
           </Col>
           <Col>
-            <Card.Title style={{maxHeight: '60px'}}><Link href={`/collective/${slug}`}>{name}</Link></Card.Title>
+            <Card.Title style={{ maxHeight: '60px' }}><Link href={`/collective/${slug}`}>{name}</Link></Card.Title>
             { website ? (
               <>
                 <Link href={website}>
@@ -49,7 +49,7 @@ const CollectiveCard = ({ collective }) => {
       </Card.Body>
       <Card.Footer>
         <Row>
-          <Col xs={7} >
+          <Col xs={7}>
             { !inCart ? (
               <Button block variant="outline-primary" onClick={() => Cart.addItem(collective, 100)}>
                 <Icons.Cart size={18} /> Add to cart
