@@ -1,12 +1,13 @@
 import nextConnect from 'next-connect';
-import { NextApiResponse, NextApiRequest } from 'next';
-import session from '../../../../middleware/session';
+import { NextApiResponse } from 'next';
+import { all } from '../../../../middleware/index';
 import passport from '../../../../middleware/passportGithub';
 
 const handler = nextConnect();
-handler.use(session).use(passport.initialize()).use(passport.session());
 
-handler.get((req: NextApiRequest, res: NextApiResponse) => {
+handler.use(all);
+
+handler.get((req: any, res: NextApiResponse) => {
   const { provider, state } = req.query;
   if (!provider) {
     return { statusCode: 404 };
@@ -16,6 +17,7 @@ handler.get((req: NextApiRequest, res: NextApiResponse) => {
   return passport.authenticate(provider, {
     failureRedirect: '/',
   })(req, res, () => {
+    req.session.user = { user: req.user._id };
     res.redirect(redirect);
   });
 });

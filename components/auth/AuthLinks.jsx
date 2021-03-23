@@ -30,7 +30,7 @@ const AuthLinks = ({ user, router }) => {
             <NavDropdown.Item href="/account">
               Account
             </NavDropdown.Item>
-            <NavDropdown.Item onClick={handleLogout}>
+            <NavDropdown.Item href="/api/auth/logout">
               Sign out
             </NavDropdown.Item>
             {user.role === 'admin' ? (
