@@ -19,6 +19,7 @@ const CartItem = ({
     <Card className="cart-item">
       <Card.Body>
         <Row
+          style={{ cursor: 'pointer' }}
           className="no-gutters"
           onClick={() => {
             const selection = collective._id === selected ? null : collective._id;
@@ -27,16 +28,15 @@ const CartItem = ({
           }}
         >
           <Col xs={2}>
-            <Image src={collective.imageUrl} width={35} roundedCircle fluid />
+            <span className={selected === collective._id ? 'with-caret-up' : 'with-caret'} />
+            <Image src={collective.imageUrl} width={30} roundedCircle fluid />
           </Col>
-          <Col xs={6}>
-            <h5>
-              {collective.name}
-            </h5>
+          <Col xs={6} className="text-fat" style={{ fontSize: '1.1rem' }}>
+            {collective.name}
           </Col>
           <Col xs={2} className="text-center">
             <Badge variant="primary" className="round" style={{ fontSize: '0.7rem' }}>
-              ${amount}
+              {formatAmountForDisplay(amount, 'USD')}
             </Badge>
           </Col>
           <Col xs={2} className="text-right">
@@ -51,29 +51,33 @@ const CartItem = ({
           </Col>
         </Row>
         {selected === collective._id ? (
-          <Row>
-            <Col xs={12}><hr /></Col>
-            <Col>
+          <Row className="align-items-center">
+            <Col xs={12}><hr style={{ margin: '5px 0' }} /></Col>
+            <Col xs={5}>
               <InputGroup className="cart-amount">
                 <InputGroup.Prepend><InputGroup.Text>$</InputGroup.Text></InputGroup.Prepend>
                 <Form.Control
+                  size="lg"
                   value={amount}
                   type="number"
+                  max={5000}
+                  min={1}
                   onChange={(e) => {
-                    onChange(e.currentTarget.value, collective);
-                    setAmount(e.currentTarget.value);
+                    const amt = e.currentTarget.value > 5000 ? 5000 : e.currentTarget.value;
+                    onChange(amt, collective);
+                    setAmount(amt);
                   }}
                 />
               </InputGroup>
             </Col>
-            <Col>
+            <Col className="text-center">
               <span className="lead">+</span>
             </Col>
-            <Col>
-              <div className="text-fat text-success display-4">{formatAmountForDisplay(amount * 2.10, 'USD')}</div>
+            <Col xs={5} className="text-right">
+              <div style={{ marginBottom: '-10px', fontSize: '2rem' }} className="text-fat text-success">{formatAmountForDisplay(amount * 2.10, 'USD')}</div>
               <small>estimated match</small>
             </Col>
-            <Col xs={12}>
+            <Col xs={12} style={{ marginTop: '10px' }}>
               {[10, 20, 30, 50, 100].map(
                 (amt) => (
                   <Button 

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import CartItemList from './CartItemList';
+import { formatAmountForDisplay } from '../../utils/currency';
 
 export const cartEvents = {
   on(event, callback) {
@@ -27,8 +28,8 @@ const Cart = ({ cart, display }) => {
   const handleClose = () => setShow(false);
 
   Cart.show = (id) => {
-    setShow(true);
     setSelectedId(id);
+    setShow(true);
   };
 
   Cart.collectives = collectives;
@@ -95,7 +96,7 @@ const Cart = ({ cart, display }) => {
     return items;
   }
   return (
-    <Modal show={show} onHide={handleClose} scrollable>
+    <Modal show={show} onHide={handleClose} scrollable size="md">
       <Modal.Header closeButton>
         <Modal.Title>
           Cart
@@ -111,7 +112,7 @@ const Cart = ({ cart, display }) => {
           : null}
       </Modal.Body>
       <Modal.Footer>
-        {cartData.length ? <Button block variant="primary" href="/checkout">total : ${total} Checkout</Button> : null}
+        {cartData.length ? <Button block variant="primary" href="/checkout">Total {formatAmountForDisplay(total, 'USD')} | Checkout</Button> : null}
       </Modal.Footer>
     </Modal>
   );
