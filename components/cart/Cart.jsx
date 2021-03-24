@@ -23,13 +23,19 @@ const Cart = ({ cart, display }) => {
     return { ...acc, [_id]: item.amount };
   }, {}));
   const [show, setShow] = useState(false);
+  const [selectedId, setSelectedId] = useState();
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
-  Cart.show = handleShow;
+  Cart.show = (id) => {
+    setShow(true);
+    setSelectedId(id);
+  };
+
   Cart.collectives = collectives;
   Cart.cartData = cartData;
+  
   Cart.getTotal = () => cart.reduce((acc, item) => acc + Number(item.amount), 0);
+
   const changeCart = (data) => {
     setCartData(data);
     const newtotal = data.reduce((acc, item) => acc + Number(item.amount), 0);
@@ -43,7 +49,7 @@ const Cart = ({ cart, display }) => {
     cartEvents.dispatch('cartChange', { data });
   };
 
-  Cart.addItem = (collective, amount) => {
+  Cart.addItem = (collective, amount, open = false) => {
     const body = {
       amount,
       collective: collective._id,
@@ -54,26 +60,34 @@ const Cart = ({ cart, display }) => {
       body: JSON.stringify(body),
     });
     const data = cartData.filter((item) => item.collective._id !== collective._id);
-    changeCart([...data, { collective, amount }]);
+    changeCart([{ collective, amount }, ...data]);
+    if (open) Cart.show(collective._id);
   };
 
   const items = (
     <CartItemList
       cart={cartData}
       deleteItem={
-    async (id) => {
-      const body = {
-        collective: id,
-      };
-      fetch('/api/cart', {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-      const data = cartData.filter((item) => item.collective._id !== id);
-      changeCart(data);
-    }
-  }
+        async (id) => {
+          fetch('/api/cart', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              collective: id,
+            }),
+          });
+          const data = cartData.filter((item) => item.collective._id !== id);
+          changeCart(data);
+        }
+      }
+      selectedId={selectedId}
+      onSelect={(id) => setSelectedId(id)}
+      onChange={(amount, collective) => {
+        const data = cartData.map(
+          (item) => (item.collective._id === collective._id ? { amount, collective } : item),
+        );
+        changeCart(data);
+      }}
     />
   );
 
@@ -81,13 +95,13 @@ const Cart = ({ cart, display }) => {
     return items;
   }
   return (
-    <Modal show={show} onHide={handleClose}>
+    <Modal show={show} onHide={handleClose} scrollable>
       <Modal.Header closeButton>
         <Modal.Title>
           Cart
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body style={{ marginTop: '-30px' }}>
+      <Modal.Body>
         {items}
         {!cartData.length ? (
           <p>Your cart is empty! Click “Add to Cart” on your

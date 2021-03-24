@@ -49,11 +49,11 @@ const CollectiveCard = ({ collective }) => {
         <Row className="no-gutters">
           <Col xs={7}>
             { !inCart ? (
-              <Button block variant="outline-primary" onClick={() => Cart.addItem(collective, 100)}>
+              <Button block variant="outline-primary" onClick={() => Cart.addItem(collective, 20, true)}>
                 <Icons.Cart size={18} /> Add to cart
               </Button>
             ) : (
-              <Button block variant="primary" onClick={() => Cart.show()}>
+              <Button block variant="primary" onClick={() => Cart.show(collective._id)}>
                 <Icons.Check size={18} /> In cart <Badge variant="danger">${inCart}</Badge>
               </Button>
             )}
