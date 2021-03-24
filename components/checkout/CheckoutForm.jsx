@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import * as Yup from 'yup';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
-import { Col, Row, Form, Button, Spinner } from 'react-bootstrap';
+import {
+  Col, Row, Form, Button, Spinner, 
+} from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import { Formik } from 'formik';
 import CountryCodes from 'countrycodes/countryCodes';
@@ -34,6 +36,7 @@ const CheckoutForm = ({ user }) => {
   };
 
   const handleSubmit = async (values, { setStatus }) => {
+    setStatus({ paymentStatus: 'verify' });
     const response = await fetchPostJSON('/api/checkout', { billing_details: values.billing_details });
     const { payment, intent } = response;
     const cardElement = elements.getElement(CardElement);
@@ -53,8 +56,20 @@ const CheckoutForm = ({ user }) => {
       setStatus({ paymentStatus: paymentIntent.status });
       payment.status = paymentIntent.status;
       await fetchPostJSON('/api/checkout', { payment });
+      setStatus({ paymentStatus: 'completed' });
       router.push('/thanks');
     }
+  };
+
+  const statusSubmitButton = (status, isSubmitting, total) => {
+    if (status === 'completed') {
+      return (<Button block variant="success"><Icons.Check size={16} /> Payment Completed</Button>);
+    } if (status === 'succeeded') {
+      return (<Button block variant="light"><Spinner animation="border" size="sm" /> Confirming Payment...</Button>);
+    } if (status === 'verify') {
+      return (<Button block variant="light"><Spinner animation="border" size="sm" /> Verifying Payment Data...</Button>);
+    } 
+    return (<Button block variant="primary" type="submit">  Pay {formatAmountForDisplay(total, 'USD')}</Button>);
   };
 
   return (
@@ -68,16 +83,16 @@ const CheckoutForm = ({ user }) => {
         touched,
         isSubmitting,
         handleChange,
-        // eslint-disable-next-line no-shadow
         handleSubmit,
         values,
         status,
         setStatus,
       }) => {
         const [total, setTotal] = useState(Cart.getTotal());
-
+        
         useEffect(() => {
           setTotal(Cart.getTotal());
+          setStatus({ paymentStatus: 'initial' });
           cartEvents.on('cartChange', () => setTotal(Cart.total));
         }, []);
 
@@ -202,22 +217,7 @@ const CheckoutForm = ({ user }) => {
                     </Form.Group>
                   </Col>
                 </Row>
-                {status?.paymentStatus === 'succeeded' ? (
-                  <Button block variant="success"><Icons.Check size={16} /> Payment succeeded</Button>
-                ) : (
-                  <>{ isSubmitting ? (
-                    <Button block variant="light"><Spinner animation="border" size="sm" /> Processing Payment</Button>
-                  ) : (
-                    <Button
-                      block
-                      variant="primary"
-                      type="submit"
-                      disabled={isSubmitting}
-                    >  Pay {formatAmountForDisplay(total, 'USD')}
-                    </Button>
-                  )}
-                  </>
-                )}
+                {statusSubmitButton(status?.paymentStatus, isSubmitting, total)}
               </Col>
             </Row>
           </Form>
