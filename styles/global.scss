@@ -94,6 +94,10 @@ footer{
         a:hover{text-decoration: none;color: $primary;}
     }
 }
+
+.session-description{
+    margin:20px 0;
+}
 @include media-breakpoint-down(sm) {
     .authDropdownLabel span{display:none}
 }

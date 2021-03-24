@@ -1,3 +1,4 @@
+/* eslint-disable react/no-danger */
 import React, { useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Link from 'next/link';
@@ -35,7 +36,7 @@ const FundingSession = ({ session, featuredCollective }) => {
             &nbsp;to&nbsp;
                 {moment(end).format('MMMM Do') || 'no end date yet'}
               </h2>
-              <p>{description}</p>
+              <div className="session-description" dangerouslySetInnerHTML={{ __html: description }} />
               <p><Link href="/quadratic-funding">Learn More about Democratic Funding</Link></p>
               <p>Brought to You By</p>
               <Button href="https://www.oscollective.org/" variant="link" target="_blank"><OscLogo /></Button>
@@ -44,9 +45,9 @@ const FundingSession = ({ session, featuredCollective }) => {
             </Col>
           </Row>
           <p style={{ padding: '30px 0' }} className="text-center content">
-            👇 Scroll to see the other&nbsp;
-            {collectives.length - 1}&nbsp;
-            amazing collectives we’re sustaining! 👇
+            👇 Scroll to see the 
+            other {collectives.length - 1} amazing 
+            collectives we’re sustaining! 👇
           </p>
         </Container>
       </div>
