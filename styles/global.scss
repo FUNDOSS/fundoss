@@ -81,6 +81,15 @@ footer{
 
 .collective-card, .cart-item{margin-top: $grid-gutter-width;}
 
+
+.text-fat{
+    font-family: $headings-font-family;
+}
+
+.btn.round, .badge.round{
+    border-radius: 15px;
+}
+
 .container.content{padding-top: 60px;padding-bottom: 60px;min-height: 500px;}
 
 .collective-content{ 
@@ -101,6 +110,11 @@ footer{
 @include media-breakpoint-down(sm) {
     .authDropdownLabel span{display:none}
 }
+
+@include media-breakpoint-down(sm) {
+    .authDropdownLabel span{display:none}
+}
+
 .navbar-nav .dropdown-menu {
     position: absolute; 
     float: none;
@@ -118,4 +132,32 @@ footer{
     a.nav-link:hover {
         color:$purple-brand;
     }
+}
+
+.with-caret{
+    display:inline-block;
+    width:15px;
+    @include caret();
+}
+
+.with-caret-up{
+    display:inline-block;
+    width:15px;
+    @include caret(up);
+}
+
+.nav-tabs .nav-link {
+    margin-bottom: -3px;
+    border: 1px solid transparent;
+    border-bottom: 3px solid transparent;
+}
+
+.nav-tabs .nav-link.active {
+    margin-bottom: -3px;
+    border: 1px solid transparent;
+    border-bottom: 3px solid $primary;
+}
+.card-header-tabs {
+    margin:0;
+    border-bottom: 0;
 }
