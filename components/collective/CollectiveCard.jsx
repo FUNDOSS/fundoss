@@ -31,24 +31,22 @@ const CollectiveCard = ({ collective }) => {
           <Col>
             <Card.Title style={{ maxHeight: '60px' }}><Link href={`/collective/${slug}`}>{name}</Link></Card.Title>
             { website ? (
-              <>
-                <Link href={website}>
-                  <><Icons.Globe size={15} /> website</>
-                </Link> &nbsp;
-              </>
+              <a variant="link" target="_blank" rel="noreferrer" href={website} style={{ marginRight: '10px' }}>
+                <Icons.Globe size={15} /> website 
+              </a>
             ) : null }
-            <Link href={`https://github.com/${githubHandle}`}>
-              <><Icons.Github size={15} /> github</>
-            </Link>
+            <a variant="link" target="_blank" rel="noreferrer" href={`https://github.com/${githubHandle}`}>
+              <Icons.Github size={15} /> github
+            </a>
           </Col>
         </Row>
         <hr />
-        <Card.Text style={{ height: '100px', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        <Card.Text className="text-center" style={{ height: '100px', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           {description}
         </Card.Text>
       </Card.Body>
       <Card.Footer>
-        <Row>
+        <Row className="no-gutters">
           <Col xs={7}>
             { !inCart ? (
               <Button block variant="outline-primary" onClick={() => Cart.addItem(collective, 100)}>
