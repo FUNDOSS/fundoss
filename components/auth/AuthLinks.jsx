@@ -8,15 +8,16 @@ const AuthLinks = ({ user }) => (
     <>
       { !user._id ? (
         <>
-          <GithubLoginButton />
+          <GithubLoginButton variant="outline-primary" size="sm" />
         </>
       ) : (
-        <NavDropdown
+        <NavDropdown 
+          menuAlign="right"
           title={(
-            <>
+            <span className="authDropdownLabel">
               <Image width="20" height="20" src={user?.avatar} roundedCircle fluid />
-              {` Hi ${user?.name || user?.username}`}
-            </>
+              <span>{` Hi ${user?.name || user?.username}`}</span>
+            </span>
       )}
         >
           <NavDropdown.Item href="/account">
