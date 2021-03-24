@@ -5,10 +5,18 @@
     "@typescript-eslint"
   ],
   "extends": [
+    "airbnb",
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended"
   ],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
+  },
   "rules": {
     "import/extensions": "off",
     "no-underscore-dangle": [
@@ -20,8 +28,8 @@
       }
     ],
     "@typescript-eslint/explicit-module-boundary-types": "off",
-    "@typescript-eslint/no-explicit-any": "off"
-
+    "@typescript-eslint/no-explicit-any": "off",
+    "no-trailing-spaces":"off"
   },
   "overrides": [{
     "files": ["*.jsx"],
@@ -48,7 +56,12 @@
     "rules": {
       "react/prop-types": "off",
       "@typescript-eslint/explicit-module-boundary-types": "off",
-      "no-undef":"off"
+      "no-undef":"off",
+      "no-use-before-define":"off",
+      "no-shadow": "off",
+      "jsx-one-expression-per-line":"off",
+      "react/jsx-one-expression-per-line":"off",
+      "no-trailing-spaces":"off"
     }
   }]
   
