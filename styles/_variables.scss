@@ -7,7 +7,7 @@
 
 $white:    #fff !default;
 $gray-100: #f8f9fa !default;
-$gray-200: #e9ecef !default;
+$gray-200: #EFEFEF !default;
 $gray-300: #dee2e6 !default;
 $gray-400: #ced4da !default;
 $gray-500: #C2C2C2 !default;
@@ -837,7 +837,7 @@ $card-spacer-y:                     .75rem !default;
 $card-spacer-x:                     1.25rem !default;
 $card-border-width:                 $border-width !default;
 $card-border-radius:                8px !default;
-$card-border-color:                 rgba($white, .125) !default;
+$card-border-color:                 $gray-200 !default;
 $card-inner-border-radius:          subtract($card-border-radius, $card-border-width) !default;
 $card-cap-bg:                       rgba($white, .03) !default;
 $card-cap-color:                    null !default;

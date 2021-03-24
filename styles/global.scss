@@ -83,17 +83,35 @@ footer{
 
 .container.content{padding-top: 60px;padding-bottom: 60px;min-height: 500px;}
 
-.collective-content{
+.collective-content{ 
     img {@extend .img-fluid}
 }
 
-
-#primary-nav .navbar-nav a.nav-link {
-    color:$purple-brand;
-    font-weight: 700;
-    //font-size: 1rem;
-    text-transform: uppercase;
-    svg {
-        color:$gray-500;
+.collective-card{
+    .card-title{
+        font-size: 1rem;
+        a{color: $black;}
+        a:hover{text-decoration: none;color: $primary;}
+    }
+}
+@include media-breakpoint-down(sm) {
+    .authDropdownLabel span{display:none}
+}
+.navbar-nav .dropdown-menu {
+    position: absolute; 
+    float: none;
+}
+#primary-nav .navbar-nav { 
+    a.nav-link {
+        color:$gray-700;
+        font-weight: 700;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        svg {
+            color:$gray-500;
+        }
+    }
+    a.nav-link:hover {
+        color:$purple-brand;
     }
 }
