@@ -6,6 +6,7 @@ export function formatAmountForDisplay(
     style: 'currency',
     currency,
     currencyDisplay: 'symbol',
+    maximumSignificantDigits: 3,
   });
   return numberFormat.format(amount);
 }
