@@ -3,7 +3,7 @@ import { NextApiResponse } from 'next';
 import Stripe from 'stripe';
 import { all } from '../../../middleware/index';
 import Payment from '../../../lib/payment/paymentController';
-import { formatAmountForStripe } from '../../../utils/stripe-helpers';
+import { formatAmountForStripe } from '../../../utils/currency';
 import Users from '../../../lib/user/usersController';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
