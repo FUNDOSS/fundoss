@@ -7,7 +7,7 @@ export interface IPaymentInput {
   fee?: number;
   status?: string;
   time?: Date;
-  intent_id?: string;
+  intentId?: string;
   confirmation?: any;
   error?: any;
 }
@@ -19,7 +19,7 @@ export interface IPayment extends Document {
   fee: number;
   status: string;
   time: Date;
-  intent_id: string;
+  intentId: string;
   confirmation: any;
   error: any;
 }
@@ -42,7 +42,7 @@ const PaymentSchema = new Schema({
   fee: {
     type: String,
   },
-  intent_id: {
+  intentId: {
     type: String,
   },
   confirmation: {

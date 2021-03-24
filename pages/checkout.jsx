@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import {
+  Container, Row, Col, Button, 
+} from 'react-bootstrap';
 import Layout from '../components/layout';
 import middleware from '../middleware/all';
 import serializable from '../lib/serializable';

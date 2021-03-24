@@ -5,12 +5,14 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Image from 'react-bootstrap/Image';
+import Link from 'next/link';
 import Cart from '../../../lib/cart/CartController';
 import Layout from '../../../components/layout';
 import collectives from '../../../lib/collectives/CollectivesController';
 import serializable from '../../../lib/serializable';
 import middleware from '../../../middleware/all';
 import CollectiveDonationCard from '../../../components/collective/CollectiveDonationCard';
+import Icons from '../../../components/icons';
 
 const collectivePage = ({ collective, user, cart }) => {
   if (!collective) {
@@ -18,7 +20,7 @@ const collectivePage = ({ collective, user, cart }) => {
   }
 
   const {
-    name, longDescription, imageUrl, backgroundImageUrl,
+    name, longDescription, imageUrl, backgroundImageUrl, members, website, githubHandle,
   } = collective;
 
   return (
@@ -29,6 +31,25 @@ const collectivePage = ({ collective, user, cart }) => {
             <Image src={backgroundImageUrl} fluid />
             <h1 className="display-4">{name}</h1>
             <Image src={imageUrl} fluid />
+            { website ? (
+              <>
+                <Link href={website}>
+                  <><Icons.Globe size={15} /> website</>
+                </Link> &nbsp;
+              </>
+            ) : null }
+            <Link href={`https://github.com/${githubHandle}`}>
+              <><Icons.Github size={15} /> github</>
+            </Link>
+
+            <h5>Community</h5>
+            <p>{members.length} members</p>
+            {members.map(
+              (member, index) => (
+                index < 10 ? <Image key={member} src={member} roundedCircle width={35} /> : null
+              ),
+            )}
+            
             <div dangerouslySetInnerHTML={{ __html: longDescription }} />
           </Col>
           <Col>

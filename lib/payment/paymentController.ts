@@ -1,19 +1,19 @@
 import Payment from './paymentModel';
 import Donation from './donationModel';
 import dbConnect from '../dbConnect';
-import FundingSessions from '../../lib/fundingSession/fundingSessionController';
-import Collectives from '../../lib/collectives/CollectivesController';
+import FundingSessions from '../fundingSession/fundingSessionController';
+import Collectives from '../collectives/CollectivesController';
 import fundingSessionModel from '../fundingSession/fundingSessionModel';
 
 export async function insertPayment(payment) {
   await dbConnect();
   const currentSession = await FundingSessions.getCurrent();
-  payment.session = currentSession._id;
-  return Payment.create(payment);
+  return Payment.create({ ...payment, session: currentSession._id });
 }
 
 export async function updatePayment(payment) {
   await dbConnect();
+  const paymentUpdates: any = {};
   if (payment.donations) {
     const fee = payment.confirmation.charges.data
       .reduce((acc, charge) => acc + (charge.balance_transaction.fee / 100), 0);
@@ -54,11 +54,11 @@ export async function updatePayment(payment) {
 
     await fundingSessionModel.updateOne({ _id: payment.session }, { totals: sessionTotals });
 
-    payment.donations = donations;
-    payment.fee = fee;
+    paymentUpdates.donations = donations;
+    paymentUpdates.fee = fee;
   }
 
-  return Payment.updateOne({ _id: payment._id }, payment);
+  return Payment.updateOne({ _id: payment._id }, { ...payment, ...paymentUpdates });
 }
 
 export async function findById(id:string) {

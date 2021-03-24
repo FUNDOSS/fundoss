@@ -1,13 +1,15 @@
 import React from 'react';
 import moment from 'moment';
-import { Image, Badge, Row, Col } from 'react-bootstrap';
+import {
+  Image, Badge, Row, Col, 
+} from 'react-bootstrap';
 
 const DonationsList = ({ donations }) => (
   <div>
     {donations.map((donation) => (
       <Row key={donation._id}>
         <Col xs={2}>
-          <h5><a href={'/collective'+donation.collective.slug}>{}</a></h5>
+          <h5><a href={`/collective${donation.collective.slug}`}>{}</a></h5>
           {moment(donation.payment.time).format('MMMM Do YYYY')}
         </Col>
         <Col> <Image src={donation.collective.imageUrl} roundedCircle width={20} /></Col>

@@ -6,7 +6,9 @@ import middleware from '../../middleware/all';
 import serializable from '../../lib/serializable';
 import Cart from '../../lib/cart/CartController';
 
-const IndexPage = ({ session, user, cart, featured }) => (
+const IndexPage = ({
+  session, user, cart, featured, 
+}) => (
   <Layout title="FundOSS | Quadratic funding for open source projects" user={user} cart={cart}>
     {session._id ? <FundingSession session={session} featuredCollective={featured} /> : null }
   </Layout>

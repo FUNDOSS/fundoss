@@ -10,21 +10,24 @@ const getCollectivesFromInput = async (session) => {
   );
   const collectives = allCollectives.filter((collective: any) => !collective.error);
   const collectiveImportErrors = allCollectives.filter((collective: any) => collective.error)
-    .reduce((obj, value:any) => ({ ...obj as object, [value.slug]: value.error }), {});
+    .reduce((obj, value:any) => ({ ...obj as any, [value.slug]: value.error }), {});
 
   return { collectives, collectiveImportErrors };
 };
 
 export async function insertSession(session):Promise<IFundingSession> {
   await dbConnect();
-  if (session.collectives) session = { ...session, ...await getCollectivesFromInput(session) };
-  return FundingSession.create(session);
+  return FundingSession.create(
+    session.collectives ? { ...session, ...await getCollectivesFromInput(session) } : session,
+  );
 }
 
-export async function editSession(session:IFundingSessionInput):Promise<any> {
+export async function editSession(session:IFundingSessionInput):Promise<IFundingSession> {
   await dbConnect();
-  if (session.collectives) session = { ...session, ...await getCollectivesFromInput(session) };
-  await FundingSession.updateOne({ _id: session._id }, session);
+  await FundingSession.updateOne(
+    { _id: session._id },
+    session.collectives ? { ...session, ...await getCollectivesFromInput(session) } : session,
+  );
   return FundingSession.findOne({ _id: session._id });
 }
 

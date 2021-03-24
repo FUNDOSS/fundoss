@@ -70,7 +70,7 @@ const Icons = {
   Trash,
   Question,
   Buoy,
-  Code
+  Code,
 };
 
 export default Icons;

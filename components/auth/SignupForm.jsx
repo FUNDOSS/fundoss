@@ -4,10 +4,8 @@ import Button from 'react-bootstrap/Button';
 import Router from 'next/router';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { useCurrentUser } from '../../hooks/index';
 
 export const SignupForm = () => {
-  const [user, { mutate }] = useCurrentUser();
   useEffect(() => {
     if (user) Router.replace('/');
   }, [user]);
@@ -54,12 +52,10 @@ export const SignupForm = () => {
       mutate(userObj);
       Router.replace('/');
     } else {
-      const errors = {};
       const serverErrors = await res.json();
-      console.log(serverErrors);
-      serverErrors.errors.map((error) => {
-        errors[error.field] = error.message;
-      });
+      serverErrors.errors.reduce(
+        (errors, error) => ({ ...errors, [error.field]: error.message }), {},
+      );
       setErrors(errors);
     }
   };
@@ -77,7 +73,6 @@ export const SignupForm = () => {
             touched,
             isSubmitting,
             values,
-            handleSubmit,
             handleChange,
           },
         ) => (

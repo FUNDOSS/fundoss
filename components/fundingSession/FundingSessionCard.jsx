@@ -1,16 +1,16 @@
 import React from 'react';
-import Card from 'react-bootstrap/Card';
-import Button from 'react-bootstrap/Button';
 import moment from 'moment';
+import { Badge, Button, Card } from 'react-bootstrap';
 
 const FundingSessionCard = ({ session }) => {
   const {
-    name, start, end, description, slug,
+    name, start, end, description, slug, totals,
   } = session;
   return (
     <Card key={slug}>
       <Card.Body>
         <Card.Title>{name}</Card.Title>
+        {totals?.donations ? <p><Badge variant="info">${totals?.amount} from {totals?.donations} contributors</Badge></p> : null}
         <Card.Text>
           <b>
             {moment(start).format('MMMM Do') || 'no start date yet'}

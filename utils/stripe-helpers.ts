@@ -19,12 +19,6 @@ export function formatAmountForStripe(
     currency,
     currencyDisplay: 'symbol',
   });
-  const parts = numberFormat.formatToParts(amount);
-  let zeroDecimalCurrency = true;
-  for (const part of parts) {
-    if (part.type === 'decimal') {
-      zeroDecimalCurrency = false;
-    }
-  }
+  const zeroDecimalCurrency = numberFormat.formatToParts(amount).filter((part) => part.type === 'decimal').length;
   return zeroDecimalCurrency ? amount : Math.round(amount * 100);
 }

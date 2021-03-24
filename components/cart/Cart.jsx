@@ -87,7 +87,7 @@ const Cart = ({ cart, display }) => {
           Cart
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body style={{marginTop:'-30px'}}>
+      <Modal.Body style={{ marginTop: '-30px' }}>
         {items}
         {!cartData.length ? (
           <p>Your cart is empty! Click “Add to Cart” on your

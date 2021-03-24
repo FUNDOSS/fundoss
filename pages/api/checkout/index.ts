@@ -25,7 +25,7 @@ handler.post(async (req: any, res: NextApiResponse) => {
       }
       const amount = Object.keys(req.session.cart)
         .map((_id) => req.session.cart[_id])
-        .reduce((acc, amt) => acc + amt, 0);
+        .reduce((acc, amt) => acc + Number(amt), 0);
       const params: Stripe.PaymentIntentCreateParams = {
         payment_method_types: ['card'],
         amount: formatAmountForStripe(amount, 'USD'),
@@ -37,7 +37,7 @@ handler.post(async (req: any, res: NextApiResponse) => {
       );
       const payment = await Payment.insert({
         user: req.user._id,
-        intent_id: paymentIntent.id,
+        intentId: paymentIntent.id,
         amount,
       });
       return res.status(200).json({ payment, intent: paymentIntent });
@@ -48,7 +48,7 @@ handler.post(async (req: any, res: NextApiResponse) => {
     const { payment } = req.body;
     if (payment.status === 'succeeded') {
       const intent: Stripe.PaymentIntent = await stripe.paymentIntents.retrieve(
-        payment.intent_id, { expand: ['charges.data.balance_transaction'] },
+        payment.intentId, { expand: ['charges.data.balance_transaction'] },
       );
       payment.status = intent.status;
       payment.confirmation = intent;

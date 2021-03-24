@@ -22,17 +22,11 @@ handler.post(async (req: any, res: NextApiResponse) => {
   }
   if (req.body._id) {
     const session = await FundingSessions.edit(req.body)
-      .catch((e) => {
-        console.error(e);
-        return res.status(500).json(e);
-      });
+      .catch((e) => res.status(500).json(e));
     return res.status(200).json({ session });
   }
   const session = await FundingSessions.insert(req.body)
-    .catch((e) => {
-      console.error(e);
-      return res.status(500).json(e);
-    });
+    .catch((e) => res.status(500).json(e));
   return res.status(200).json({ session });
 });
 

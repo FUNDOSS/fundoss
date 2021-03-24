@@ -27,7 +27,6 @@ const FundingSessionForm = ({ sessionData }) => {
   const initialValues = toFormValues(sessionData);
 
   const handleSubmit = async (values, { setStatus, setValues }) => {
-    if (sessionData?._id) values._id = sessionData._id;
     const body = JSON.stringify(values);
     const res = await fetch('/api/funding-session', {
       method: 'POST',
@@ -37,7 +36,6 @@ const FundingSessionForm = ({ sessionData }) => {
     if (res.status === 200) {
       setStatus({ saved: true });
       const result = await res.json();
-      console.log(result);
       setValues(toFormValues(result.session));
     } else {
       setStatus({ error: res.json() });

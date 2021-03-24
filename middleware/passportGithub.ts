@@ -16,11 +16,9 @@ passport.deserializeUser((req, id, done) => {
 passport.use(new GithubStrategy(
   appConfig.github,
   async (accessToken, refreshToken, githubProfile: any, cb) => {
-    console.log('github oauth', githubProfile.username);
     try {
       const existingUser:IUser = await Users.findByGithubId(githubProfile.id);
       if (existingUser?._id) {
-        console.log('github login user', existingUser);
         cb(null, existingUser);
       } else {
         const userInput:IUserInput = {
@@ -40,13 +38,10 @@ passport.use(new GithubStrategy(
         userInput.email = emails.data
           .filter((email) => email.primary)
           .map((email) => email.email).join();
-        console.log('github create user', userInput);
         const user = await Users.insert(userInput);
-        console.log('login', user);
         cb(null, user);
       }
     } catch (e) {
-      console.log('github user error', e);
       cb(e);
     }
   },

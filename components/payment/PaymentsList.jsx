@@ -1,6 +1,8 @@
 import React from 'react';
 import moment from 'moment';
-import { Image, Badge, Row, Col } from 'react-bootstrap';
+import {
+  Image, Badge, Row, Col, 
+} from 'react-bootstrap';
 
 const PaymentsList = ({ payments }) => (
   <div>

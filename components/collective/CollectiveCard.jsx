@@ -33,12 +33,12 @@ const CollectiveCard = ({ collective }) => {
             { website ? (
               <>
                 <Link href={website}>
-                  <a><Icons.Globe size={15} /> website</a>
+                  <><Icons.Globe size={15} /> website</>
                 </Link> &nbsp;
               </>
             ) : null }
             <Link href={`https://github.com/${githubHandle}`}>
-              <a><Icons.Github size={15} /> github</a>
+              <><Icons.Github size={15} /> github</>
             </Link>
           </Col>
         </Row>

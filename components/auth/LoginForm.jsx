@@ -3,7 +3,6 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { useUser } from '../../lib/hooks';
 
 export const LoginForm = () => {
   useUser({ redirectTo: '/', redirectIfFound: true });
@@ -43,7 +42,9 @@ export const LoginForm = () => {
       validationSchema={userValidationSchema}
       initialValues={initialValues}
       onSubmit={handleSubmit}
-    >{({ errors, touched, isSubmitting, handleSubmit, values, handleChange }) => (
+    >{({
+      errors, touched, isSubmitting, values, handleChange, 
+    }) => (
       <Form noValidate onSubmit={handleSubmit}>
         <Form.Group controlId="email">
           <Form.Label>Your Email </Form.Label>
