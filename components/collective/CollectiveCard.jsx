@@ -8,6 +8,7 @@ import Col from 'react-bootstrap/Col';
 import Link from 'next/link';
 import Cart, { cartEvents } from '../cart/Cart';
 import Icons from '../icons';
+import { formatAmountForDisplay } from '../../utils/currency';
 
 const CollectiveCard = ({ collective }) => {
   const {
@@ -54,7 +55,7 @@ const CollectiveCard = ({ collective }) => {
               </Button>
             ) : (
               <Button block variant="primary" onClick={() => Cart.show(collective._id)}>
-                <Icons.Check size={18} /> In cart <Badge variant="danger">${inCart}</Badge>
+                <Icons.Check size={18} /> In cart <Badge variant="danger">{formatAmountForDisplay(inCart, 'USD')}</Badge>
               </Button>
             )}
           </Col>

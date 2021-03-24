@@ -9,7 +9,7 @@ import { Formik } from 'formik';
 import CountryCodes from 'countrycodes/countryCodes';
 import StripeTestCards from './StripeTestCards';
 import { fetchPostJSON } from '../../utils/api-helpers';
-import { formatAmountForDisplay } from '../../utils/stripe-helpers';
+import { formatAmountForDisplay } from '../../utils/currency';
 import Cart, { cartEvents } from '../cart/Cart';
 import Icons from '../icons';
 
