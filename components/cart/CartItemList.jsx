@@ -7,6 +7,7 @@ import Badge from 'react-bootstrap/Badge';
 import { Form, InputGroup, Card } from 'react-bootstrap';
 import { formatAmountForDisplay } from '../../utils/currency';
 import Icons from '../icons';
+import Qf from '../../utils/qf';
 
 const CartItem = ({
   item, onDelete, onSelect, selectedId, cartAmount, onChange,
@@ -74,7 +75,9 @@ const CartItem = ({
               <span className="lead">+</span>
             </Col>
             <Col xs={5} className="text-right">
-              <div style={{ marginBottom: '-10px', fontSize: '2rem' }} className="text-fat text-success">{formatAmountForDisplay(amount * 2.10, 'USD')}</div>
+              <div style={{ marginBottom: '-10px', fontSize: '2rem' }} className="text-fat text-success">
+                {formatAmountForDisplay(Qf.calculate(amount), 'USD')}
+              </div>
               <small>estimated match</small>
             </Col>
             <Col xs={12} style={{ marginTop: '10px' }}>

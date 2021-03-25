@@ -7,6 +7,7 @@ import Button from 'react-bootstrap/Button';
 import Cart, { cartEvents } from '../cart/Cart';
 import Icons from '../icons';
 import { formatAmountForDisplay } from '../../utils/currency';
+import Qf from '../../utils/qf';
 
 const CollectiveDonationCard = ({ collective }) => {
   const [tab, setTab] = useState('set');
@@ -46,9 +47,22 @@ const CollectiveDonationCard = ({ collective }) => {
         { tab === 'set'
           ? (
             <div style={{ padding: '20px 0' }}>
-              <Button variant={amount === 10 ? 'primary' : 'outline-primary'} onClick={() => Cart.addItem(collective, 10)} block>Donate $10 for a $11.4 match</Button>
-              <Button variant={amount === 20 ? 'primary' : 'outline-primary'} onClick={() => Cart.addItem(collective, 20)} block>Donate $20 for a $34.2 match</Button>
-              <Button variant={amount === 50 ? 'primary' : 'outline-primary'} onClick={() => Cart.addItem(collective, 50)} block>Donate $50 for a $77.4 match</Button>
+              {[10, 20, 30, 50, 100].map(
+                (amt) => (
+                  <Button 
+                    block
+                    style={{ marginRight: '10px' }}
+                    key={`btn${amt}`} 
+                    onClick={() => {
+                      Cart.addItem(collective, amt);
+                    }}
+                    variant={amt === amount ? 'primary' : 'outline-primary'}
+                  >
+                    ${amt} for a estimated <span className="text-fat">{formatAmountForDisplay(Qf.calculate(amt), 'USD')}</span>
+                    &nbsp;match
+                  </Button>
+                ),
+              )}
             </div>
           )
           : (
@@ -71,7 +85,9 @@ const CollectiveDonationCard = ({ collective }) => {
                 max={10000}
               />
               <small>estimated match</small>
-              <div style={{ fontSize: '2.3rem' }} className="text-fat text-success">{formatAmountForDisplay(amount * 2.10, 'USD')}</div>
+              <div style={{ fontSize: '2.3rem' }} className="text-fat text-success">
+                {formatAmountForDisplay(Qf.calculate(amount), 'USD')}
+              </div>
             </div>
           )}
 
