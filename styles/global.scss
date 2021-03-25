@@ -60,6 +60,14 @@ body{
     @extend .invert;
     background: $darkpurple url('/bgconfetti.png') top repeat-x;
     padding: 60px 0;
+    clip-path: polygon(100% 0%, 100% 90%, 0 100%, 0 0);
+    margin-bottom: -80px
+}
+
+.illu-hand{
+    @extend .invert;
+    background: $darkpurple url('/illu-hand.png') no-repeat top left/contain ;
+    padding: 30px;
 }
 
 .collective-card{
@@ -86,7 +94,7 @@ footer{
 
 .card, .navbar, .dropdown-menu{box-shadow: 0px 4px 24px rgba($black, 0.15);}
 
-.collective-card, .cart-item{margin-top: $grid-gutter-width;}
+.collective-card, .cart-item{margin-bottom: $grid-gutter-width;}
 
 
 .text-fat{
