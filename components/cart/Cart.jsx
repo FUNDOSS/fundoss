@@ -51,18 +51,18 @@ const Cart = ({ cart, display }) => {
   };
 
   Cart.addItem = (collective, amount, open = false) => {
-    const body = {
-      amount,
-      collective: collective._id,
-    };
-    fetch('/api/cart', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
+    saveCartItem(collective._id, amount);
     const data = cartData.filter((item) => item.collective._id !== collective._id);
     changeCart([{ collective, amount }, ...data]);
     if (open) Cart.show(collective._id);
+  };
+
+  const saveCartItem = (collective, amount) => {
+    fetch('/api/cart', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ amount, collective }),
+    });
   };
 
   const items = (
@@ -84,6 +84,7 @@ const Cart = ({ cart, display }) => {
       selectedId={selectedId}
       onSelect={(id) => setSelectedId(id)}
       onChange={(amount, collective) => {
+        saveCartItem(collective._id, amount);
         const data = cartData.map(
           (item) => (item.collective._id === collective._id ? { amount, collective } : item),
         );
