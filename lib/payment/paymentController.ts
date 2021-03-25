@@ -96,6 +96,20 @@ export async function getPaymentsByUser(userId:string) {
     .limit(20);
 }
 
+export async function getLastPaymentByUser(userId:string) {
+  await dbConnect();
+  const payment = await Payment.findOne({ user: userId, status: 'succeeded' })
+    .populate({
+      path: 'donations',
+      populate: {
+        path: 'collective',
+        select: 'slug imageUrl',
+      },
+    })
+    .sort('field -time');
+  return payment;
+}
+
 export default class Payments {
     static insert = insertPayment
 
@@ -106,4 +120,6 @@ export default class Payments {
     static get = getPayments
 
     static getByUser = getPaymentsByUser
+
+    static getLastByUser = getLastPaymentByUser
 }
