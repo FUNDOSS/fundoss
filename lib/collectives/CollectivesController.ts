@@ -31,6 +31,7 @@ export async function getCollective(slug:string):Promise<any> {
       imageUrl
       backgroundImageUrl
       website
+      tags
       description
       longDescription
       categories

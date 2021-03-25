@@ -8,6 +8,7 @@ export interface ICollective extends Document {
   imageUrl:string;
   backgroundImageUrl:string;
   website:string;
+  tags:string;
   description:string;
   longDescription:string;
 }
@@ -34,6 +35,9 @@ const CollectiveSchema = new Schema({
   backgroundImageUrl: {
     type: String,
   },
+  tags: [{
+    type: String,
+  }],
   website: {
     type: String,
   },
