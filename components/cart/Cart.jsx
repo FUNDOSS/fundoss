@@ -33,11 +33,12 @@ const Cart = ({ cart, display }) => {
   };
 
   Cart.collectives = collectives;
-  Cart.cartData = cartData;
+  Cart.data = cart;
   
   Cart.getTotal = () => cart.reduce((acc, item) => acc + Number(item.amount), 0);
 
   const changeCart = (data) => {
+    Cart.data = data;
     setCartData(data);
     const newtotal = data.reduce((acc, item) => acc + Number(item.amount), 0);
     setTotal(newtotal);

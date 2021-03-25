@@ -11,14 +11,31 @@ import CartController from '../lib/cart/CartController';
 import CheckoutForm from '../components/checkout/CheckoutForm';
 import GithubLoginButton from '../components/auth/GithubLoginButton';
 import Cart, { cartEvents } from '../components/cart/Cart';
+import Qf from '../utils/qf';
+import { formatAmountForDisplay } from '../utils/currency';
 
 const CheckoutPage = ({
   user, cart, stripekey, cartValue,
 }) => {
   const stripePromise = loadStripe(stripekey);
   const [total, setTotal] = useState(cartValue);
+  const [totalMatch, setTotalMatch] = useState();
   useEffect(() => {
-    cartEvents.on('cartChange', () => setTotal(Cart.total));
+    const onCartChange = (cart = null) => {
+      const totals = (Cart.data || cart).reduce(
+        (acc, item) => ({
+          amount: acc.amount + Number(item.amount), 
+          match: acc.match + Qf.calculate(Number(item.amount)),
+        }),
+        { amount: 0, match: 0 },
+      );
+      if (totals) {
+        setTotal(totals.amount);
+        setTotalMatch(totals.match);
+      }
+    };
+    cartEvents.on('cartChange', onCartChange);
+    onCartChange(cart);
   }, []);
 
   return (
@@ -28,7 +45,23 @@ const CheckoutPage = ({
           <>
             {total ? (
               <>
-                <Row><Col md={{ offset: 3, span: 6 }}><Cart display="inline" cart={cart} /></Col></Row>
+                <Row>
+                  <Col md={{ offset: 3, span: 6 }}>
+                    <Cart display="inline" cart={cart} />
+                    <hr />
+                    <Row className="align-items-center text-center">
+                      <Col className="lead text-fat">Total: {formatAmountForDisplay(total, 'USD')}</Col>
+                      <Col className="lead">+</Col>
+                      <Col>
+                        <div className="text-success text-fat display-4">
+                          {totalMatch ? formatAmountForDisplay(totalMatch, 'USD') : ''}
+                        </div>
+                        <small>estimated match</small>
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
+
                 <Elements stripe={stripePromise}>
                   <CheckoutForm user={user} />
                 </Elements>
