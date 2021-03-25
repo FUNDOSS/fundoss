@@ -32,14 +32,20 @@ const CartItem = ({
             <span className={selected === collective._id ? 'with-caret-up' : 'with-caret'} />
             <Image src={collective.imageUrl} width={30} roundedCircle fluid />
           </Col>
-          <Col xs={6} className="text-fat" style={{ fontSize: '1.1rem' }}>
+          <Col className="text-fat" style={{ fontSize: '1.1rem' }}>
             {collective.name}
           </Col>
-          <Col xs={2} className="text-center">
-            <Badge variant="primary" className="round" style={{ fontSize: '0.7rem' }}>
-              {formatAmountForDisplay(amount, 'USD')}
-            </Badge>
-          </Col>
+          {selected !== collective._id ? (
+            <Col xs={3} className="text-center">
+              <Badge variant="primary" className="round">
+                {formatAmountForDisplay(amount, 'USD')} +&nbsp;
+                <span className="text-fat text-success">
+                  {formatAmountForDisplay(Qf.calculate(amount), 'USD')}
+                </span>
+              </Badge>
+
+            </Col>
+          ) : null }
           <Col xs={2} className="text-right">
             <Button
               size="sm"
