@@ -98,8 +98,10 @@ const CheckoutForm = ({ user }) => {
 
         return (
           <Form noValidate onSubmit={handleSubmit}>
-            <h4>Credit/Debit Card Info</h4>
-            <hr />
+            <Row>
+              <Col md={3} className="text-fat lead">Credit/Debit Card Info</Col>
+              <Col><hr /></Col>
+            </Row>
             <Row>
               <Col md={{ offset: 3, span: 6 }}>
                 <Form.Group controlId="cardholderName">
@@ -126,9 +128,10 @@ const CheckoutForm = ({ user }) => {
                 </Form.Group>
               </Col>
             </Row>
-
-            <h4>Billing Info</h4>
-            <hr />
+            <Row>
+              <Col md={3} className="text-fat lead">Billing Info</Col>
+              <Col><hr /></Col>
+            </Row>
             <Row>
               <Col md={{ offset: 3, span: 6 }}>
                 <Form.Group controlId="billing_details.name">
