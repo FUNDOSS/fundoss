@@ -1,7 +1,9 @@
 import { GraphQLClient, gql } from 'graphql-request';
+import moment from 'moment';
 import Collective, { ICollective } from './CollectiveModel';
 import FundingSessions from '../fundingSession/fundingSessionController';
 import dbConnect from '../dbConnect';
+
 
 export async function findBySlug(slug:string):Promise<ICollective> {
   await dbConnect();
@@ -13,15 +15,28 @@ export async function findBySlug(slug:string):Promise<ICollective> {
 
 export async function updateCollectiveTotals(id:string, session:string, totals:any) {
   await dbConnect();
+
   // const collectiveTotals = await Collective.findOne({ _id: id }).select('totals');
   // console.log(collectiveTotals, totals);
   return Collective.updateOne({ _id: id }, { totals: { [session]: totals } });
 }
 
+export async function similarCollectives() {
+  await dbConnect();
+  return (await FundingSessions.getCurrent()).collectives.filter( () => (Math.random() > 0.9) );
+}
+
+
+
 export async function getCollective(slug:string):Promise<any> {
   await dbConnect();
   const savedCollective = await findBySlug(slug);
-  if (savedCollective) return savedCollective;
+  if (savedCollective) {
+    if ( moment(savedCollective.lastUpdate).diff('date_time', 'days') < 2) {
+      return savedCollective;
+    }
+  }
+
   const query = gql`
   query collectives($slug: String!) {
     collective(slug: $slug) {
@@ -32,6 +47,7 @@ export async function getCollective(slug:string):Promise<any> {
       backgroundImageUrl
       website
       tags
+      slug
       description
       longDescription
       categories
@@ -55,7 +71,13 @@ export async function getCollective(slug:string):Promise<any> {
       .map((member) => member.account.imageUrl);
     data.collective.lastUpdate = new Date();
     data.collective.slug = slug;
-    return Collective.create(data.collective);
+    if(!savedCollective){
+      return Collective.create(data.collective);
+    } else {
+      await Collective.updateOne({_id: savedCollective._id}, data.collective);
+      return await findBySlug(slug);
+    }
+
   } catch (error) {
     return { error: error.response.errors[0].message, slug };
   }
@@ -67,4 +89,6 @@ export default class Collectives {
     static findBySlug = findBySlug;
 
     static updateTotals = updateCollectiveTotals;
+
+    static similar = similarCollectives;
 }

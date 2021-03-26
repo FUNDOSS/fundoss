@@ -3,6 +3,7 @@ import mongoose, { Document, Schema } from 'mongoose';
 export interface ICollective extends Document {
   slug:string;
   name:string;
+  lastUpdate:Date;
   twitterHandle:string;
   githubHandle:string;
   imageUrl:string;
