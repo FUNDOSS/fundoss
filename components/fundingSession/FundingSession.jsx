@@ -14,13 +14,39 @@ import Button from 'react-bootstrap/Button';
 import CollectiveCard from '../collective/CollectiveCard';
 import OscLogo from '../../svg/osc.svg';
 import GitcoinLogo from '../../svg/gitcoin.svg';
+import { Card } from 'react-bootstrap';
 
 const FundingSession = ({ session, featuredCollective }) => {
   const {
-    name, description, collectives, start, end,
+    name, description, collectives, start, end, _id,
   } = session;
 
   const [collectivesList, setCollectivesList] = useState(collectives);
+  const [sort, setSort] = useState('desc');
+  const [sortOn, setSortOn] = useState('total');
+  const [search, setSearch] = useState(null);
+  const change = ( filters ) => {
+    if(filters.sort) setSort(filters.sort);
+    if(filters.sortOn) setSortOn(filters.sortOn);
+    if(filters.search) setSearch(filters.search)
+
+    let list = collectives;
+    if(filters.search || search){
+      const src = filters.search || search;
+      list = collectives.filter((col) => col.name.toLowerCase().indexOf(src) > -1
+      || col.description?.toLowerCase().indexOf(src) > -1
+      || col.longDescription?.toLowerCase().indexOf(src) > -1)
+    }
+    if(filters.sort || sort){
+      const srt = filters.sort || sort;
+      list = list.sort((a, b) => {
+        return srt == 'asc' ? parseInt(a.totals.amount) - parseInt(b.totals.amount) : parseInt(b.totals.amount) - parseInt(a.totals.amount);
+      })
+    }
+
+
+    setCollectivesList(list);
+  }
   return (
     <>
       <div className="confetti">
@@ -52,31 +78,32 @@ const FundingSession = ({ session, featuredCollective }) => {
         </Container>
       </div>
       <Container>
-        <Navbar bg="light" expand="lg">
-          <Form inline>
+        <Card style={{margin: '10px 0', padding: '5px'}}>
+          <Row>
+            <Col xs={8}>
             <FormControl
               type="text"
-              placeholder="Search"
+              placeholder="Filter by name and description"
               className="mr-sm-2"
               onChange={(e) => {
-                setCollectivesList(
-                  collectives.filter(
-                    (collective) => collective.name.toLowerCase().indexOf(e.target.value) > -1,
-                  ),
-                );
+                change({search: e.target.value.toLowerCase()});
               }}
             />
-          </Form>
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="mr-auto">
-              <NavDropdown title="Filter by" id="basic-nav-dropdown">
-                <NavDropdown.Item href="#action/3.1">Least Funded</NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.2">Most Funded</NavDropdown.Item>
-              </NavDropdown>
-              <Nav.Link href="#home">Add Filter</Nav.Link>
-            </Nav>
-          </Navbar.Collapse>
-        </Navbar>
+            </Col>
+            <Col>
+              <Nav>
+                <NavDropdown className={sort === 'asc' ? 'caret-up' : 'caret'}
+                  title={sort == 'desc' ? 'most to least funded' : 'least to most funded'}
+                  id="basic-nav-dropdown"
+                >
+                  <NavDropdown.Item onClick={() => change({sort:'asc'})} >Least Funded</NavDropdown.Item>
+                  <NavDropdown.Item onClick={() => change({sort:'desc'})} >Most Funded</NavDropdown.Item>
+                </NavDropdown>
+              </Nav>
+            </Col>
+          </Row>
+
+        </Card>
         <Row>{
           collectivesList.map(
             (collective) => (
