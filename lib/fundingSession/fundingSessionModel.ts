@@ -9,6 +9,7 @@ export interface IFundingSession extends Document {
   name: string;
   description: string;
   matchedFunds: number;
+  tags: Array<string>;
   collectives: Array<ICollective>;
 }
 
@@ -21,6 +22,7 @@ export interface IFundingSessionInput {
   matchedFunds?: number;
   collectives?: any;
   protytype?: any;
+  tags: Array<string>;
 }
 
 const FundingSessionSchema = new Schema({
@@ -48,6 +50,9 @@ const FundingSessionSchema = new Schema({
   description: {
     type: String,
   },
+  tags: [{
+    type: String,
+  }],
   collectives: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Collective',

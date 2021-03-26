@@ -4,7 +4,19 @@ import Button from 'react-bootstrap/Button';
 import { Formik } from 'formik';
 import moment from 'moment';
 import * as Yup from 'yup';
-import { Alert, Col, Row } from 'react-bootstrap';
+import { Alert, Badge, Col, Row } from 'react-bootstrap';
+
+Array.prototype.unique = function() {
+  var a = this.concat();
+  for(var i=0; i<a.length; ++i) {
+      for(var j=i+1; j<a.length; ++j) {
+          if(a[i] === a[j])
+              a.splice(j--, 1);
+      }
+  }
+
+  return a;
+};
 
 const FundingSessionForm = ({ sessionData }) => {
   const userValidationSchema = Yup.object({
@@ -14,6 +26,15 @@ const FundingSessionForm = ({ sessionData }) => {
       .required('Please provide a description'),
   });
 
+  const availableTags = () => {
+    return sessionData.collectives.reduce((tags, col) => {
+      col.tags?.map(tag => {
+        tags[tag] ? tags[tag] += 1 :  tags[tag] = 1;
+        return true;
+      })
+     }, {})
+  }
+
   const toFormValues = (session) => ({
     ...session,
     matchedFunds: session?.matchedFunds || 75000,
@@ -22,6 +43,7 @@ const FundingSessionForm = ({ sessionData }) => {
     start: moment(session?.start || new Date()).format('YYYY-MM-DD'),
     end: moment(session?.end || new Date()).format('YYYY-MM-DD'),
     collectives: (session?.collectives || []).map((collective) => `https://opencollective.com/${collective.slug}`).join('\n'),
+    collectiveTags: availableTags()
   });
 
   const initialValues = toFormValues(sessionData);
@@ -177,6 +199,9 @@ const FundingSessionForm = ({ sessionData }) => {
               )}
             </Alert>
           ) : null}
+          {Oject.keys(values.collectiveTags).map((tag) => <Button key={tag}>
+          {tag}<Badge variant="success" > {values.collectiveTags[tag]}</Badge>
+          </Button>)}
 
           {status?.saved ? (<Alert variant="success">Session saved!</Alert>) : null}
           {status?.error ? (<Alert variant="danger">{status.error.message}</Alert>) : null}

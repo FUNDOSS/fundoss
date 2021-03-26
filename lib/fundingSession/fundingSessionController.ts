@@ -34,6 +34,13 @@ export async function editSession(session:IFundingSessionInput):Promise<IFunding
 export async function getCurrentSession():Promise<IFundingSession> {
   await dbConnect();
   const session = await FundingSession.findOne().populate('collectives');
+  const collectives = session.collectives.map((col) => {
+    const totals = col.totals ? col.totals.get(session._id) : {amount: 0, donations: 0}
+    col.totals = totals;
+    return col
+    }
+  )
+  session.collectives = collectives;
   return session;
 }
 
