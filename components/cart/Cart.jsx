@@ -100,7 +100,7 @@ const Cart = ({ cart, display }) => {
   return (
     <Modal show={show} onHide={handleClose} scrollable size="md">
       <Modal.Header closeButton>
-        <Modal.Title>
+        <Modal.Title className="text-secondary">
           Cart
         </Modal.Title>
       </Modal.Header>
