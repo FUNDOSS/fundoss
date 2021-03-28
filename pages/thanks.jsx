@@ -11,8 +11,8 @@ import { formatAmountForDisplay } from '../utils/currency';
 import Icons from '../components/icons';
 
 const CheckoutPage = ({ user, payment }) => (
-  <Layout title="FundOSS | Donations cart" user={user}>
-    <div className="confetti" style={{ marginBottom: '-60px' }}>
+  <Layout title="FundOSS | Donations cart" user={user} style={{background: '#0E0C4D'}}>
+    <div className="confetti" style={{ marginBottom: '-60px' , paddingBottom: '70px'}}>
       <Container>
         <Card style={{ maxWidth: '750px', margin: '30px auto' }}>
           <Card.Body className="text-center">
@@ -24,7 +24,7 @@ const CheckoutPage = ({ user, payment }) => (
             <p className="lead">The &nbsp;
               <span className="text-fat display-4">
                 {formatAmountForDisplay(payment.amount, 'USD')}
-              </span> you donated will be matched with an estimated &nbsp;
+              </span> you donated will be matched<br/>with an estimated &nbsp;
               <span className="text-fat text-success display-4">
                 {formatAmountForDisplay(payment.donations.reduce(
                   (acc, donation) => {
@@ -43,8 +43,8 @@ const CheckoutPage = ({ user, payment }) => (
             <Row className="justify-content-md-center" style={{ maxWidth: '550px', margin: '10px auto' }}>
               {payment.donations.map(
                 (donation) => (
-                  <Col xs={2}>
-                    <Image key={donation._id} src={donation.collective.imageUrl} roundedCircle fluid />
+                  <Col xs={2}  key={donation._id}>
+                    <Image src={donation.collective.imageUrl} roundedCircle fluid />
                   </Col>
                 ),
               )}
