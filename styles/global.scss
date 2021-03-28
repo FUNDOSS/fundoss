@@ -59,7 +59,10 @@ body{
 .confetti{
     @extend .invert;
     background: $darkpurple url('/bgconfetti.png') top repeat-x;
-    padding: 60px 0;
+    padding: 40px 0;
+}
+
+.trapezoid{
     clip-path: polygon(100% 0%, 100% 90%, 0 100%, 0 0);
     margin-bottom: -80px
 }
@@ -87,12 +90,25 @@ footer{
     }
 }
 
-.form-control{
+.form-control, div.form-select, .btn,.input-group{
     box-shadow: $input-box-shadow;
+    
+}
+.input-group{
+    .form-control{box-shadow:none}
+    .input-group-prepend{background: none;font-size: 0.8rem;}
+    .input-group-text {
+        padding: 0.375rem 0.4rem;
+        margin-bottom: 0;
+        font-size: 0.7rem;
+    }
 }
 
 
-.card, .navbar, .dropdown-menu{box-shadow: 0px 4px 24px rgba($black, 0.15);}
+
+.btn.btn-link {box-shadow:none}
+
+.card, .navbar, .dropdown-menu{box-shadow: 0px 4px 24px rgba($black, 0.15)}
 
 .collective-card, .cart-item{margin-bottom: $grid-gutter-width;}
 
@@ -101,8 +117,8 @@ footer{
     font-family: $headings-font-family;
 }
 
-.btn.round, .badge.round{
-    border-radius: 15px;
+.btn.round, .badge.round,.input-group.round{
+    border-radius: 20px;
 }
 
 .container.content{padding-top: 60px;padding-bottom: 60px;min-height: 500px;}
@@ -119,6 +135,14 @@ footer{
     }
 }
 
+a.black{
+    color: $black;
+}
+a.black:hover{
+    text-decoration: none;color: $primary;
+}
+
+
 .session-description{
     margin:20px 0;
 }
@@ -134,6 +158,14 @@ footer{
     position: absolute; 
     float: none;
 }
+
+header .navbar{
+    border-left: 10px solid $primary;
+}
+header .navbar-toggler{
+    border:transparent
+}
+
 #primary-nav .navbar-nav { 
     a.nav-link {
         color:$gray-700;
@@ -152,12 +184,14 @@ footer{
 .with-caret{
     display:inline-block;
     width:15px;
+    margin-left: -15px;
     @include caret();
 }
 
 .with-caret-up{
     display:inline-block;
     width:15px;
+    margin-left: -15px;
     @include caret(up);
 }
 
@@ -176,3 +210,14 @@ footer{
     margin:0;
     border-bottom: 0;
 }
+
+#cart.modal-dialog{
+    max-width: 600px;
+}
+
+
+.collective-card .card-title{margin-bottom: 0.2rem;}
+
+h4, h5 {font-family: $font-family-sans-serif; margin:20px 0 10px; text-transform: uppercase;}
+h4{font-size: 1.1rem;}
+h4{font-size: 1rem;}
