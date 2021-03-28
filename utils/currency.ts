@@ -1,25 +1,23 @@
 export function formatAmountForDisplay(
   amount: number,
-  currency: string,
+  currency = 'USD',
 ): string {
-  const numberFormat = new Intl.NumberFormat(['en-US'], {
-    style: 'currency',
-    currency,
-    currencyDisplay: 'symbol',
-    maximumSignificantDigits: 3,
-  });
-  return numberFormat.format(amount);
+  const numberFormat = new Intl.NumberFormat(['en-US']);
+  const floored = Math.floor(amount);
+  const digits = Math.round(( amount * 100 ) - (floored * 100));
+  let digitsDisplay = '';
+  if(digits){
+    if(digits < 10) {
+      digitsDisplay = '.0'+ digits;
+    } else {
+      digitsDisplay = '.'+ digits;
+    }
+  }
+  return '$' + numberFormat.format(floored) + digitsDisplay ;
 }
 
 export function formatAmountForStripe(
   amount: number,
-  currency: string,
 ): number {
-  const numberFormat = new Intl.NumberFormat(['en-US'], {
-    style: 'currency',
-    currency,
-    currencyDisplay: 'symbol',
-  });
-  const zeroDecimalCurrency = numberFormat.formatToParts(amount).filter((part) => part.type === 'decimal').length;
-  return zeroDecimalCurrency ? amount : Math.round(amount * 100);
+  return Math.round(amount * 100);
 }
