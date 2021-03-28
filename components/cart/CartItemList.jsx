@@ -18,7 +18,7 @@ const CartItem = ({
   
   return (
     <Card className="cart-item">
-      <Card.Body>
+      <Card.Header>
         <Row
           style={{ cursor: 'pointer' }}
           className="no-gutters"
@@ -28,25 +28,31 @@ const CartItem = ({
             setSelected(selection);
           }}
         >
-          <Col xs={2}>
+          <Col xs={1}>
             <span className={selected === collective._id ? 'with-caret-up' : 'with-caret'} />
-            <Image src={collective.imageUrl} width={30} roundedCircle fluid />
+            <Image src={collective.imageUrl} width={30} roundedCircle fluid  />
           </Col>
           <Col className="text-fat" style={{ fontSize: '1.1rem' }}>
             {collective.name}
           </Col>
           {selected !== collective._id ? (
-            <Col xs={3} className="text-center">
-              <Badge variant="primary" className="round">
-                {formatAmountForDisplay(amount, 'USD')} +&nbsp;
+            <Col xs={3} className="text-right text-nowrap">
+              
+                <Badge variant="primary">{formatAmountForDisplay(amount, 'USD')}</Badge> +&nbsp;
                 <span className="text-fat text-success">
                   {formatAmountForDisplay(Qf.calculate(amount), 'USD')}
                 </span>
-              </Badge>
-
+              &nbsp;
+              <Button
+              size="sm"
+              style={{ fontSize: '0.6rem', padding: '2px 3px' }} 
+              variant="outline-secondary round"
+              onClick={() => { onDelete(collective._id); }}
+            ><Icons.Trash size={15} />
+            </Button>
             </Col>
-          ) : null }
-          <Col xs={2} className="text-right">
+          ) : (
+            <Col xs={2} className="text-right">
             <Button
               size="sm"
               style={{ fontSize: '0.6rem', padding: '2px 3px' }} 
@@ -56,10 +62,14 @@ const CartItem = ({
             ><Icons.Trash size={15} /> Remove
             </Button>
           </Col>
+          ) }
+
         </Row>
+        </Card.Header>
+        
         {selected === collective._id ? (
+          <Card.Body>
           <Row className="align-items-center">
-            <Col xs={12}><hr style={{ margin: '5px 0' }} /></Col>
             <Col xs={5}>
               <InputGroup className="cart-amount">
                 <InputGroup.Prepend><InputGroup.Text>$</InputGroup.Text></InputGroup.Prepend>
@@ -105,10 +115,10 @@ const CartItem = ({
                 ),
               )}
             </Col>
-          </Row>
+          </Row></Card.Body>
         ) : null }
         
-      </Card.Body>
+      
     </Card>
   );
 };
