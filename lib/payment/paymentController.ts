@@ -17,7 +17,8 @@ export async function updatePayment(payment) {
   if (payment.donations) {
     const fee = payment.confirmation.charges.data
       .reduce((acc, charge) => acc + (charge.balance_transaction.fee / 100), 0);
-
+    console.log('payment fee', fee)
+    console.log('payment charge', payment.confirmation.charges.data)
     const donations = await Promise.all(
       Object.keys(payment.donations)
         .map(async (collectiveId) => {
@@ -96,6 +97,20 @@ export async function getPaymentsByUser(userId:string) {
     .limit(20);
 }
 
+export async function getDonationsByUser(userId:string){
+  await dbConnect();
+  return Donation.find({ user: userId })
+    .populate({
+      path: 'collective',
+      select: 'name imageUrl',
+    })
+    .populate({
+      path: 'payment',
+      select: 'time',
+    })
+    .sort('field -_id');
+}
+
 export async function getLastPaymentByUser(userId:string) {
   await dbConnect();
   const payment = await Payment.findOne({ user: userId, status: 'succeeded' })
@@ -103,7 +118,7 @@ export async function getLastPaymentByUser(userId:string) {
       path: 'donations',
       populate: {
         path: 'collective',
-        select: 'slug imageUrl',
+        select: 'slug imageUrl name',
       },
     })
     .sort('field -time');
@@ -122,4 +137,6 @@ export default class Payments {
     static getByUser = getPaymentsByUser
 
     static getLastByUser = getLastPaymentByUser
+
+    static getDonationsByUser = getDonationsByUser
 }
