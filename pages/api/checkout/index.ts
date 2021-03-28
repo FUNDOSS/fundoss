@@ -28,7 +28,7 @@ handler.post(async (req: any, res: NextApiResponse) => {
         .reduce((acc, amt) => acc + Number(amt), 0);
       const params: Stripe.PaymentIntentCreateParams = {
         payment_method_types: ['card'],
-        amount: formatAmountForStripe(amount, 'USD'),
+        amount: formatAmountForStripe(amount),
         currency: 'USD',
         description: process.env.STRIPE_PAYMENT_DESCRIPTION ?? '',
       };
