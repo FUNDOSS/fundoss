@@ -7,16 +7,21 @@ import Payments from '../lib/payment/paymentController';
 import middleware from '../middleware/all';
 import serializable from '../lib/serializable';
 import Icons from '../components/icons';
-import PaymentsList from '../components/payment/PaymentsList';
+import DonationsList from '../components/payment/DonationsList';
 import Cart from '../lib/cart/CartController';
 
-const AccountPage = ({ user, payments, cart }) => {
+const AccountPage = ({ user, donations, cart }) => {
   if (!user._id) {
     return <Error statusCode={403} />;
   }
 
   return (
     <Layout title="FundOSS | My Account" user={user} cart={cart}>
+      <div style={{
+        background: 'linear-gradient(170deg, rgba(189, 216, 255, 0.53) 20px, #FCFCFF 500px)',
+        borderLeft: '10px solid #fff',
+        boxSizing: 'border-box',
+      }}>
       <Container style={{ paddingTop: '40px' }} className="content">
         {user._id ? (
           <Row>
@@ -26,21 +31,22 @@ const AccountPage = ({ user, payments, cart }) => {
               <h4>Name</h4>
               {user.name}
               <h4>
-                <Icons.Github size={15} />
+                <Icons.Github size={20} />
                 {' '}
                 Github Profile
               </h4>
-              https://github.com/
-              {user.username}
+              <a href={'https://github.com/'+user.username}>https://github.com/{user.username}</a>
+              
             </Col>
             <Col>
               <h2>Donations History</h2>
-              <PaymentsList payments={payments} />
+              <DonationsList donations={donations} />
             </Col>
           </Row>
 
         ) : null }
       </Container>
+      </div>
     </Layout>
   );
 };
@@ -48,12 +54,13 @@ const AccountPage = ({ user, payments, cart }) => {
 export async function getServerSideProps({ req, res }) {
   await middleware.run(req, res);
   if (req.user) {
-    const payments = await Payments.getByUser(req.user?._id);
+    const donations = await Payments.getDonationsByUser(req.user?._id);
+    console.log(donations);
     const cart = await Cart.get(req.session.cart);
     return {
       props: {
         user: serializable(req.user),
-        payments: serializable(payments),
+        donations: serializable(donations),
         cart: serializable(cart),
       },
     };

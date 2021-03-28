@@ -7,21 +7,16 @@ import {
 const DonationsList = ({ donations }) => (
   <div>
     {donations.map((donation) => (
-      <Row key={donation._id}>
-        <Col xs={2}>
-          <h5><a href={`/collective${donation.collective.slug}`}>{}</a></h5>
-          {moment(donation.payment.time).format('MMMM Do YYYY')}
+      <Row key={donation._id} style={{margin:'10px 0'}}>
+        <Col xs={2} md={1}>
+        <Image src={donation.collective.imageUrl} roundedCircle width={40} />
         </Col>
-        <Col> <Image src={donation.collective.imageUrl} roundedCircle width={20} /></Col>
+        <Col> &nbsp;
+        <a className="text-fat lead black" href={`/collective${donation.collective.slug}`}>{donation.collective.name}</a><br />
+        {moment(donation.payment.time).format('MMMM Do YYYY')}
+        </Col>
         <Col>
-          ...<h5> $ {payment.amount} </h5>
-        </Col>
-        
-        <Col>{payment.donations.map((don) => (
-          <Badge key={don.collective.slug} variant="info" style={{ marginRight: '3px' }}>
-            ${don.amount} <Image src={don.collective.imageUrl} roundedCircle width={20} />
-          </Badge>
-        ))}
+        <span className="text-fat lead">... $ {donation.amount} </span>
         </Col>
       </Row>
     ))}
