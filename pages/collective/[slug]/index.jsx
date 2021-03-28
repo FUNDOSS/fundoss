@@ -68,10 +68,10 @@ const collectivePage = ({ collective, user, cart, similar }) => {
         
         </Row>
       </Container>
-      <div style={{background:'#E5E5E5', marginBottom:'-70px', padding:'20px 0 0 0'}}>
+      <div style={{background:'#E5E5E5', marginBottom:'-70px', padding:'40px 0'}}>
         <Container>
           <h5>Similar Collectives</h5>
-          <p>People who’ve backed Dark Reader have also backed these projects...</p>
+          <p>People who’ve backed {name} have also backed these projects...</p>
           <Row>{
           similar.map(
             (collective) => (
