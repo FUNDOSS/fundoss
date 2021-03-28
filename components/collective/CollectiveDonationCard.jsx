@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Pluralize from 'pluralize';
 import { Badge, Col, Row } from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
@@ -13,6 +14,7 @@ const CollectiveDonationCard = ({ collective }) => {
   const [tab, setTab] = useState('set');
   const [amount, setAmount] = useState(30);
   const [inCart, setInCart] = useState(false);
+  const { totals } = collective;
 
   const onCartChange = () => {
     setAmount(Cart.collectives[collective._id] || 30);
@@ -27,14 +29,7 @@ const CollectiveDonationCard = ({ collective }) => {
   return (
     <Card>
       <Card.Body>
-        {collective.totals ? (
-          <>
-            <h3 className="display-4 text-success text-center">
-              {formatAmountForDisplay(collective.totals.amount, 'USD')}
-            </h3>
-            <p className="text-center">estimated amount raised from {collective.totals?.donations} contributors</p>
-          </>
-        ) : null}
+
         
         <Nav variant="tabs" fill activeKey={tab} onSelect={setTab}>
           <Nav.Item>
@@ -67,9 +62,14 @@ const CollectiveDonationCard = ({ collective }) => {
           )
           : (
             <div style={{ padding: '20px 0' }} className="text-center">
-              <p className="text-center">
-                <b>354 contributors</b> have unlocked <span className="text-center">$840.32</span> in estimated total funding
-              </p>
+              
+              {totals.donations ? (
+                <p className="text-center">
+                <span className="text-fat">{totals.donations}</span> {Pluralize('contributor', totals.donations)}&nbsp;
+                have unlocked <span className="text-fat">{formatAmountForDisplay(Qf.calculate(totals.amount/totals.donations) * totals.donations )}</span> in estimated total funding
+                </p>
+              ) : null }   
+
               <Form.Control
                 style={{ maxWidth: '250px', margin: '0 auto' }}
                 size="lg"
@@ -77,7 +77,6 @@ const CollectiveDonationCard = ({ collective }) => {
                 value={amount}
                 type="number"
                 onChange={(e) => {
-                  Cart.addItem(collective, amount);
                   setAmount(e.target.value);
                 }}
                 placeholder="in USD"
@@ -95,15 +94,27 @@ const CollectiveDonationCard = ({ collective }) => {
       <Card.Footer>
 
         { !inCart ? (
-          <Button block variant="link" onClick={() => Cart.addItem(collective, 20, true)}>
+          <Button block variant="link" href="/quadratic-funding">
             How does Democratic Funding Work?
           </Button>
         ) : (
           <Row>
             <Col xs={7}>
-              <Button block variant="outline-primary" onClick={() => Cart.show(collective._id)}>
-                <Icons.Check size={18} /> In cart <Badge variant="danger">{formatAmountForDisplay(inCart, 'USD')}</Badge>
-              </Button>
+              
+                {inCart != amount ? (
+                  <Button block variant="outline-primary" onClick={() =>  Cart.addItem(collective, amount, false)}>
+                      <Icons.Cart size={18} /> Update cart
+                  </Button>
+                ) : (
+                  <Button block variant="outline-primary" onClick={() => Cart.show(collective._id)}>
+                      <Icons.Check size={18} /> In cart <Badge variant="danger">{formatAmountForDisplay(inCart, 'USD')}</Badge>
+                  </Button>
+                )
+                }
+               
+
+
+              
             </Col>
             <Col>
               <Button block variant="primary" href="/checkout/">Checkout</Button>
