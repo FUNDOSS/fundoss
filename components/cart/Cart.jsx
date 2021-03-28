@@ -98,7 +98,7 @@ const Cart = ({ cart, display }) => {
     return items;
   }
   return (
-    <Modal show={show} onHide={handleClose} scrollable size="md">
+    <Modal id="cart" show={show} onHide={handleClose} scrollable size="md">
       <Modal.Header closeButton>
         <Modal.Title className="text-secondary">
           Cart
