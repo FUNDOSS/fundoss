@@ -4,14 +4,12 @@ import Container from 'react-bootstrap/Container';
 import Link from 'next/link';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import NavDropdown from 'react-bootstrap/NavDropdown';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import Form from 'react-bootstrap/Form';
+import Select from 'react-select';
 import FormControl from 'react-bootstrap/FormControl';
 import moment from 'moment';
 import Button from 'react-bootstrap/Button';
 import CollectiveCard from '../collective/CollectiveCard';
+import FeaturedCollectiveCard from '../collective/FeaturedCollectiveCard';
 import OscLogo from '../../svg/osc.svg';
 import GitcoinLogo from '../../svg/gitcoin.svg';
 import { Card } from 'react-bootstrap';
@@ -24,12 +22,13 @@ const FundingSession = ({ session, featuredCollective }) => {
   const [collectivesList, setCollectivesList] = useState(collectives);
   const [sort, setSort] = useState('desc');
   const [sortOn, setSortOn] = useState('total');
+  const [tags, setTags] = useState([]);
   const [search, setSearch] = useState(null);
   const change = ( filters ) => {
     if(filters.sort) setSort(filters.sort);
     if(filters.sortOn) setSortOn(filters.sortOn);
     if(filters.search) setSearch(filters.search)
-
+    if(filters.tags) setTags(filters.tags)
     let list = collectives;
     if(filters.search || search){
       const src = filters.search || search;
@@ -37,10 +36,21 @@ const FundingSession = ({ session, featuredCollective }) => {
       || col.description?.toLowerCase().indexOf(src) > -1
       || col.longDescription?.toLowerCase().indexOf(src) > -1)
     }
+    if(filters.tags?.length || (tags?.length && !filters.tags) ){
+      const tagsFilter = filters.tags || tags;
+      console.log(tagsFilter)
+      list = collectives.filter(
+        (col) => {
+          let found = col.tags?.reduce( (found, tag) => tagsFilter.includes(tag) || found, false)
+          return found
+        }
+      )
+    }
     if(filters.sort || sort){
       const srt = filters.sort || sort;
       list = list.sort((a, b) => {
-        return srt == 'asc' ? parseInt(a.totals.amount) - parseInt(b.totals.amount) : parseInt(b.totals.amount) - parseInt(a.totals.amount);
+        const at = parseInt(a.totals?.amount), bt = parseInt(b.totals?.amount);
+        return srt == 'asc' ? at - bt : bt - at;
       })
     }
 
@@ -49,11 +59,11 @@ const FundingSession = ({ session, featuredCollective }) => {
   }
   return (
     <>
-      <div className="confetti">
+      <div className="confetti trapezoid">
         <Container>
           <Row>
             <Col md="5" lg="4" className="d-none d-md-block">
-              <CollectiveCard collective={featuredCollective} />
+              <FeaturedCollectiveCard collective={featuredCollective} />
             </Col>
             <Col className="content">
               <h1 className="display-4">{name}</h1>
@@ -78,9 +88,9 @@ const FundingSession = ({ session, featuredCollective }) => {
         </Container>
       </div>
       <Container>
-        <Card style={{margin: '10px 0', padding: '5px'}}>
-          <Row>
-            <Col xs={8}>
+        <Card style={{margin: '10px 0 28px', padding: '5px'}}>
+          <Row  className="no-gutters">
+            <Col>
             <FormControl
               type="text"
               placeholder="Filter by name and description"
@@ -90,16 +100,28 @@ const FundingSession = ({ session, featuredCollective }) => {
               }}
             />
             </Col>
-            <Col>
-              <Nav>
-                <NavDropdown className={sort === 'asc' ? 'caret-up' : 'caret'}
-                  title={sort == 'desc' ? 'most to least funded' : 'least to most funded'}
-                  id="basic-nav-dropdown"
-                >
-                  <NavDropdown.Item onClick={() => change({sort:'asc'})} >Least Funded</NavDropdown.Item>
-                  <NavDropdown.Item onClick={() => change({sort:'desc'})} >Most Funded</NavDropdown.Item>
-                </NavDropdown>
-              </Nav>
+            <Col xs={4} lg={2} className="text-center"><small>Sort by</small>
+            <Button 
+              style={{margin:'0 10px'}}
+              onClick={() => change({sort: sort === 'desc' ? 'asc' : 'desc'})} 
+              variant="link">
+              {sort === 'asc' ? (
+                <><span className="with-caret-up"></span>Least funded</>
+              ) : (
+                <><span className="with-caret"></span>Most funded</>
+              )}
+            </Button>
+            </Col>
+            <Col md={3} className="d-none d-lg-block">
+            <Select 
+              instanceId="tags"
+              className="form-select"
+              isMulti
+              onChange={(inputValue) => {
+                change({tags: inputValue.map((selected) => selected.value)})
+              }}
+              options={session.tags.map(tag => ({label:tag, value:tag}))}
+            />
             </Col>
           </Row>
 
