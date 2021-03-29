@@ -11,14 +11,12 @@ const QFPage = ({ user }) => (
     <Container className="content">
       <h1 className="display-2">WTF is Quadratic Funding ?</h1>
       {[
-        {a: 80, m:40, p:2, desc:'Different averages make a different curve'},
-        {a: 100, m:50, p:1, desc:'We can change the slope by using a different power'},
-        {a: 100, m:50, p:1.5, desc:'We can change the slope by using a different power'},
-        {a: 66, m:120, p:3, desc:''},
+        {a: 100, m:50, desc:'Current QF formula'},
+        {a: 20, m:100, desc:'Current QF formula'},
       ].map((o, index)=> <div key={index}>
         <h5>{o.desc}</h5>
-        <p>Averages (donation: ${o.a}, match: ${o.a}) curve: {o.p}</p>
-        <Graph plot={(x) => Qf.calculate(x, o.a, o.m, o.p)} averageDonation={o.a} averageMatch={o.m} />
+        <p>Averages (donation: ${o.a}, match: ${o.m})</p>
+        <Graph plot={(x) => Qf.calculate(x, o.a, o.m)} averageDonation={o.a} averageMatch={o.m} />
       </div>)}
       
     </Container>

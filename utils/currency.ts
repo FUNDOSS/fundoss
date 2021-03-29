@@ -4,7 +4,7 @@ export function formatAmountForDisplay(
 ): string {
   const numberFormat = new Intl.NumberFormat(['en-US']);
   const floored = Math.floor(amount);
-  const digits = Math.round(( amount * 100 ) - (floored * 100));
+  const digits = Math.floor(( amount * 100 ) - (floored * 100));
   let digitsDisplay = '';
   if(digits){
     if(digits < 10) {
