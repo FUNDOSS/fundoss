@@ -50,6 +50,12 @@ export async function getCurrentSessionId():Promise<string> {
   return session._id;
 }
 
+export async function getCurrentSessionInfo():Promise<string> {
+  await dbConnect();
+  const session = await FundingSession.findOne().select('_id name start end averageDonationEst numberDonationEst matchedFunds');
+  return session;
+}
+
 export async function getAll():Promise<IFundingSession[]> {
   await dbConnect();
   const sessions = await FundingSession.find();
@@ -58,7 +64,7 @@ export async function getAll():Promise<IFundingSession[]> {
 
 export async function getById(id:string):Promise<IFundingSession> {
   await dbConnect();
-  const session = await FundingSession.findOne({ id });
+  const session = await FundingSession.findOne({ _id:id }).populate('collectives');
   return session;
 }
 
@@ -82,4 +88,6 @@ export default class Users {
     static edit = editSession
 
     static getBySlug = getBySlug
+
+    static getCurrentSessionInfo = getCurrentSessionInfo
 }
