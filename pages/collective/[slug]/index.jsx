@@ -1,10 +1,12 @@
 /* eslint-disable react/no-danger */
 import React from 'react';
+import Pluralize from 'pluralize';
 import Error from 'next/error';
 import {
   Button, Image, Col, Row, Container, 
 } from 'react-bootstrap';
 import Cart from '../../../lib/cart/CartController';
+import FundingSessions from '../../../lib/fundingSession/fundingSessionController';
 import Layout from '../../../components/layout';
 import collectives from '../../../lib/collectives/CollectivesController';
 import serializable from '../../../lib/serializable';
@@ -13,7 +15,7 @@ import CollectiveDonationCard from '../../../components/collective/CollectiveDon
 import Icons from '../../../components/icons';
 import CollectiveCard from '../../../components/collective/CollectiveCard';
 
-const collectivePage = ({ collective, user, cart, similar }) => {
+const collectivePage = ({ collective, user, cart, similar, session }) => {
   if (!collective) {
     return <Error statusCode={404} />;
   }
@@ -26,11 +28,11 @@ const collectivePage = ({ collective, user, cart, similar }) => {
   return (
     <div style={{background:'url('+backgroundImageUrl+') #fff top center/100% auto no-repeat'}} >
       <div style={{background: 'linear-gradient(180deg, rgba(189, 216, 255, 0.53) 20px, #FCFCFF 180px)'}}>
-    <Layout title={`FundOSS | ${name}`} user={user} cart={cart}>
+    <Layout title={`FundOSS | ${name}`} user={user} cart={cart} session={session}>
       
       <Container>
         <Row style={{ padding: '40px 0' }}>
-          <Col md={{ span: 7 }} className="collective-content">
+          <Col md={{ span: 7 }} >
           <Image width={80} src={imageUrl} fluid roundedCircle />
             <h1 className="display-4">{name}</h1>
             
@@ -49,10 +51,10 @@ const collectivePage = ({ collective, user, cart, similar }) => {
             </Button>
             &nbsp;
             <span className='lead'>Fiscal Host: Open Source Collective 501(c)(6)</span>
-            <div dangerouslySetInnerHTML={{ __html: longDescription }} style={{padding:'20px 0'}} />
-            <h5>Community</h5>
+            <div className="collective-content" dangerouslySetInnerHTML={{ __html: longDescription }} style={{padding:'20px 0'}} />
+            <h3>Community</h3>
             <div style={{borderLeft:' 5px solid #02E2AC', padding:'10px 0 10px 20px'}}>
-            <p>{members.length} members</p>
+            <p>{members.length} {Pluralize('member', members.length)}</p>
             {members.map(
               (member, index) => (
                 index < 10 ? <Image key={member} src={member} roundedCircle width={35} height={35} /> : null
@@ -70,7 +72,7 @@ const collectivePage = ({ collective, user, cart, similar }) => {
       </Container>
       <div style={{background:'#E5E5E5', marginBottom:'-70px', padding:'40px 0'}}>
         <Container>
-          <h5>Similar Collectives</h5>
+          <h3>Similar Collectives</h3>
           <p>People who’ve backed {name} have also backed these projects...</p>
           <Row>{
           similar.map(
@@ -94,7 +96,7 @@ export async function getServerSideProps({ query, req, res }) {
   await middleware.run(req, res);
   const collective = await collectives.findBySlug(query.slug);
   const cart = await Cart.get(req.session.cart);
-
+  const session = await FundingSessions.getCurrentSessionInfo();
   const similar = await collectives.similar();
   return {
     props: {
@@ -102,6 +104,7 @@ export async function getServerSideProps({ query, req, res }) {
       cart: serializable(cart),
       collective: serializable(collective),
       similar: serializable(similar),
+      session: serializable(session),
     },
   };
 }

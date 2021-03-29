@@ -11,12 +11,13 @@ import CartController from '../lib/cart/CartController';
 import CheckoutForm from '../components/checkout/CheckoutForm';
 import GithubLoginButton from '../components/auth/GithubLoginButton';
 import Cart, { cartEvents } from '../components/cart/Cart';
+import FundingSessions from '../lib/fundingSession/fundingSessionController';
 import Qf from '../utils/qf';
 import { formatAmountForDisplay } from '../utils/currency';
 import Icons from '../components/icons';
 
 const CheckoutPage = ({
-  user, cart, stripekey, cartValue,
+  user, cart, stripekey, cartValue, session
 }) => {
   const stripePromise = loadStripe(stripekey);
   const [total, setTotal] = useState(cartValue);
@@ -40,7 +41,7 @@ const CheckoutPage = ({
   }, []);
 
   return (
-    <Layout title="FundOSS | Checkout" hidefooter={1}>
+    <Layout title="FundOSS | Checkout" hidefooter={1} session={session}>
       
         {user._id ? (
           <>
@@ -115,9 +116,14 @@ export async function getServerSideProps({ req, res }) {
   const cart = await CartController.get(req.session.cart);
   const cartValue = cart.reduce((acc, item) => acc + item.amount, 0);
   const stripekey = process.env.STRIPE_PUBLISHABLE_KEY;
+  const session = await FundingSessions.getCurrentSessionInfo();
   return {
     props: {
-      user: serializable(req.user), cart: serializable(cart), stripekey, cartValue,
+      user: serializable(req.user), 
+      cart: serializable(cart), 
+      session: serializable(session), 
+      stripekey, 
+      cartValue,
     },
   };
 }

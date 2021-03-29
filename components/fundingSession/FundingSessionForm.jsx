@@ -58,8 +58,6 @@ const FundingSessionForm = ({ sessionData }) => {
     });
     if (res.status === 200) {
       setStatus({ saved: true });
-      const result = await res.json();
-      setValues(toFormValues(result.session));
     } else {
       setStatus({ error: res.json() });
     }

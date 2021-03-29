@@ -12,7 +12,7 @@ const DonationsList = ({ donations }) => (
         <Image src={donation.collective.imageUrl} roundedCircle width={40} />
         </Col>
         <Col> &nbsp;
-        <a className="text-fat lead black" href={`/collective${donation.collective.slug}`}>{donation.collective.name}</a><br />
+        <a className="text-fat lead black" href={`/collective/${donation.collective.slug}`}>{donation.collective.name}</a><br />
         {moment(donation.payment.time).format('MMMM Do YYYY')}
         </Col>
         <Col>

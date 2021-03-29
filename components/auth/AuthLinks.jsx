@@ -1,5 +1,6 @@
 import React from 'react';
-import NavDropdown from 'react-bootstrap/NavDropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import Dropdown from 'react-bootstrap/Dropdown';
 import Image from 'react-bootstrap/Image';
 import GithubLoginButton from './GithubLoginButton';
 
@@ -11,27 +12,28 @@ const AuthLinks = ({ user }) => (
           <GithubLoginButton variant="outline-primary" size="sm" />
         </>
       ) : (
-        <NavDropdown 
+        <DropdownButton 
+          variant="link"
           menuAlign="right"
           title={(
             <span className="authDropdownLabel">
-              <Image width="20" height="20" src={user?.avatar} roundedCircle fluid />
+              <Image width="20" height="20" src={user?.avatar} roundedCircle />
               <span>{` Hi ${user?.name || user?.username}`}</span>
             </span>
       )}
         >
-          <NavDropdown.Item href="/account">
+          <Dropdown.Item href="/account">
             Account
-          </NavDropdown.Item>
-          <NavDropdown.Item href="/api/auth/logout">
+          </Dropdown.Item>
+          <Dropdown.Item href="/api/auth/logout">
             Sign out
-          </NavDropdown.Item>
+          </Dropdown.Item>
           {user.role === 'admin' ? (
-            <NavDropdown.Item href="/dashboard">
+            <Dropdown.Item href="/dashboard">
               Dashboard
-            </NavDropdown.Item>
+            </Dropdown.Item>
           ) : null }
-        </NavDropdown>
+        </DropdownButton>
       )}
     </>
   ) : null}

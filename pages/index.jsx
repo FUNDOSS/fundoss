@@ -9,7 +9,7 @@ import Cart from '../lib/cart/CartController';
 const IndexPage = ({
   session, user, cart, featured, 
 }) => (
-  <Layout title="FundOSS | Quadratic funding for open source projects" user={user} cart={cart}>
+  <Layout title="FundOSS | Quadratic funding for open source projects" user={user} cart={cart} session={session}>
     {session._id ? <FundingSession session={session} featuredCollective={featured} /> : null }
   </Layout>
 );
