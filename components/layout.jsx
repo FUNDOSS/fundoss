@@ -8,10 +8,15 @@ import Cart from './cart/Cart';
 import Logo from '../svg/logo.svg';
 import Footer from './Footer';
 import Icons from './icons';
+import Qf from '../utils/qf';
 
 const Layout = ({
-  children, title = 'This is the default title', user, hidefooter, cart,
-}) => (
+  children, title = 'This is the default title', user, hidefooter, cart, session
+}) => {
+
+  if(session) Qf.init(session.averageDonationEst, session.matchedFunds/session.numberDonationEst);
+
+  return (
   <div>
     <Head>
       <title>{title}</title>
@@ -29,8 +34,8 @@ const Layout = ({
             <Nav.Link href="/quadratic-funding"><Icons.Buoy size={20} /> How democratic funding works</Nav.Link>
           </Nav>
         </Navbar.Collapse>
-        { cart ? <CartButton itemCount={cart?.length} /> : null }
-        <Nav className="mr-auto">
+        { cart ? <CartButton className="btn-cart" itemCount={cart?.length} /> : null }
+        <Nav className="auth">
           <AuthLinks user={user} />
         </Nav>
       </Navbar>
@@ -39,6 +44,6 @@ const Layout = ({
     <Footer minimal={hidefooter} />
     { cart ? <Cart cart={cart} /> : null }
   </div>
-);
+)};
 
 export default Layout;

@@ -100,7 +100,6 @@ const CollectiveDonationCard = ({ collective }) => {
         ) : (
           <Row>
             <Col xs={7}>
-              
                 {inCart != amount ? (
                   <Button block variant="outline-primary" onClick={() =>  Cart.addItem(collective, amount, false)}>
                       <Icons.Cart size={18} /> Update cart
@@ -109,12 +108,7 @@ const CollectiveDonationCard = ({ collective }) => {
                   <Button block variant="outline-primary" onClick={() => Cart.show(collective._id)}>
                       <Icons.Check size={18} /> In cart <Badge variant="danger">{formatAmountForDisplay(inCart, 'USD')}</Badge>
                   </Button>
-                )
-                }
-               
-
-
-              
+                )}
             </Col>
             <Col>
               <Button block variant="primary" href="/checkout/">Checkout</Button>

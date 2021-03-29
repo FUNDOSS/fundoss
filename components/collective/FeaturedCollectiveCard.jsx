@@ -82,8 +82,8 @@ const FeaturedCollectiveCard = ({ collective }) => {
             <Col className="text-center">
               <span className="lead">+</span>
             </Col>
-            <Col xs={5} className="text-right">
-              <div style={{ marginBottom: '-10px', fontSize: '1.8rem' }} className="text-fat text-success">
+            <Col xs={5} className="text-right text-nowrap">
+              <div style={{ marginBottom: '-10px', fontSize: '1.6rem' }} className="text-fat text-success">
                 {formatAmountForDisplay(Qf.calculate(amount), 'USD')}
               </div>
               <small>estimated match</small>
@@ -93,15 +93,16 @@ const FeaturedCollectiveCard = ({ collective }) => {
       <Card.Footer>
         <Row className="no-gutters">
           <Col xs={7}>
-            { !inCart ? (
-              <Button block variant="outline-primary" onClick={() => Cart.addItem(collective, amount, true)}>
-                <Icons.Cart size={18} /> Add to cart
+          {inCart != amount ? (
+              <Button block variant="outline-primary" onClick={() =>  Cart.addItem(collective, amount, false)}>
+                  <Icons.Cart size={18} /> Update cart
               </Button>
             ) : (
-              <Button block variant="primary" onClick={() => Cart.show(collective._id)}>
-                <Icons.Check size={18} /> In cart <Badge variant="danger">{formatAmountForDisplay(inCart, 'USD')}</Badge>
+              <Button block variant="outline-primary" onClick={() => Cart.show(collective._id)}>
+                  <Icons.Check size={18} /> In cart <Badge variant="danger">{formatAmountForDisplay(inCart, 'USD')}</Badge>
               </Button>
-            )}
+            )
+          }
           </Col>
           <Col>
             <Button block variant="link" href={`/collective/${slug}`}>Read more</Button>
