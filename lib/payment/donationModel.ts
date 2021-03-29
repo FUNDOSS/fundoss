@@ -38,10 +38,10 @@ const DonationSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   },
-  session: [{
+  session: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'FundingSession',
-  }],
+  },
 });
 
 export default mongoose.models.Donation || mongoose.model('Donation', DonationSchema);

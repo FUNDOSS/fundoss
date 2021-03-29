@@ -15,7 +15,7 @@ export async function findBySlug(slug:string):Promise<ICollective> {
 
 export async function updateCollectiveTotals(id:string, session:string, totals:any) {
   await dbConnect();
-  const collectiveTotals = await Collective.findOne({ _id: id }).select('totals');
+  //const collectiveTotals = await Collective.findOne({ _id: id }).select('totals');
   return Collective.updateOne({ _id: id }, { totals: {...{ [session]: totals } } });
 }
 
@@ -30,9 +30,9 @@ export async function getCollective(slug:string):Promise<any> {
   await dbConnect();
   const savedCollective = await findBySlug(slug);
   if (savedCollective) {
-    //if ( moment(savedCollective.lastUpdate).diff('date_time', 'days') < 2) {
+    if ( moment().diff(moment(savedCollective.lastUpdate), 'days') < 2) {
       return savedCollective;
-    //}
+    }
   }
 
   const query = gql`

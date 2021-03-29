@@ -1,9 +1,11 @@
+import mongoose from 'mongoose';
 import Payment from './paymentModel';
 import Donation from './donationModel';
 import dbConnect from '../dbConnect';
 import FundingSessions from '../fundingSession/fundingSessionController';
 import Collectives from '../collectives/CollectivesController';
 import fundingSessionModel from '../fundingSession/fundingSessionModel';
+import Qf from '../../utils/qf';
 
 export async function insertPayment(payment) {
   await dbConnect();
@@ -67,9 +69,9 @@ export async function findById(id:string) {
   return Payment.findOne({ _id: id });
 }
 
-export async function getPayments() {
+export async function getPayments(query) {
   await dbConnect();
-  return Payment.find().select('user amount donations fee status time')
+  return Payment.find(query).select('user amount donations fee status time')
     .populate({ path: 'user', select: 'avatar username' })
     .populate({
       path: 'donations',
@@ -80,6 +82,51 @@ export async function getPayments() {
     })
     .sort('field -time')
     .limit(20);
+}
+
+export async function getSessionDisbursement(sessionId){
+  const ObjectId = mongoose.Types.ObjectId;
+  const session = await FundingSessions.getById(sessionId);
+  const donations = await Donation
+    .aggregate([
+      {$match: {session:ObjectId(sessionId)}},
+      {$group: {_id:{user:'$user', collective: '$collective'}, amount:{$sum:'$amount' }, fee:{$sum:'$fee' }}},
+    ]);
+    const numDonations = donations.length;
+    const totalDonations = donations.reduce((total, d) => total += d.amount ,0);
+    const averageDonation = totalDonations / numDonations;
+    const averageMatch = session.matchedFunds / numDonations;
+    const matches = donations.map(d => ({
+      collective: d._id.collective,
+      amount: d.amount,
+      match: Qf.calculate(d.amount,averageDonation,averageMatch),
+      fee: d.fee,
+    }))
+    const totalMatches = matches.reduce((total, m) => total += m.match, 0)
+    const matchRatio = totalMatches/session.matchedFunds
+    const collectivesTotalsInit = session.collectives.reduce(
+      (cols,col)=> ({...cols, ...{[col._id]: {donation: 0, match:0, fee:0 } }})
+    , {})
+    const collectiveTotals = matches.reduce( (totals, m) => {
+      totals[m.collective].donation += m.amount;
+      totals[m.collective].match += m.match / matchRatio;
+      totals[m.collective].fee += m.fee;
+      return totals;
+    }, collectivesTotalsInit);
+    const disbursments = session.collectives.map(c=>{
+      const totals = collectiveTotals[c._id];
+      const matched = Math.round(totals.match*100)/100
+      const fee = Math.round(totals.fee*100)/100
+      const donation = Math.round(totals.donation*100)/100
+      return {
+        slug: c.slug,
+        donation,
+        matched,
+        fee,
+        total: donation + matched - fee
+      }})
+
+  return disbursments;
 }
 
 export async function getPaymentsByUser(userId:string) {
@@ -102,7 +149,7 @@ export async function getDonationsByUser(userId:string){
   return Donation.find({ user: userId })
     .populate({
       path: 'collective',
-      select: 'name imageUrl',
+      select: 'name imageUrl slug',
     })
     .populate({
       path: 'payment',
@@ -118,7 +165,7 @@ export async function getLastPaymentByUser(userId:string) {
       path: 'donations',
       populate: {
         path: 'collective',
-        select: 'slug imageUrl name',
+        select: 'imageUrl name slug',
       },
     })
     .sort('field -time');
@@ -139,4 +186,6 @@ export default class Payments {
     static getLastByUser = getLastPaymentByUser
 
     static getDonationsByUser = getDonationsByUser
+
+    static getSessionDisbursement = getSessionDisbursement
 }

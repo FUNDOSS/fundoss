@@ -20,7 +20,8 @@ const FundingSessionCard = ({ session }) => {
           <p>{description}</p>
         </Card.Text>
         <Button variant="primary" href={`/dashboard/funding-session/${slug}`}>edit</Button>&nbsp;
-        <Button variant="primary" href={`/session/${slug}`}>view</Button>
+        <Button variant="primary" href={`/session/${slug}`}>view</Button>&nbsp;
+        <Button variant="primary" href={`/api/payment/`}>disbursments csv</Button> 
       </Card.Body>
     </Card>
   );
