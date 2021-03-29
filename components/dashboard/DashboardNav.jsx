@@ -7,16 +7,13 @@ const DashboardNav = () => (
       <Nav.Link active>Home</Nav.Link>
     </Nav.Item>
     <Nav.Item>
-      <Nav.Link>Funding Sessions</Nav.Link>
+      <Nav.Link href="/dashboard/payment">Payments</Nav.Link>
     </Nav.Item>
     <Nav.Item>
-      <Nav.Link>Payments</Nav.Link>
+      <Nav.Link disabled>Collectives</Nav.Link>
     </Nav.Item>
     <Nav.Item>
-      <Nav.Link>Collectives</Nav.Link>
-    </Nav.Item>
-    <Nav.Item>
-      <Nav.Link>Users</Nav.Link>
+      <Nav.Link disabled>Users</Nav.Link>
     </Nav.Item>
   </Nav>
 );

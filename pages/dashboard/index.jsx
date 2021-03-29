@@ -21,10 +21,7 @@ const DashboardPage = ({ user, sessions, payments }) => {
     <Layout title="FundOSS | Dashboard" user={user}>
       <Container style={{ paddingTop: '40px' }}>
         <DashboardNav />
-        <h1 style={{ marginTop: '30px' }}>Hi {user.name || user.username}</h1>
-        <p>
-          <Button href="dashboard/funding-session/create" variant="secondary">New Funding Session</Button>
-        </p>
+        <p style={{ marginTop: '30px' }}>Hi {user.name || user.username}</p>
         <FundingSessionsList sessions={sessions} />
         <br />
         <h4>Latest Payments</h4>

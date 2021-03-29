@@ -6,6 +6,8 @@ import moment from 'moment';
 import * as Yup from 'yup';
 import { Alert, Badge, Col, Row } from 'react-bootstrap';
 import Select from 'react-select'
+import Graph from '../qf/graph';
+import Qf from '../../utils/qf';
 
 const FundingSessionForm = ({ sessionData }) => {
   const userValidationSchema = Yup.object({
@@ -16,12 +18,12 @@ const FundingSessionForm = ({ sessionData }) => {
   });
 
   const availableTags = () => {
-    const tagsMap = sessionData.collectives.reduce((tags, col) => {
+    const tagsMap = sessionData?.collectives.reduce((tags, col) => {
       col.tags?.map(tag => {
         tags[tag] ? tags[tag] += 1 :  tags[tag] = 1;
       })
       return tags;
-     }, {})
+     }, {}) || {};
     return Object.keys(tagsMap)
       .map((key) => ({label:key, count:tagsMap[key]}))
       .sort((a, b) => b.count - a.count)
@@ -37,9 +39,9 @@ const FundingSessionForm = ({ sessionData }) => {
 
   const toFormValues = (session) => ({
     ...session,
-    matchedFunds: session?.matchedFunds || 75000,
+    matchedFunds: session?.matchedFunds || 100000,
     averageDonationEst: session?.averageDonationEst || 20,
-    numberDonationEst: session?.numberDonationEst || 5000,
+    numberDonationEst: session?.numberDonationEst || 2000,
     start: moment(session?.start || new Date()).format('YYYY-MM-DD'),
     end: moment(session?.end || new Date()).format('YYYY-MM-DD'),
     collectives: (session?.collectives || []).map((collective) => `https://opencollective.com/${collective.slug}`).join('\n'),
@@ -48,7 +50,7 @@ const FundingSessionForm = ({ sessionData }) => {
 
   const initialValues = toFormValues(sessionData);
 
-  const handleSubmit = async (values, { setStatus, setValues }) => {
+  const handleSubmit = async (values, { setStatus }) => {
     console.log(values)
     const body = JSON.stringify(values);
     const res = await fetch('/api/funding-session', {
@@ -101,6 +103,8 @@ const FundingSessionForm = ({ sessionData }) => {
                   required
                   type="number"
                   placeholder="in USD"
+                  step={1000}
+                  min={1000}
                   value={values.matchedFunds}
                   onChange={handleChange}
                   isValid={touched.matchedFunds && !errors.matchedFunds}
@@ -117,6 +121,7 @@ const FundingSessionForm = ({ sessionData }) => {
                   type="number"
                   placeholder="in USD"
                   value={values.averageDonationEst}
+                  min={1}
                   onChange={handleChange}
                   isValid={touched.averageDonationEst && !errors.averageDonationEst}
                   isInvalid={touched.averageDonationEst && errors.averageDonationEst}
@@ -129,8 +134,10 @@ const FundingSessionForm = ({ sessionData }) => {
                 <Form.Label># donations estimate</Form.Label>
                 <Form.Control
                   required
+                  step={100}
                   type="number"
                   placeholder="in USD"
+                  min={100}
                   value={values.numberDonationEst}
                   onChange={handleChange}
                   isValid={touched.numberDonationEst && !errors.numberDonationEst}
@@ -140,7 +147,17 @@ const FundingSessionForm = ({ sessionData }) => {
               </Form.Group>
             </Col>
           </Row>
-
+          <Graph 
+            plot={(x) => Qf.calculate(
+                x, 
+                values.averageDonationEst, 
+                values.matchedFunds / values.numberDonationEst
+              )} 
+            averageDonation={values.averageDonationEst} 
+            averageMatch={values.matchedFunds / values.numberDonationEst} 
+            width={720}
+            height={300}
+          />
           <Form.Group controlId="description">
             <Form.Label>Session description</Form.Label>
             <Form.Control

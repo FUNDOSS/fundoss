@@ -1,27 +1,42 @@
 import React from 'react';
 import moment from 'moment';
 import { Badge, Button, Card } from 'react-bootstrap';
+import Graph from '../qf/graph';
+import Qf from '../../utils/qf';
 
 const FundingSessionCard = ({ session }) => {
   const {
-    name, start, end, description, slug, totals,
+    name, start, end, slug, totals,
   } = session;
   return (
     <Card key={slug}>
       <Card.Body>
-        <Card.Title>{name}</Card.Title>
-        {totals?.donations ? <p><Badge variant="info">${totals?.amount} from {totals?.donations} contributors</Badge></p> : null}
+        <h3>{name}
+        {totals?.donations ? (
+          <p><Badge variant="info">${totals?.amount}</Badge> from <Badge variant="warning">{totals?.donations}</Badge> contributors</p>
+        ) : null}
+        </h3>
         <Card.Text>
-          <b>
+          <h5>
             {moment(start).format('MMMM Do') || 'no start date yet'}
             &nbsp;to&nbsp;
             {moment(end).format('MMMM Do') || 'no end date yet'}
-          </b>
-          <p>{description}</p>
+          </h5>
+          <Graph 
+            width={320}
+            height={240}
+            plot={(x) => Qf.calculate(
+                x, 
+                session.averageDonationEst, 
+                session.matchedFunds / session.numberDonationEst
+              )} 
+            averageDonation={session.averageDonationEst} 
+            averageMatch={session.matchedFunds / session.numberDonationEst} 
+          />
         </Card.Text>
-        <Button variant="primary" href={`/dashboard/funding-session/${slug}`}>edit</Button>&nbsp;
-        <Button variant="primary" href={`/session/${slug}`}>view</Button>&nbsp;
-        <Button variant="primary" href={`/api/payment/`}>disbursments csv</Button> 
+        <Button variant="outline-primary" href={`/dashboard/funding-session/${slug}`}>edit</Button>&nbsp;
+        <Button variant="outline-secondary" href={`/session/${slug}`}>view</Button>&nbsp;
+        <Button variant="outline-secondary" href={`/api/payment/`}>disbursments csv</Button> 
       </Card.Body>
     </Card>
   );

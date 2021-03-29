@@ -13,12 +13,18 @@ const PaymentsTable = ({ payments }) => (
         <td>
           <Image src={payment.user.avatar} roundedCircle width={20} />&nbsp;{payment.user.username}
         </td>
-        <td>{moment(payment.time).format('MMMM Do YYYY, h:mm:ss a')}</td>
-        <td>{payment.donations.map((don) => (
-          <Badge key={don.collective.slug} variant="info" style={{ marginRight: '3px' }}>
-            ${don.amount} <Image src={don.collective.imageUrl} roundedCircle width={20} />
-          </Badge>
-        ))}
+        <td>{moment(payment.time).format('lll')}</td>
+        <td>{ payment.donations.map((don, index ) => 
+          {
+            if(index < 6) 
+              return (
+                <Badge key={don.collective.slug} variant="light" style={{ marginRight: '3px' }}>
+                  ${don.amount} <Image src={don.collective.imageUrl} roundedCircle width={20} />
+                </Badge>
+                );
+            else return (<b>.</b>)
+          }
+        )}
         </td>
       </tr>
     ))}
