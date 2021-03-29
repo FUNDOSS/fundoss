@@ -123,7 +123,7 @@ export async function getSessionDisbursement(sessionId){
         donation,
         matched,
         fee,
-        total: donation + matched - fee
+        total: Math.round((donation + matched - fee)*100)/100
       }})
 
   return disbursments;
