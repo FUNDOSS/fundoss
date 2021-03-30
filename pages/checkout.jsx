@@ -66,28 +66,32 @@ const CheckoutPage = ({
                 </Elements>
               </Container>
             ) : (
-              <Container style={{ paddingTop: '40px' }} className="content">
-                <Row>
-                  <Col md={{ offset: 3, span: 6 }} className="text-center">
-                    <h4>Oops.. Your cart is empty</h4>
-                    <p>
-                      Go back and find your favorite OSS projects 
-                      to support projects and boost their democratic match!
-                    </p>
-                    <Button href="/">Go back to the collectives page</Button>
-                  </Col>
-                </Row>
-              </Container>
+              <Container style={{ paddingTop: '40px', margin: '-60px 0' }} fluid>
+              <Row className="no-gutter align-items-center">
+                <Col md={6} className="illu-hand" style={{ minHeight: '550px' }}>
+
+                </Col>
+                <Col md={{ span: 4, offset:1 }} className="text-center">
+                  <h3>Oops.. Your cart is empty</h3>
+                  <p>
+                    Go back and find your favorite OSS projects 
+                    to support projects and boost their democratic match!
+                  </p>
+                  <Button href="/">Go back to the collectives page</Button>
+                </Col>
+              </Row>
+            </Container>
             )}
           </>
         ) : (
-        <Container style={{ paddingTop: '40px' }} className="fluid">
+        <Container style={{ paddingTop: '40px', margin: '-60px 0' }} fluid>
           <Row className="no-gutter align-items-center">
-            <Col className="illu-hand" style={{ minHeight: '550px' }}>
+            <Col md={6} className="illu-hand" style={{ minHeight: '550px' }}>
 
             </Col>
-            <Col md={{ span: 6 }} className="text-center">
-              <h4>Register / Login To Finish Donating</h4>
+            <Col md={{ span: 4, offset:1 }} className="text-center">
+
+              <h3>Register / Login To Finish Donating</h3>
               <p>
                 FundOSS is only allowing sign-ups through Github at this time.
                 We apologize for the inconvenience this might cause!
