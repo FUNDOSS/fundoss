@@ -14,6 +14,7 @@ import middleware from '../../../middleware/all';
 import CollectiveDonationCard from '../../../components/collective/CollectiveDonationCard';
 import Icons from '../../../components/icons';
 import CollectiveCard from '../../../components/collective/CollectiveCard';
+import ShareButton from '../../../components/social/ShareButton';
 
 const collectivePage = ({ collective, user, cart, similar, session }) => {
   if (!collective) {
@@ -21,12 +22,12 @@ const collectivePage = ({ collective, user, cart, similar, session }) => {
   }
 
   const {
-    name, longDescription, imageUrl, 
+    name, longDescription, imageUrl, slug,
     backgroundImageUrl, members, website, githubHandle, twitterHandle,
   } = collective;
 
   return (
-    <div style={{background:'url('+backgroundImageUrl+') #fff top center/100% auto no-repeat'}} >
+    <div style={{background:'#fff top center/100% auto no-repeat'}} >
       <div style={{background: 'linear-gradient(180deg, rgba(189, 216, 255, 0.53) 20px, #FCFCFF 180px)'}}>
     <Layout title={`FundOSS | ${name}`} user={user} cart={cart} session={session}>
       
@@ -64,6 +65,15 @@ const collectivePage = ({ collective, user, cart, similar, session }) => {
           </Col>
           <Col>
             <CollectiveDonationCard collective={collective} />
+
+            <div style={{margin:'30px 0', padding:'10px'}}>
+            <h3>Share This Project</h3>
+            <p>Projects that get social boosts from donors have a higher likelihood of hitting their fundraising needs each year. Please considering lending your voice to suppor these OSS projects!</p>
+            <ShareButton platform="twitter" variant="link" url={'/collective/'+slug } />
+            <ShareButton platform="facebook" variant="link" url={'/collective/'+slug } />
+            <ShareButton platform="email" variant="link" url={'/collective/'+slug } />
+            </div>
+
           </Col>
         </Row>
         <Row>

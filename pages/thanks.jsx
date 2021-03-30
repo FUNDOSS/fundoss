@@ -6,12 +6,14 @@ import Layout from '../components/layout';
 import middleware from '../middleware/all';
 import serializable from '../lib/serializable';
 import Payments from '../lib/payment/paymentController';
+import FundingSessions from '../lib/fundingSession/fundingSessionController'; 
 import Qf from '../utils/qf';
 import { formatAmountForDisplay } from '../utils/currency';
 import Icons from '../components/icons';
+import ShareButton from '../components/social/ShareButton';
 
-const CheckoutPage = ({ user, payment }) => (
-  <Layout title="FundOSS | Donations cart" user={user} style={{background: '#0E0C4D'}}>
+const CheckoutPage = ({ user, payment, session }) => (
+  <Layout title="FundOSS | Donations cart" user={user} session={session} style={{background: '#0E0C4D'}}>
     <div className="confetti" style={{ marginBottom: '-60px' , paddingBottom: '70px'}}>
       <Container>
         <Card style={{ maxWidth: '750px', margin: '30px auto' }}>
@@ -52,17 +54,18 @@ const CheckoutPage = ({ user, payment }) => (
             <hr />
             <Row className="text-left">
               <Col>
-                <h4>Social</h4>
+                <h3>Social</h3>
                 <p>Projects that get social boosts from donors have a higher &nbsp;
                   likelihood of hitting their fundraising needs each year.
                 </p>
                 <p>Please considering lending your voice to support these OSS projects!</p>
-                <Button variant="outline-primary"><Icons.Twitter size={16} /> Twitter</Button>
-                <Button variant="outline-primary"><Icons.Twitter size={16} /> Facebook</Button>
-                <Button variant="outline-primary"><Icons.Twitter size={16} /> Email</Button>
+
+                <ShareButton platform="twitter" variant="link" url={'/share/'+payment.sid}/>
+                <ShareButton platform="facebook" variant="link" url={'/share/'+payment.sid}/>
+                <ShareButton platform="email" variant="link" url={'/share/'+payment.sid}/>
               </Col>
               <Col>
-                <h4>FundOSS  Round 2</h4>
+                <h3>FundOSS  Round 2</h3>
                 <p>If there are projects you want to see in Round 2, &nbsp;
                   please consider nominating them for FundOSS, currently set for late Summer 2021.
                 </p>
@@ -82,7 +85,12 @@ const CheckoutPage = ({ user, payment }) => (
 export async function getServerSideProps({ req, res }) {
   await middleware.run(req, res);
   const payment = await Payments.getLastByUser(req.user._id);
-  return { props: { user: serializable(req.user), payment: serializable(payment) } };
+  const session = await FundingSessions.getCurrentSessionInfo();
+  return { props: { 
+    user: serializable(req.user), 
+    payment: serializable(payment),
+    session: serializable(session), 
+  } };
 }
 
 export default CheckoutPage;
