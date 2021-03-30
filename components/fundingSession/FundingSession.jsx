@@ -112,17 +112,6 @@ const FundingSession = ({ session, featuredCollective }) => {
               )}
             </Button>
             </Col>
-            <Col md={3} className="d-none d-lg-block">
-            <Select 
-              instanceId="tags"
-              className="form-select"
-              isMulti
-              onChange={(inputValue) => {
-                change({tags: inputValue.map((selected) => selected.value)})
-              }}
-              options={session.tags.map(tag => ({label:tag, value:tag}))}
-            />
-            </Col>
           </Row>
 
         </Card>
