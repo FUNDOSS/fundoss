@@ -36,9 +36,9 @@ const CartItem = ({
             {collective.name}
           </Col>
           {selected !== collective._id ? (
-            <Col xs={3} className="text-right text-nowrap">
+            <Col xs={4} className="text-right text-nowrap">
               
-                <Badge variant="primary">{formatAmountForDisplay(amount, 'USD')}</Badge> +&nbsp;
+                <Badge className="round" style={{ fontSize: '0.8rem' }} variant="primary">{formatAmountForDisplay(amount, 'USD')}</Badge> +&nbsp;
                 <span className="text-fat text-success">
                   {formatAmountForDisplay(Qf.calculate(amount), 'USD')}
                 </span>
