@@ -172,6 +172,33 @@ export async function getLastPaymentByUser(userId:string) {
   return payment;
 }
 
+export async function getSharedPayment(sid:string) {
+  await dbConnect();
+  const payment = await Payment.findOne({ sid })
+    .populate({
+      path: 'donations',
+      populate: {
+        path: 'collective',
+        select: 'imageUrl name slug',
+      },
+    })
+    .populate({
+      path: 'donations',
+      populate: {
+        path: 'collective',
+        select: 'imageUrl name slug',
+      },
+    })
+    .populate(
+      {
+        path: 'user',
+        select: 'name avatar',
+      }
+    )
+    .sort('field -time');
+  return payment;
+}
+
 export default class Payments {
     static insert = insertPayment
 
@@ -188,4 +215,6 @@ export default class Payments {
     static getDonationsByUser = getDonationsByUser
 
     static getSessionDisbursement = getSessionDisbursement
+
+    static getShared = getSharedPayment
 }
