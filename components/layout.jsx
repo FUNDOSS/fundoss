@@ -5,7 +5,7 @@ import Nav from 'react-bootstrap/Nav';
 import AuthLinks from './auth/AuthLinks';
 import CartButton from './cart/CartButton';
 import Cart from './cart/Cart';
-import Logo from '../svg/logo.svg';
+import Logo from './Logo';
 import Footer from './Footer';
 import Icons from './icons';
 import Qf from '../utils/qf';
