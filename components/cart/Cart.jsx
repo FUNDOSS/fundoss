@@ -55,6 +55,7 @@ const Cart = ({ cart, display }) => {
     const newtotals = getCartTotals(data);
     setTotals(newtotals);
     Cart.totals = newtotals;
+    Cart.collectives = getCollectives(data)
     setCollectives(Cart.collectives);
     cartEvents.dispatch('cartChange', { data });
   };
