@@ -45,7 +45,9 @@ body{
     -moz-osx-font-smoothing: grayscale;
 }
 
-
+div#main{
+    display: block !important;
+}
 
 .invert{
     background-color: $darkpurple;

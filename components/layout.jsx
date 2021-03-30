@@ -17,7 +17,7 @@ const Layout = ({
   if(session) Qf.init(session.averageDonationEst, session.matchedFunds/session.numberDonationEst);
 
   return (
-  <div>
+  <div id="main" style={{display:'none'}}>
     <Head>
       <title>{title}</title>
       <meta charSet="utf-8" />
