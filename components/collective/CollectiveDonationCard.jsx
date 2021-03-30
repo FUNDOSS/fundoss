@@ -17,7 +17,7 @@ const CollectiveDonationCard = ({ collective }) => {
   const { totals } = collective;
 
   const onCartChange = () => {
-    setAmount(Cart.collectives[collective._id] || 30);
+    setAmount(Cart.collectives[collective._id] || 20);
     setInCart(Cart.collectives[collective._id]);
   };
 
@@ -94,7 +94,7 @@ const CollectiveDonationCard = ({ collective }) => {
       </Card.Body>
       <Card.Footer>
 
-        { !inCart ? (
+        { !inCart && amount == inCart ? (
           <Button block variant="link" href="/quadratic-funding">
             How does Democratic Funding Work?
           </Button>

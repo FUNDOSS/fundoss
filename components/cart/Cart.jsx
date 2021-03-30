@@ -3,6 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import CartItemList from './CartItemList';
 import { formatAmountForDisplay } from '../../utils/currency';
+import Qf from '../../utils/qf';
 
 export const cartEvents = {
   on(event, callback) {
@@ -16,13 +17,21 @@ export const cartEvents = {
   },
 };
 
+export const getCartTotals = (data = Cart.data || []) => data.reduce(
+  (acc, item) => ({
+    amount:Number(item.amount) + acc.amount, 
+    match:(Math.floor(Qf.calculate(item.amount) * 100)/100) + acc.match,
+  }), {amount:0, match:0});
+
+export const getCollectives = (cart = Cart.data || []) => cart.reduce((acc, item) => {
+  const { _id } = item.collective;
+  return { ...acc, [_id]: item.amount };
+}, {})
+
 const Cart = ({ cart, display }) => {
   const [cartData, setCartData] = useState(cart);
-  const [total, setTotal] = useState(cart.reduce((acc, item) => acc + Number(item.amount), 0));
-  const [collectives, setCollectives] = useState(cart.reduce((acc, item) => {
-    const { _id } = item.collective;
-    return { ...acc, [_id]: item.amount };
-  }, {}));
+  
+  const [collectives, setCollectives] = useState();
   const [show, setShow] = useState(false);
   const [selectedId, setSelectedId] = useState();
   const handleClose = () => setShow(false);
@@ -32,22 +41,20 @@ const Cart = ({ cart, display }) => {
     setShow(true);
   };
 
-  Cart.collectives = collectives;
+  Cart.collectives = getCollectives;
   Cart.data = cart;
   
-  Cart.getTotal = () => cart.reduce((acc, item) => acc + Number(item.amount), 0);
+  Cart.getTotals = getCartTotals;
+
+  const [totals, setTotals] = useState(Cart.getTotals(cart));
+
 
   const changeCart = (data) => {
-    console.log(data);
     Cart.data = data;
     setCartData(data);
-    const newtotal = data.reduce((acc, item) => acc + Number(item.amount), 0);
-    setTotal(newtotal);
-    Cart.total = newtotal;
-    Cart.collectives = data.reduce((acc, item) => {
-      const { _id } = item.collective;
-      return { ...acc, [_id]: item.amount };
-    }, {});
+    const newtotals = getCartTotals(data);
+    setTotals(newtotals);
+    Cart.totals = newtotals;
     setCollectives(Cart.collectives);
     cartEvents.dispatch('cartChange', { data });
   };
@@ -97,7 +104,7 @@ const Cart = ({ cart, display }) => {
       selectedId={selectedId}
       onSelect={(id) => setSelectedId(id)}
       onChange={(amount, collective) => {
-        saveCartItem(collective._id, amount);
+        saveCart([{collective:collective._id, amount}]);
         const data = cartData.map(
           (item) => (item.collective._id === collective._id ? { amount, collective } : item),
         );
@@ -126,7 +133,7 @@ const Cart = ({ cart, display }) => {
           : null}
       </Modal.Body>
       <Modal.Footer>
-        {cartData.length ? <Button block variant="primary" href="/checkout">Total {formatAmountForDisplay(total, 'USD')} | Checkout</Button> : null}
+        {cartData.length ? <Button block variant="primary" href="/checkout">Total {formatAmountForDisplay(totals.amount, 'USD')} | Checkout</Button> : null}
       </Modal.Footer>
     </Modal>
   );

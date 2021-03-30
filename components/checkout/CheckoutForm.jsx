@@ -10,7 +10,7 @@ import CountryCodes from 'countrycodes/countryCodes';
 import StripeTestCards from './StripeTestCards';
 import { fetchPostJSON } from '../../utils/api-helpers';
 import { formatAmountForDisplay } from '../../utils/currency';
-import Cart, { cartEvents } from '../cart/Cart';
+import Cart, { cartEvents, getCartTotals } from '../cart/Cart';
 import Icons from '../icons';
 
 const CheckoutForm = ({ user }) => {
@@ -88,12 +88,12 @@ const CheckoutForm = ({ user }) => {
         status,
         setStatus,
       }) => {
-        const [total, setTotal] = useState(Cart.getTotal());
+        const [totals, setTotals] = useState(getCartTotals());
         
         useEffect(() => {
-          setTotal(Cart.getTotal());
+          setTotals(getCartTotals());
           setStatus({ paymentStatus: 'initial' });
-          cartEvents.on('cartChange', () => setTotal(Cart.total));
+          cartEvents.on('cartChange', () => setTotals(getCartTotals()));
         }, []);
 
         return (
@@ -220,7 +220,7 @@ const CheckoutForm = ({ user }) => {
                     </Form.Group>
                   </Col>
                 </Row>
-                {statusSubmitButton(status?.paymentStatus, isSubmitting, total)}
+                {statusSubmitButton(status?.paymentStatus, isSubmitting, totals.amount)}
               </Col>
             </Row>
           </Form>

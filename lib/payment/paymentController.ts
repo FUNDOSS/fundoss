@@ -182,13 +182,6 @@ export async function getSharedPayment(sid:string) {
         select: 'imageUrl name slug',
       },
     })
-    .populate({
-      path: 'donations',
-      populate: {
-        path: 'collective',
-        select: 'imageUrl name slug',
-      },
-    })
     .populate(
       {
         path: 'user',

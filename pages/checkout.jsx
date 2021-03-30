@@ -10,9 +10,8 @@ import serializable from '../lib/serializable';
 import CartController from '../lib/cart/CartController';
 import CheckoutForm from '../components/checkout/CheckoutForm';
 import GithubLoginButton from '../components/auth/GithubLoginButton';
-import Cart, { cartEvents } from '../components/cart/Cart';
+import Cart, { cartEvents, getCartTotals } from '../components/cart/Cart';
 import FundingSessions from '../lib/fundingSession/fundingSessionController';
-import Qf from '../utils/qf';
 import { formatAmountForDisplay } from '../utils/currency';
 import Icons from '../components/icons';
 
@@ -23,18 +22,10 @@ const CheckoutPage = ({
   const [total, setTotal] = useState(cartValue);
   const [totalMatch, setTotalMatch] = useState();
   useEffect(() => {
-    const onCartChange = (cart = null) => {
-      const totals = (Cart.data || cart).reduce(
-        (acc, item) => ({
-          amount: acc.amount + Number(item.amount), 
-          match: acc.match + Qf.calculate(Number(item.amount)),
-        }),
-        { amount: 0, match: 0 },
-      );
-      if (totals) {
+    const onCartChange = () => {
+        const totals = getCartTotals(Cart.data || cart); 
         setTotal(totals.amount);
         setTotalMatch(totals.match);
-      }
     };
     cartEvents.on('cartChange', onCartChange);
     onCartChange(cart);
