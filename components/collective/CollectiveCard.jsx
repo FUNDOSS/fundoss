@@ -26,7 +26,7 @@ const CollectiveCard = ({ collective }) => {
     <Card className="collective-card" id={`collective-${slug}`}>
       <Card.Header>
       <Row>
-          <Col xs={2} md={3}>
+          <Col xs={2} md={3} style={{minHeight:'80px'}}>
             { imageUrl ? <Image src={imageUrl} roundedCircle fluid /> : null }
           </Col>
           <Col>
