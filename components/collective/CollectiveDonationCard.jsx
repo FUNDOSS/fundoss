@@ -49,6 +49,7 @@ const CollectiveDonationCard = ({ collective }) => {
                     style={{ marginRight: '10px' }}
                     key={`btn${amt}`} 
                     onClick={() => {
+                      setAmount(amt);
                       Cart.addItem(collective, amt);
                     }}
                     variant={amt === amount ? 'primary' : 'outline-primary'}

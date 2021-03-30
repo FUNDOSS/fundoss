@@ -54,7 +54,7 @@ const Cart = ({ cart, display }) => {
 
   Cart.addItem = (collective, amount, open = false) => {
     saveCart([{collective:collective._id, amount}]);
-    Cart.addItems([{collective:collective._id, amount}], open)
+    Cart.addItems([{collective, amount}], open)
   };
 
   Cart.addItems = (items, open = false) => {
