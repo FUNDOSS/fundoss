@@ -15,7 +15,7 @@ const PaymentsPage = ({ user, payments }) => {
   }
 
   return (
-    <Layout title="FundOSS | Dashboard" user={user}>
+    <Layout title="FundOSS | Dashboard" user={user} hidefooter={1}>
       <Container style={{ paddingTop: '40px' }} >
         <h1>Payments</h1>
         <PaymentsTable payments={payments} />

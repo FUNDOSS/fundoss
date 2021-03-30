@@ -18,7 +18,7 @@ const DashboardPage = ({ user, sessions, payments }) => {
   }
 
   return (
-    <Layout title="FundOSS | Dashboard" user={user}>
+    <Layout title="FundOSS | Dashboard" user={user} hidefooter={1}>
       <Container style={{ paddingTop: '40px' }}>
         <DashboardNav />
         <p style={{ marginTop: '30px' }}>Hi {user.name || user.username}</p>
