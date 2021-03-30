@@ -19,9 +19,9 @@ handler.get(async (req:any, res:NextApiResponse) => {
 
 handler.post(async (req:any, res:NextApiResponse) => {
   const cart = req.session.cart || {};
-  cart[req.body.collective] = req.body.amount;
-  req.session.cart = cart;
-  return res.status(200).json(cart);
+  const newCart = req.body.reduce((cart, item) => ({...cart, [item.collective] : item.amount}), cart)
+  req.session.cart = newCart;
+  return res.status(200).json(newCart);
 });
 
 handler.delete(async (req:any, res:NextApiResponse) => {

@@ -38,6 +38,7 @@ const Cart = ({ cart, display }) => {
   Cart.getTotal = () => cart.reduce((acc, item) => acc + Number(item.amount), 0);
 
   const changeCart = (data) => {
+    console.log(data);
     Cart.data = data;
     setCartData(data);
     const newtotal = data.reduce((acc, item) => acc + Number(item.amount), 0);
@@ -52,17 +53,28 @@ const Cart = ({ cart, display }) => {
   };
 
   Cart.addItem = (collective, amount, open = false) => {
-    saveCartItem(collective._id, amount);
-    const data = cartData.filter((item) => item.collective._id !== collective._id);
-    changeCart([{ collective, amount }, ...data]);
-    if (open) Cart.show(collective._id);
+    saveCart([{collective:collective._id, amount}]);
+    Cart.addItems([{collective:collective._id, amount}], open)
   };
 
-  const saveCartItem = (collective, amount) => {
+  Cart.addItems = (items, open = false) => {
+    
+    const collectiveIds = items.reduce((ids, item) => [...ids, item.collective._id], [])
+    console.log(collectiveIds)
+    saveCart(items.reduce(
+      (items, item) => [...items, {collective:item.collective._id, amount:item.amount}], 
+      []));
+    const data = cartData.filter((item) => collectiveIds.indexOf(item.collective._id) === -1);
+    items.map(item => data.unshift(item)) ;
+    changeCart(data);
+    if (open) Cart.show();
+  };
+
+  const saveCart = (items) => {
     fetch('/api/cart', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ amount, collective }),
+      body: JSON.stringify(items),
     });
   };
 
