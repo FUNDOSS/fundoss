@@ -71,7 +71,7 @@ div#main{
 
 .illu-hand{
     @extend .invert;
-    background: $darkpurple url('/illu-hand.png') no-repeat top left/contain ;
+    background: $darkpurple url('/illu-hand.svg') no-repeat top left/contain ;
     padding: 30px;
 }
 
