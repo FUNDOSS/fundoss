@@ -30,7 +30,7 @@ handler.post(async (req: any, res: NextApiResponse) => {
 
       const cartData = (await Cart.get(req.session.cart)).reduce( (data, item) => ( {
           amount: data.amount + item.amount,
-          meta: { ...data.meta, [item.collective._id]:item.amount }
+          meta: { ...data.meta, [item.collective.slug]:item.amount }
         }), {amount:0, meta:{}});
       const params: Stripe.PaymentIntentCreateParams = {
         payment_method_types: ['card'],
