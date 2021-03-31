@@ -17,17 +17,15 @@ const CartItem = ({
   const [selected, setSelected] = useState(selectedId);
   
   return (
-    <Card className="cart-item">
-      <Card.Header>
-        <Row
-          style={{ cursor: 'pointer' }}
-          className="no-gutters"
-          onClick={() => {
-            const selection = collective._id === selected ? null : collective._id;
-            onSelect(selection);
-            setSelected(selection);
-          }}
-        >
+    <div>
+      <div 
+        onClick={() => {
+          const selection = collective._id === selected ? null : collective._id;
+          onSelect(selection);
+          setSelected(selection);
+        }}
+        style={{borderBottom:'1px solid #ccc', padding:'0.9rem', cursor: 'pointer'}}>
+        <Row className="no-gutters">
           <Col xs={1}>
             <span className={selected === collective._id ? 'with-caret-up' : 'with-caret'} />
             <Image src={collective.imageUrl} width={30} roundedCircle fluid  />
@@ -65,10 +63,10 @@ const CartItem = ({
           ) }
 
         </Row>
-        </Card.Header>
+        </div>
         
         {selected === collective._id ? (
-          <Card.Body>
+          <Card.Body style={{background:'#f8f9fa'}}>
           <Row className="align-items-center">
             <Col xs={5}>
               <InputGroup className="cart-amount">
@@ -119,7 +117,7 @@ const CartItem = ({
         ) : null }
         
       
-    </Card>
+    </div>
   );
 };
 
