@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Pluralize from 'pluralize';
-import { Badge, Col, Row } from 'react-bootstrap';
+import { Badge, Col, Row, InputGroup } from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
@@ -29,8 +29,27 @@ const CollectiveDonationCard = ({ collective }) => {
   return (
     <Card>
       <Card.Body>
+      {totals.donations ? (
+        <div style={{ margin: '10px 0 20px' }} className="text-center">
+          <b>{totals.donations}</b> {Pluralize('donor', totals.donations)} raised
+          <Row className="no-gutters text-center align-items-center">
+            <Col xs={5} className="text-right">
+              <span style={{ fontSize: '1.8rem' }}>
+              {formatAmountForDisplay(totals.amount)}
+              </span>
+              <div className="small">in donations</div>
+            </Col>
+            <Col>+</Col>
+            <Col xs={5} className="text-left">
+            <span className="text-fat text-success" style={{ fontSize: '1.8rem' }}>{formatAmountForDisplay(Qf.calculate(totals.amount/totals.donations) * totals.donations )}</span>
+            <div className="small">in estimated matches</div>
+            </Col>
+          </Row>
+          </div>
+        ) : null }  
 
-        
+
+
         <Nav variant="tabs" fill activeKey={tab} onSelect={setTab}>
           <Nav.Item>
             <Nav.Link eventKey="set">Set Amount</Nav.Link>
@@ -64,30 +83,27 @@ const CollectiveDonationCard = ({ collective }) => {
           : (
             <div style={{ padding: '20px 0' }} className="text-center">
               
-              {totals.donations ? (
-                <p className="text-center">
-                <span className="text-fat">{totals.donations}</span> {Pluralize('contributor', totals.donations)}&nbsp;
-                have unlocked <span className="text-fat">{formatAmountForDisplay(Qf.calculate(totals.amount/totals.donations) * totals.donations )}</span> in estimated total funding
-                </p>
-              ) : null }   
+ 
 
-              <Form.Control
-                style={{ maxWidth: '250px', margin: '0 auto' }}
-                size="lg"
-                required
-                value={amount}
-                type="number"
-                onChange={(e) => {
-                  setAmount(e.target.value);
-                }}
-                placeholder="in USD"
-                min={2}
-                max={10000}
-              />
-              <small>estimated match</small>
-              <div style={{ fontSize: '2.3rem' }} className="text-fat text-success">
+              <InputGroup className="cart-amount round text-fat text-success" style={{maxWidth:'150px', margin:'5px auto'}}>
+                <InputGroup.Prepend><InputGroup.Text>$</InputGroup.Text></InputGroup.Prepend>
+                <Form.Control
+                  size="lg"
+                  value={amount}
+                  type="number"
+                  max={5000}
+                  min={1}
+                  onChange={(e) => {
+                    const amt = e.currentTarget.value > 5000 ? 5000 : e.currentTarget.value;
+                    setAmount(amt);
+                  }}
+                />
+              </InputGroup>
+              
+              + <span style={{ fontSize: '2.3rem' }} className="text-fat text-success">
                 {formatAmountForDisplay(Qf.calculate(amount), 'USD')}
-              </div>
+              </span>
+              <div className="small">estimated match</div>
             </div>
           )}
 
@@ -99,7 +115,7 @@ const CollectiveDonationCard = ({ collective }) => {
             How does Democratic Funding Work?
           </Button>
         ) : (
-          <Row>
+          <Row className="no-gutters">
             <Col xs={7}>
                 {inCart != amount ? (
                   <Button block variant="outline-primary" onClick={() =>  Cart.addItem(collective, amount, false)}>
@@ -112,7 +128,7 @@ const CollectiveDonationCard = ({ collective }) => {
                 )}
             </Col>
             <Col>
-              <Button block variant="primary" href="/checkout/">Checkout</Button>
+              <Button block variant="link" href="/checkout/">Checkout</Button>
             </Col>
           </Row>
         )}

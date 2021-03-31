@@ -44,25 +44,24 @@ const FeaturedCollectiveCard = ({ collective }) => {
             </a>
           </Col>
         </Row>
-
-      </Card.Header>
-      <Card.Body>
-      <div className="text-center small" style={{margin:'-20px 0 20px'}}>
-        {totals?.donations ? (
+        <div className="text-center small" style={{margin:'10px 0 -20px'}}>
+      {totals?.donations ? (
           <>
-          Raised <span className="text-fat">{formatAmountForDisplay(totals.amount)}</span>&nbsp;
+          Raised <span className="text-fat">{formatAmountForDisplay(totals.amount)}</span> + 
+          est. <span className="text-fat text-success">{formatAmountForDisplay(Qf.calculate(totals.amount/totals.donations) * totals.donations )}</span> match 
           from <span className="text-fat">{totals.donations}</span> {Pluralize('donor', totals.donations)}
           </>
-        ) : null }
-
-        </div>
+        ) : null }        
+      </div>
+      </Card.Header>
+      <Card.Body>
               
-        <Card.Text className="text-center" style={{ height: '100px', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        <Card.Text className="text-center">
           {description}
           <p>Every dollar you donate today is matched by a donation from our large-donor pool.</p>
         </Card.Text>
         
-        <Row className="align-items-center">
+        <Row className="align-items-center no-gutters">
             <Col xs={5}>
               <InputGroup className="cart-amount round text-fat text-success">
                 <InputGroup.Prepend><InputGroup.Text>$</InputGroup.Text></InputGroup.Prepend>

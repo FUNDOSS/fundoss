@@ -10,6 +10,7 @@ import Link from 'next/link';
 import Cart, { cartEvents } from '../cart/Cart';
 import Icons from '../icons';
 import { formatAmountForDisplay } from '../../utils/currency';
+import Qf from '../../utils/qf';
 
 const CollectiveCard = ({ collective }) => {
   const {
@@ -26,11 +27,11 @@ const CollectiveCard = ({ collective }) => {
     <Card className="collective-card" id={`collective-${slug}`}>
       <Card.Header>
       <Row>
-          <Col xs={2} md={3} style={{minHeight:'80px'}}>
+          <Col xs={2} md={3} style={{minHeight:'55px'}}>
             { imageUrl ? <Image src={imageUrl} roundedCircle fluid /> : null }
           </Col>
           <Col>
-            <Card.Title  style={{maxHeight:'20px',overflow:'hidden'}}><Link  href={`/collective/${slug}`}>{name}</Link></Card.Title>
+            <Card.Title><Link  href={`/collective/${slug}`}>{name}</Link></Card.Title>
             { website ? (
               <a variant="link" target="_blank" rel="noreferrer" href={website} style={{ marginRight: '10px' }}>
                 <Icons.Globe size={15} /> website 
@@ -41,20 +42,21 @@ const CollectiveCard = ({ collective }) => {
             </a>
           </Col>
         </Row>
-
-      </Card.Header>
-      <Card.Body style={{minHeight:'180px'}}>
-        <Card.Text className="text-center" style={{maxHeight:'80px',overflow:'hidden'}}>
-          {description}
-        </Card.Text>
-        <div className="text-center small" style={{margin:'10px 0'}}>
+        <div className="text-center small" style={{margin:'10px 0 -20px'}}>
       {totals?.donations ? (
           <>
-          Raised <span className="text-fat">{formatAmountForDisplay(totals.amount)}</span>&nbsp;
+          Raised <span className="text-fat">{formatAmountForDisplay(totals.amount)}</span> + 
+          est. <span className="text-fat text-success">{formatAmountForDisplay(Qf.calculate(totals.amount/totals.donations) * totals.donations )}</span> match 
           from <span className="text-fat">{totals.donations}</span> {Pluralize('donor', totals.donations)}
           </>
         ) : null }        
       </div>
+      </Card.Header>
+      <Card.Body style={{minHeight:'170px'}}>
+        <Card.Text className="text-center" style={{maxHeight:'80px',overflow:'hidden'}}>
+          {description}
+        </Card.Text>
+
       </Card.Body>
       <Card.Footer>
         <Row className="no-gutters">
