@@ -9,6 +9,8 @@ import Logo from './Logo';
 import Footer from './Footer';
 import Icons from './icons';
 import Qf from '../utils/qf';
+import Bg from '../svg/bg1.svg';
+
 
 const Layout = ({
   children, title = 'This is the default title', user, hidefooter, cart, session

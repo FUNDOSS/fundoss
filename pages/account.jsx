@@ -17,11 +17,7 @@ const AccountPage = ({ user, donations, cart }) => {
 
   return (
     <Layout title="FundOSS | My Account" user={user} cart={cart}>
-      <div style={{
-        background: 'linear-gradient(170deg, rgba(189, 216, 255, 0.53) 20px, #FCFCFF 500px)',
-        borderLeft: '10px solid #fff',
-        boxSizing: 'border-box',
-      }}>
+      <div className="bg1">
       <Container style={{ paddingTop: '40px' }} className="content">
         {user._id ? (
           <Row>
