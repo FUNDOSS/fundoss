@@ -23,12 +23,11 @@ const collectivePage = ({ collective, user, cart, similar, session }) => {
 
   const {
     name, longDescription, imageUrl, slug,
-    backgroundImageUrl, members, website, githubHandle, twitterHandle,
+    members, website, githubHandle, twitterHandle,
   } = collective;
 
   return (
-    <div style={{background:'#fff top center/100% auto no-repeat'}} >
-      <div style={{background: 'linear-gradient(180deg, rgba(189, 216, 255, 0.53) 20px, #FCFCFF 180px)'}}>
+    <div className="bg1" >
     <Layout title={`FundOSS | ${name}`} user={user} cart={cart} session={session}>
       
       <Container>
@@ -87,7 +86,7 @@ const collectivePage = ({ collective, user, cart, similar, session }) => {
           <Row>{
           similar.map(
             (collective) => (
-              <Col md={6} lg={4} key={collective.slug}>
+              <Col md={12} lg={4} key={collective.slug}>
                 <CollectiveCard collective={collective} />
               </Col>
             ),
@@ -97,7 +96,6 @@ const collectivePage = ({ collective, user, cart, similar, session }) => {
         </Container>
       </div>
     </Layout>
-    </div>
     </div>
   );
 };

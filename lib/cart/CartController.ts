@@ -12,7 +12,7 @@ export async function getCart(sessionCart) {
   ).select({
     name: 1, imageUrl: 1, slug: 1, description: 1,
   });
-  return cart.map((collective) => ({ collective, amount: sessionCart[collective._id] }));
+  return cart.map((collective) => ({ collective, amount: sessionCart[collective._id] as number }));
 }
 
 export default class Cart {

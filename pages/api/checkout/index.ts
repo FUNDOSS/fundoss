@@ -5,6 +5,7 @@ import { all } from '../../../middleware/index';
 import Payment from '../../../lib/payment/paymentController';
 import { formatAmountForStripe } from '../../../utils/currency';
 import Users from '../../../lib/user/usersController';
+import Cart from '../../../lib/cart/CartController';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2020-08-27',
@@ -26,11 +27,17 @@ handler.post(async (req: any, res: NextApiResponse) => {
       const amount = Object.keys(req.session.cart)
         .map((_id) => req.session.cart[_id])
         .reduce((acc, amt) => acc + Number(amt), 0);
+
+      const cartData = (await Cart.get(req.session.cart)).reduce( (data, item) => ( {
+          amount: data.amount + item.amount,
+          meta: { ...data.meta, [item.collective._id]:item.amount }
+        }), {amount:0, meta:{}});
       const params: Stripe.PaymentIntentCreateParams = {
         payment_method_types: ['card'],
-        amount: formatAmountForStripe(amount),
+        amount: formatAmountForStripe(cartData.amount),
         currency: 'USD',
         description: process.env.STRIPE_PAYMENT_DESCRIPTION ?? '',
+        metadata:cartData.meta
       };
       const paymentIntent: Stripe.PaymentIntent = await stripe.paymentIntents.create(
         params,
@@ -52,7 +59,9 @@ handler.post(async (req: any, res: NextApiResponse) => {
       );
       payment.status = intent.status;
       payment.confirmation = intent;
-      payment.donations = req.session.cart;
+      payment.donations = (await Cart.get(req.session.cart)).reduce( (data, item) => (
+          { ...data, [item.collective._id]:item.amount }
+        ), {});
       await Payment.update(payment);
       req.session.cart = {};
       return res.status(200).json({ payment, intent });
