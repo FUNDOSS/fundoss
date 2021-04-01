@@ -9,7 +9,6 @@ import Logo from './Logo';
 import Footer from './Footer';
 import Icons from './icons';
 import Qf from '../utils/qf';
-import Bg from '../svg/bg1.svg';
 
 
 const Layout = ({
@@ -17,6 +16,7 @@ const Layout = ({
 }) => {
 
   if(session) Qf.init(session.averageDonationEst, session.matchedFunds/session.numberDonationEst);
+  if(user) Cart.previousDonations = user.donations;
 
   return (
   <div id="main" style={{display:'none'}}>
@@ -44,7 +44,7 @@ const Layout = ({
     </header>
     {children}
     <Footer minimal={hidefooter} />
-    { cart ? <Cart cart={cart} /> : null }
+    { cart ? <Cart cart={cart} user={user} /> : null }
   </div>
 )};
 

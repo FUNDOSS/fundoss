@@ -237,7 +237,9 @@ h3{font-size: 1.2rem;}
 }
 
 @include media-breakpoint-up(lg) {
-    .card-body, .card-footer, .card-header{padding:2rem}
+    .card-body{padding:1rem 2rem}
+    .card-header{padding:1.5rem 2rem 1rem}
+    .card-footer{padding:0rem 2rem 2rem}
 }
 
 .card-header{border-bottom: 1px solid $gray-200;}

@@ -9,7 +9,7 @@ const AuthLinks = ({ user }) => (
     <>
       { !user._id ? (
         <>
-          <GithubLoginButton variant="outline-primary" size="sm" />
+          <GithubLoginButton variant="link" size="sm" />
         </>
       ) : (
         <DropdownButton 
