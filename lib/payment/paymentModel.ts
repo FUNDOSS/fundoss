@@ -60,10 +60,10 @@ const PaymentSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Donation',
   }],
-  session: [{
+  session: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'FundingSession',
-  }],
+  },
 });
 
-export default mongoose.models.Payment || mongoose.model('Payment', PaymentSchema);
+export default mongoose.models?.Payment || mongoose.model('Payment', PaymentSchema);

@@ -1,7 +1,9 @@
 import { GraphQLClient, gql } from 'graphql-request';
 import moment from 'moment';
+import mongoose from 'mongoose';
 import Collective, { ICollective } from './CollectiveModel';
 import FundingSessions from '../fundingSession/fundingSessionController';
+import Donation from '../payment/donationModel';
 import dbConnect from '../dbConnect';
 
 
@@ -9,15 +11,31 @@ export async function findBySlug(slug:string):Promise<ICollective> {
   await dbConnect();
   const currentSessionId:string = await FundingSessions.getCurrentId();
   const collective = await Collective.findOne({ slug });
-  collective.totals = collective.totals?.get(currentSessionId);
+  console.log(collective.totals)
+  collective.totals = collective.totals ? collective.totals[currentSessionId] : {amount:0, donations:[]};
+
   return collective;
 }
 
-export async function updateCollectiveTotals(id:string, session:string, totals:any) {
+export async function updateCollectivesTotals(ids:Array<string>, session:string) {
   await dbConnect();
-  //const collectiveTotals = await Collective.findOne({ _id: id }).select('totals');
-  return Collective.updateOne({ _id: id }, { totals: {...{ [session]: totals } } });
+  console.log('updateCollectivesTotals', ids, session);
+  const donations = (await Donation
+    .aggregate([
+      {$match: {collective:{$in: ids.map(id => mongoose.Types.ObjectId(id)) }, session: mongoose.Types.ObjectId(session)}},
+      {$group: {_id:{user:'$user', collective:'$collective'},  amount:{$sum:'$amount' }}},
+      {$group: {_id:{collective:'$_id.collective'}, amount:{$sum:'$amount' }, donations:{$push:'$amount'}}},
+    ])).map(
+      async (collective)=>{
+        const collectiveTotals = await Collective.findOne({ _id: collective._id.collective }).select('totals');
+        const totals = { totals: {...(collectiveTotals?.totals || {}), ...{ [session]: {amount:collective.amount, donations:collective.donations} } } }
+        console.log(collective, totals)
+        return await Collective.updateOne({ _id: collective._id.collective },totals );
+      }
+    );
+    return donations;
 }
+
 
 export async function similarCollectives() {
   await dbConnect();
@@ -86,7 +104,7 @@ export default class Collectives {
 
     static findBySlug = findBySlug;
 
-    static updateTotals = updateCollectiveTotals;
+    static updateTotals = updateCollectivesTotals;
 
     static similar = similarCollectives;
 }

@@ -1,10 +1,8 @@
 import React from 'react';
-import FundingSessions from '../lib/fundingSession/fundingSessionController';
 import Layout from '../components/layout';
 import FundingSession from '../components/fundingSession/FundingSession';
 import middleware from '../middleware/all';
-import serializable from '../lib/serializable';
-import Cart from '../lib/cart/CartController';
+import ServerProps from '../lib/serverProps';
 
 const IndexPage = ({
   session, user, cart, featured, 
@@ -16,16 +14,16 @@ const IndexPage = ({
 
 export async function getServerSideProps({ req, res }) {
   await middleware.run(req, res);
-  const session = await FundingSessions.getCurrent();
-  const cart = await Cart.get(req.session.cart);
+  const session = await ServerProps.getCurrentSession();
+  const cart = await ServerProps.getCart(req.session.cart);
+  const user = await ServerProps.getUser(req.user);
+  console.log(user);
   return {
     props: {
-      user: serializable(req.user),
-      session: serializable(session),
-      featured: serializable(
-        session?.collectives[Math.floor(Math.random() * session.collectives.length)],
-      ),
-      cart: serializable(cart),
+      user,
+      session,
+      featured: session?.collectives[Math.floor(Math.random() * session.collectives.length)],
+      cart
     },
   };
 }

@@ -68,4 +68,4 @@ const FundingSessionSchema = new Schema({
 
 FundingSessionSchema.plugin(mongooseSlugPlugin, { tmpl: '<%=name%>' });
 
-export default mongoose.models.FundingSession || mongoose.model<IFundingSession>('FundingSession', FundingSessionSchema);
+export default mongoose.models?.FundingSession || mongoose.model<IFundingSession>('FundingSession', FundingSessionSchema);

@@ -25,9 +25,9 @@ const CollectiveCard = ({ collective }) => {
 
   return (
     <Card className="collective-card" id={`collective-${slug}`}>
-      <Card.Header>
+      <Card.Header style={{minHeight:'110px'}}>
       <Row>
-          <Col xs={2} md={3} style={{minHeight:'55px'}}>
+          <Col xs={2} md={3}>
             { imageUrl ? <Image src={imageUrl} roundedCircle fluid /> : null }
           </Col>
           <Col>
@@ -42,23 +42,34 @@ const CollectiveCard = ({ collective }) => {
             </a>
           </Col>
         </Row>
-        <div className="text-center small" style={{margin:'10px 0 -20px'}}>
-      {totals?.donations ? (
+        <div className="text-center small" style={{margin:'10px 0 -10px 0'}}>
+      {totals?.donations.length ? (
           <>
           Raised <span className="text-fat">{formatAmountForDisplay(totals.amount)}</span> + 
-          est. <span className="text-fat text-success">{formatAmountForDisplay(Qf.calculate(totals.amount/totals.donations) * totals.donations )}</span> match 
-          from <span className="text-fat">{totals.donations}</span> {Pluralize('donor', totals.donations)}
+          est. <span className="text-fat text-success">{formatAmountForDisplay( totals.donations.reduce( (total, amount) => total + Qf.calculate(amount), 0))}</span> match 
+          from <span className="text-fat">{totals.donations.length}</span> {Pluralize('donor', totals.donations.length)}
           </>
         ) : null }        
       </div>
       </Card.Header>
-      <Card.Body style={{minHeight:'170px'}}>
+      <Card.Body style={{minHeight:'160px'}}>
         <Card.Text className="text-center" style={{maxHeight:'80px',overflow:'hidden'}}>
           {description}
         </Card.Text>
 
       </Card.Body>
       <Card.Footer>
+        {Cart.previousDonations[collective._id] ? (
+          <div className="text-center small" style={{margin:'-20px 0 5px 0'}}>
+            You donated&nbsp;
+            <span className="text-fat"> 
+              {formatAmountForDisplay(Cart.previousDonations[collective._id], 'USD')}
+            </span>&nbsp;
+            for a <span className="text-fat text-success"> 
+            {formatAmountForDisplay(Qf.calculate(Cart.previousDonations[collective._id]), 'USD')}
+            </span> match
+          </div>
+        ) : null }
         <Row className="no-gutters">
           <Col xs={7}>
             { !inCart ? (

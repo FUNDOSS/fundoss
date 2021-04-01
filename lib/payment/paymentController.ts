@@ -19,8 +19,7 @@ export async function updatePayment(payment) {
   if (payment.donations) {
     const fee = payment.confirmation.charges.data
       .reduce((acc, charge) => acc + (charge.balance_transaction.fee / 100), 0);
-    console.log('payment fee', fee)
-    console.log('payment charge', payment.confirmation.charges.data)
+    const collectives = [];
     const donations = await Promise.all(
       Object.keys(payment.donations)
         .map(async (collectiveId) => {
@@ -35,18 +34,12 @@ export async function updatePayment(payment) {
               fee: Math.ceil((amt / payment.amount) * fee * 100) / 100,
             },
           );
-
-          const collectiveTotals = (await Donation.find(
-            { collective: collectiveId, session: payment.session },
-          )).reduce((acc, don) => ({
-            donations: acc.donations + 1,
-            amount: acc.amount + don.amount,
-          }), { donations: 0, amount: 0 });
-
-          await Collectives.updateTotals(collectiveId, payment.session, collectiveTotals);
+          await Collectives.updateTotals([collectiveId], payment.session);
           return donation._id;
         }),
     );
+
+
 
     const sessionTotals = (await Donation.find(
       { session: payment.session },
@@ -85,11 +78,10 @@ export async function getPayments(query) {
 }
 
 export async function getSessionDisbursement(sessionId){
-  const ObjectId = mongoose.Types.ObjectId;
   const session = await FundingSessions.getById(sessionId);
   const donations = await Donation
     .aggregate([
-      {$match: {session:ObjectId(sessionId)}},
+      {$match: {session:mongoose.Types.ObjectId(sessionId)}},
       {$group: {_id:{user:'$user', collective: '$collective'}, amount:{$sum:'$amount' }, fee:{$sum:'$fee' }}},
     ]);
     const numDonations = donations.length;
@@ -158,6 +150,16 @@ export async function getDonationsByUser(userId:string){
     .sort('field -_id');
 }
 
+
+export async function getGroupedDonationsByUser(userId:string, sessionId:string){
+  await dbConnect();
+  return (await Donation.aggregate([
+    {$match: {session:mongoose.Types.ObjectId(sessionId), user:mongoose.Types.ObjectId(userId)}},
+    {$group: {_id:{collective: '$collective'}, amount:{$sum:'$amount' }}},
+  ])).reduce((collectives, donation) => ({...collectives, ...{[donation._id.collective]: donation.amount}}), {});
+}
+
+
 export async function getLastPaymentByUser(userId:string) {
   await dbConnect();
   const payment = await Payment.findOne({ user: userId, status: 'succeeded' })
@@ -210,4 +212,6 @@ export default class Payments {
     static getSessionDisbursement = getSessionDisbursement
 
     static getShared = getSharedPayment
+
+    static getGroupedDonationsByUser = getGroupedDonationsByUser
 }

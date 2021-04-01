@@ -6,12 +6,10 @@ import {
 } from 'react-bootstrap';
 import Layout from '../components/layout';
 import middleware from '../middleware/all';
-import serializable from '../lib/serializable';
-import CartController from '../lib/cart/CartController';
 import CheckoutForm from '../components/checkout/CheckoutForm';
 import GithubLoginButton from '../components/auth/GithubLoginButton';
 import Cart, { cartEvents, getCartTotals } from '../components/cart/Cart';
-import FundingSessions from '../lib/fundingSession/fundingSessionController';
+import ServerProps from '../lib/serverProps';
 import { formatAmountForDisplay } from '../utils/currency';
 import Icons from '../components/icons';
 
@@ -32,7 +30,7 @@ const CheckoutPage = ({
   }, []);
 
   return (
-    <Layout title="FundOSS | Checkout" hidefooter={1} session={session} >
+    <Layout title="FundOSS | Checkout" hidefooter={1} session={session} user={user}>
       
         {user._id ? (
           <>
@@ -43,7 +41,7 @@ const CheckoutPage = ({
                     <h3 className="text-secondary"> <Icons.Cart size={30} /> Checkout</h3>
                   </Col>
                   <Col md={{ span: 6 }}>
-                    <Cart display="inline" cart={cart} />
+                    <Cart display="inline" cart={cart} user={user} />
                   </Col>
                 </Row>
                 <Row>
@@ -110,17 +108,16 @@ const CheckoutPage = ({
 
 export async function getServerSideProps({ req, res }) {
   await middleware.run(req, res);
-  const cart = await CartController.get(req.session.cart);
-  const cartValue = cart.reduce((acc, item) => acc + item.amount, 0);
   const stripekey = process.env.STRIPE_PUBLISHABLE_KEY;
-  const session = await FundingSessions.getCurrentSessionInfo();
+  const session = await ServerProps.getCurrentSessionInfo();
+  const user = await ServerProps.getUser(req.user);
+  const cart = await ServerProps.getCart(req.session.cart);
   return {
     props: {
-      user: serializable(req.user), 
-      cart: serializable(cart), 
-      session: serializable(session), 
-      stripekey, 
-      cartValue,
+      user, 
+      cart, 
+      session, 
+      stripekey
     },
   };
 }

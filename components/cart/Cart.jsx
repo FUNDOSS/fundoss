@@ -20,7 +20,7 @@ export const cartEvents = {
 export const getCartTotals = (data = Cart.data || []) => data.reduce(
   (acc, item) => ({
     amount:Number(item.amount) + acc.amount, 
-    match:(Math.floor(Qf.calculate(item.amount) * 100)/100) + acc.match,
+    match:(Math.floor(calculateMatch(item.amount, item.collective._id) * 100)/100) + acc.match,
   }), {amount:0, match:0});
 
 export const getCollectives = (cart = Cart.data || []) => cart.reduce((acc, item) => {
@@ -28,9 +28,26 @@ export const getCollectives = (cart = Cart.data || []) => cart.reduce((acc, item
   return { ...acc, [_id]: item.amount };
 }, {})
 
-const Cart = ({ cart, display }) => {
-  const [cartData, setCartData] = useState(cart);
-  
+export const getPreviousDonation = (collective) => {
+  return Cart.previousDonations ? Cart.previousDonations[collective] || 0 : 0;
+}
+
+export const calculateMatch = (amount, collective) => {
+  const prev = getPreviousDonation(collective);
+  console.log(prev)
+  return Qf.calculate(Number(amount) + prev) - Qf.calculate(prev)
+}
+
+const Cart = ({ cart, display, user }) => {
+
+  console.log('user', user)
+  const data = cart.map(item => {
+      const previous = getPreviousDonation(item.collective._id);
+      return ({...item, ...{previous: previous || 0}})
+    }
+  );
+  const [cartData, setCartData] = useState(data);
+  const userPreviousDonations = user?.donations;
   const [collectives, setCollectives] = useState();
   const [show, setShow] = useState(false);
   const [selectedId, setSelectedId] = useState();
@@ -40,10 +57,10 @@ const Cart = ({ cart, display }) => {
     setSelectedId(id);
     setShow(true);
   };
-
-  Cart.collectives = getCollectives;
+  Cart.previousDonations = userPreviousDonations;
+  Cart.collectives = getCollectives(cart);
   Cart.data = cart;
-  
+  Cart.calculateMatch = calculateMatch;
   Cart.getTotals = getCartTotals;
 
   const [totals, setTotals] = useState(Cart.getTotals(cart));
@@ -57,11 +74,12 @@ const Cart = ({ cart, display }) => {
     Cart.totals = newtotals;
     Cart.collectives = getCollectives(data)
     setCollectives(Cart.collectives);
+    console.log(data)
     cartEvents.dispatch('cartChange', { data });
   };
 
   Cart.addItem = (collective, amount, open = false) => {
-    saveCart([{collective:collective._id, amount}]);
+    saveCart([{collective:collective._id, amount }]);
     Cart.addItems([{collective, amount}]);
     if (open) Cart.show(collective._id);
   };
@@ -69,12 +87,12 @@ const Cart = ({ cart, display }) => {
   Cart.addItems = (items, open = false) => {
     
     const collectiveIds = items.reduce((ids, item) => [...ids, item.collective._id], [])
-    console.log(collectiveIds)
+    console.log(items)
     saveCart(items.reduce(
-      (items, item) => [...items, {collective:item.collective._id, amount:item.amount}], 
+      (items, item) => [...items, {collective:item.collective._id, amount:item.amount }], 
       []));
     const data = cartData.filter((item) => collectiveIds.indexOf(item.collective._id) === -1);
-    items.map(item => data.unshift(item)) ;
+    items.map(item => data.unshift({...item, ...{previous: getPreviousDonation(item.collective._id)} })) ;
     changeCart(data);
     if (open) Cart.show();
   };
@@ -90,6 +108,7 @@ const Cart = ({ cart, display }) => {
   const items = (
     <CartItemList
       cart={cartData}
+      calculateMatch={calculateMatch}
       deleteItem={
         async (id) => {
           fetch('/api/cart', {
@@ -99,7 +118,9 @@ const Cart = ({ cart, display }) => {
               collective: id,
             }),
           });
+          console.log(id);
           const data = cartData.filter((item) => item.collective._id !== id);
+          console.log(data);
           changeCart(data);
         }
       }
@@ -108,7 +129,7 @@ const Cart = ({ cart, display }) => {
       onChange={(amount, collective) => {
         saveCart([{collective:collective._id, amount}]);
         const data = cartData.map(
-          (item) => (item.collective._id === collective._id ? { amount, collective } : item),
+          (item) => (item.collective._id === collective._id ? { amount, collective, previous:getPreviousDonation(collective._id)} : item),
         );
         changeCart(data);
       }}

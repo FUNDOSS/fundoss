@@ -44,4 +44,4 @@ const DonationSchema = new Schema({
   },
 });
 
-export default mongoose.models.Donation || mongoose.model('Donation', DonationSchema);
+export default mongoose.models?.Donation || mongoose.model('Donation', DonationSchema);

@@ -7,10 +7,9 @@ import Badge from 'react-bootstrap/Badge';
 import { Form, InputGroup, Card } from 'react-bootstrap';
 import { formatAmountForDisplay } from '../../utils/currency';
 import Icons from '../icons';
-import Qf from '../../utils/qf';
 
 const CartItem = ({
-  item, onDelete, onSelect, selectedId, cartAmount, onChange,
+  item, onDelete, onSelect, selectedId, cartAmount, onChange, calculateMatch
 }) => {
   const { collective } = item;
   const [amount, setAmount] = useState(cartAmount);
@@ -35,17 +34,18 @@ const CartItem = ({
           </Col>
           {selected !== collective._id ? (
             <Col xs={4} className="text-right text-nowrap">
-              
-                <Badge className="round" style={{ fontSize: '0.8rem' }} variant="primary">{formatAmountForDisplay(amount, 'USD')}</Badge> +&nbsp;
+                <Badge className="round" style={{ fontSize: '0.8rem' }} variant="primary">
+                  {formatAmountForDisplay(amount, 'USD')}
+                </Badge> +&nbsp;
                 <span className="text-fat text-success">
-                  {formatAmountForDisplay(Qf.calculate(amount), 'USD')}
+                  {formatAmountForDisplay(calculateMatch(amount, collective._id), 'USD')}
                 </span>
               &nbsp;
               <Button
               size="sm"
               style={{ fontSize: '0.6rem', padding: '2px 3px' }} 
               variant="outline-secondary round"
-              onClick={() => { onDelete(collective._id); }}
+              onClick={(e) => { onDelete(collective._id);}}
             ><Icons.Trash size={15} />
             </Button>
             </Col>
@@ -90,7 +90,7 @@ const CartItem = ({
             </Col>
             <Col xs={5} className="text-right">
               <div style={{ marginBottom: '-10px', fontSize: '2rem' }} className="text-fat text-success">
-                {formatAmountForDisplay(Qf.calculate(amount), 'USD')}
+                {formatAmountForDisplay(calculateMatch(amount, collective._id), 'USD')}
               </div>
               <small>estimated match</small>
             </Col>
@@ -122,7 +122,7 @@ const CartItem = ({
 };
 
 const CartItemList = ({
-  cart, deleteItem, onSelect, selectedId, onChange,
+  cart, deleteItem, onSelect, selectedId, onChange,calculateMatch
 }) => (
   cart.map(
     (item) => (
@@ -134,6 +134,7 @@ const CartItemList = ({
         onChange={onChange}
         selectedId={selectedId}
         cartAmount={item.amount}
+        calculateMatch={calculateMatch}
       />
     ),
   )

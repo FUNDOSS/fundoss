@@ -9,7 +9,7 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Link from 'next/link';
-import Cart, { cartEvents } from '../cart/Cart';
+import Cart, { cartEvents, calculateMatch } from '../cart/Cart';
 import Icons from '../icons';
 import { formatAmountForDisplay } from '../../utils/currency';
 import Qf from '../../utils/qf';
@@ -26,7 +26,7 @@ const FeaturedCollectiveCard = ({ collective }) => {
   }, []);
 
   return (
-    <Card className="collective-card" id={`collective-${slug}`}>
+    <Card className="collective-card" id={`collective-${slug}`} style={{maxWidth:'370px', margin: '0 auto'}}>
       <Card.Header>
       <Row>
           <Col xs={2} md={3}>
@@ -45,12 +45,11 @@ const FeaturedCollectiveCard = ({ collective }) => {
           </Col>
         </Row>
         <div className="text-center small" style={{margin:'10px 0 -20px'}}>
-      {totals?.donations ? (
+      {totals?.donations.length ? (
           <>
           Raised <span className="text-fat">{formatAmountForDisplay(totals.amount)}</span> + 
-          est. <span className="text-fat text-success">{formatAmountForDisplay(Qf.calculate(totals.amount/totals.donations) * totals.donations )}</span> match 
-          from <span className="text-fat">{totals.donations}</span> {Pluralize('donor', totals.donations)}
-          </>
+          est. <span className="text-fat text-success">{formatAmountForDisplay( totals.donations.reduce( (total, amount) => total + Qf.calculate(amount), 0))}</span> match 
+          from <span className="text-fat">{totals.donations.length}</span> {Pluralize('donor', totals.donations.length)}          </>
         ) : null }        
       </div>
       </Card.Header>
@@ -83,7 +82,7 @@ const FeaturedCollectiveCard = ({ collective }) => {
             </Col>
             <Col xs={5} className="text-right text-nowrap">
               <div style={{ marginBottom: '-10px', fontSize: '1.6rem' }} className="text-fat text-success">
-                {formatAmountForDisplay(Qf.calculate(amount), 'USD')}
+                {formatAmountForDisplay(calculateMatch(amount, collective._id), 'USD')}
               </div>
               <small>estimated match</small>
             </Col>

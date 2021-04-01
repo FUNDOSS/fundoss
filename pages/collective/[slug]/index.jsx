@@ -5,8 +5,7 @@ import Error from 'next/error';
 import {
   Button, Image, Col, Row, Container, 
 } from 'react-bootstrap';
-import Cart from '../../../lib/cart/CartController';
-import FundingSessions from '../../../lib/fundingSession/fundingSessionController';
+import ServerProps from '../../../lib/serverProps';
 import Layout from '../../../components/layout';
 import collectives from '../../../lib/collectives/CollectivesController';
 import serializable from '../../../lib/serializable';
@@ -103,16 +102,17 @@ const collectivePage = ({ collective, user, cart, similar, session }) => {
 export async function getServerSideProps({ query, req, res }) {
   await middleware.run(req, res);
   const collective = await collectives.findBySlug(query.slug);
-  const cart = await Cart.get(req.session.cart);
-  const session = await FundingSessions.getCurrentSessionInfo();
+  const session = await ServerProps.getCurrentSessionInfo();
+  const cart = await ServerProps.getCart(req.session.cart);
+  const user = await ServerProps.getUser(req.user);
   const similar = await collectives.similar();
   return {
     props: {
-      user: serializable(req.user),
-      cart: serializable(cart),
+      user,
+      cart,
       collective: serializable(collective),
       similar: serializable(similar),
-      session: serializable(session),
+      session,
     },
   };
 }

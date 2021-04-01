@@ -4,7 +4,7 @@ import Container from 'react-bootstrap/Container';
 import Link from 'next/link';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Select from 'react-select';
+import Image from 'react-bootstrap/Image';
 import FormControl from 'react-bootstrap/FormControl';
 import moment from 'moment';
 import Button from 'react-bootstrap/Button';
@@ -62,11 +62,11 @@ const FundingSession = ({ session, featuredCollective }) => {
       <div className="confetti trapezoid">
         <Container>
           <Row>
-            <Col md="5" lg="4" className="d-none d-md-block">
-              <FeaturedCollectiveCard collective={featuredCollective} />
+            <Col md="5"  className="d-none d-lg-block">
+              <FeaturedCollectiveCard  collective={featuredCollective} />
             </Col>
             <Col className="content">
-              <h1 className="display-4">{name}</h1>
+              <h1 className="display-4" style={{textShadow: '0 0 10px #000000'}}>{name}</h1>
               <h2>
                 {moment(start).format('MMMM Do') || 'no start date yet'}
             &nbsp;to&nbsp;
@@ -78,6 +78,11 @@ const FundingSession = ({ session, featuredCollective }) => {
               <Button href="https://www.oscollective.org/" variant="link" target="_blank"><OscLogo /></Button>
               &nbsp;&nbsp;
               <Button href="https://gitcoin.co/" variant="link" target="_blank"><GitcoinLogo /></Button>
+              <br />
+              <Button href="#" variant="link" target="_blank"><Image src="/sponsors/sustain.svg" /></Button>
+              
+              <Button href="https://synthetix.io/" variant="link" target="_blank"><Image src="/sponsors/synthetix.svg" /></Button>
+              <Button href="#" variant="link" target="_blank"><Image src="/sponsors/OCF.png" /></Button>
             </Col>
           </Row>
           <p style={{ padding: '30px 0' }} className="text-center content">

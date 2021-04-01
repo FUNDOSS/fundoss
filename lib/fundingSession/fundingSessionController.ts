@@ -1,5 +1,5 @@
 import FundingSession, { IFundingSession, IFundingSessionInput } from './fundingSessionModel';
-import Collectives from '../collectives/CollectivesController';
+import Collectives, { updateCollectivesTotals } from '../collectives/CollectivesController';
 import dbConnect from '../dbConnect';
 
 const getCollectivesFromInput = async (session) => {
@@ -35,11 +35,17 @@ export async function getCurrentSession():Promise<IFundingSession> {
   await dbConnect();
   const session = await FundingSession.findOne().populate('collectives');
   const collectives = session.collectives.map((col) => {
-    const totals = col.totals ? col.totals.get(session._id) : {amount: 0, donations: 0}
-    col.totals = totals;
+    const totals = col.totals ? col.totals[session._id] : {amount: 0, donations: []}
+    if(!Array.isArray(totals?.donations)){
+      col.totals = {amount: 0, donations: []};
+    } else {
+      col.totals = totals;
+    }
+     // updateCollectivesTotals([col._id],session._id);
     return col
     }
   )
+
   session.collectives = collectives;
   return session;
 }
@@ -74,7 +80,7 @@ export async function getBySlug(slug:string):Promise<IFundingSession> {
   return session;
 }
 
-export default class Users {
+export default class FundingSessionController {
     static insert = insertSession
 
     static getCurrent = getCurrentSession
