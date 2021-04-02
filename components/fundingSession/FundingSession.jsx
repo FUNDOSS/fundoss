@@ -163,18 +163,21 @@ const FundingSession = ({ session, featuredCollective, user }) => {
               }}
             />
             </Col>
-            <Col xs={4} lg={2} className="text-center"><small>Sort by</small>
-            <Button 
-              style={{margin:'0 10px'}}
-              onClick={() => change({sort: sort === 'desc' ? 'asc' : 'desc'})} 
-              variant="link">
-              {sort === 'asc' ? (
-                <><span className="with-caret-up"></span>Least funded</>
-              ) : (
-                <><span className="with-caret"></span>Most funded</>
-              )}
-            </Button>
-            </Col>
+            { started ? (
+              <Col xs={4} lg={2} className="text-center"><small>Sort by</small>
+                <Button 
+                  style={{margin:'0 10px'}}
+                  onClick={() => change({sort: sort === 'desc' ? 'asc' : 'desc'})} 
+                  variant="link">
+                  {sort === 'asc' ? (
+                    <><span className="with-caret-up"></span>Least funded</>
+                  ) : (
+                    <><span className="with-caret"></span>Most funded</>
+                  )}
+                </Button>
+              </Col>
+            ) : null}
+
           </Row>
 
         </Card>
