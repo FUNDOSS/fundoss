@@ -188,6 +188,11 @@ export async function getSharedPayment(sid:string) {
       {
         path: 'user',
         select: 'name avatar',
+      })
+    .populate(
+      {
+        path: 'session',
+        select: 'sponsors',
       }
     )
     .sort('field -time');
