@@ -14,7 +14,7 @@ import Icons from '../icons';
 import { formatAmountForDisplay } from '../../utils/currency';
 import Qf from '../../utils/qf';
 
-const FeaturedCollectiveCard = ({ collective }) => {
+const FeaturedCollectiveCard = ({ collective, active }) => {
   const {
     name, description, imageUrl, slug, website, githubHandle, totals
   } = collective;
@@ -89,7 +89,7 @@ const FeaturedCollectiveCard = ({ collective }) => {
           </Row>
       </Card.Body>
       <Card.Footer>
-        <Row className="no-gutters">
+      {active ? (<Row className="no-gutters">
           <Col xs={7}>
           {inCart != amount ? (
               <Button block variant="outline-primary" onClick={() =>  Cart.addItem(collective, amount, false)}>
@@ -105,8 +105,7 @@ const FeaturedCollectiveCard = ({ collective }) => {
           <Col>
             <Button block variant="link" href={`/collective/${slug}`}>Read more</Button>
           </Col>
-        </Row>
-
+        </Row>) : null }
       </Card.Footer>
     </Card>
   );

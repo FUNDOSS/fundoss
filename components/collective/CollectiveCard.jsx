@@ -7,12 +7,12 @@ import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Link from 'next/link';
-import Cart, { cartEvents } from '../cart/Cart';
+import Cart, { cartEvents, getPreviousDonation } from '../cart/Cart';
 import Icons from '../icons';
 import { formatAmountForDisplay } from '../../utils/currency';
 import Qf from '../../utils/qf';
 
-const CollectiveCard = ({ collective }) => {
+const CollectiveCard = ({ collective, active }) => {
   const {
     name, description, imageUrl, slug, website, githubHandle, totals
   } = collective;
@@ -43,7 +43,7 @@ const CollectiveCard = ({ collective }) => {
           </Col>
         </Row>
         <div className="text-center small" style={{margin:'10px 0 -10px 0'}}>
-      {totals?.donations.length ? (
+      {totals?.donations?.length ? (
           <>
           Raised <span className="text-fat">{formatAmountForDisplay(totals.amount)}</span> + 
           est. <span className="text-fat text-success">{formatAmountForDisplay( totals.donations.reduce( (total, amount) => total + Qf.calculate(amount), 0))}</span> match 
@@ -59,7 +59,7 @@ const CollectiveCard = ({ collective }) => {
 
       </Card.Body>
       <Card.Footer>
-        {Cart.previousDonations[collective._id] ? (
+        {getPreviousDonation(collective._id) ? (
           <div className="text-center small" style={{margin:'-20px 0 5px 0'}}>
             You donated&nbsp;
             <span className="text-fat"> 
@@ -70,7 +70,8 @@ const CollectiveCard = ({ collective }) => {
             </span> match
           </div>
         ) : null }
-        <Row className="no-gutters">
+        {active ? (
+          <Row className="no-gutters">
           <Col xs={7}>
             { !inCart ? (
               <Button block variant="outline-primary" onClick={() => Cart.addItem(collective, 20, true)}>
@@ -86,6 +87,8 @@ const CollectiveCard = ({ collective }) => {
             <Button block variant="link" href={`/collective/${slug}`}>Read more</Button>
           </Col>
         </Row>
+        ) : null}
+
 
       </Card.Footer>
     </Card>
