@@ -4,25 +4,27 @@ import Layout from '../../components/layout';
 import FundingSession from '../../components/fundingSession/FundingSession';
 import middleware from '../../middleware/all';
 import serializable from '../../lib/serializable';
-import Cart from '../../lib/cart/CartController';
+import ServerProps from '../../lib/serverProps';
+
 
 const IndexPage = ({
   session, user, cart, featured, 
 }) => (
   <Layout title="FundOSS | Quadratic funding for open source projects" user={user} cart={cart}>
-    {session._id ? <FundingSession session={session} featuredCollective={featured} /> : null }
+    {session._id ? <FundingSession session={session} featuredCollective={featured} user={user} /> : null }
   </Layout>
 );
 
 export async function getServerSideProps({ query, req, res }) {
   await middleware.run(req, res);
   const session = await FundingSessions.getBySlug(query.slug);
-  const cart = await Cart.get(req.session.cart);
+  const cart = await ServerProps.getCart(req.session.cart);
+  const user = await ServerProps.getUser(req.user);
   return {
     props: {
-      user: serializable(req.user),
+      user,
       session: serializable(session),
-      cart: serializable(cart),
+      cart,
       featured: serializable(
         session?.collectives[Math.floor(Math.random() * session.collectives.length)],
       ),

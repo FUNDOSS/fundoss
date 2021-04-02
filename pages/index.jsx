@@ -8,7 +8,7 @@ const IndexPage = ({
   session, user, cart, featured, 
 }) => (
   <Layout title="FundOSS | Quadratic funding for open source projects" user={user} cart={cart} session={session}>
-    {session._id ? <FundingSession session={session} featuredCollective={featured} /> : null }
+    {session._id ? <FundingSession session={session} featuredCollective={featured} user={user} /> : null }
   </Layout>
 );
 
