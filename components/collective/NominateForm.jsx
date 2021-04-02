@@ -47,8 +47,15 @@ export const NominateForm = () => {
           />
           <Form.Control.Feedback type="invalid">{errors.url}</Form.Control.Feedback>
         </Form.Group>
-        <Button block variant="primary" disabled={isSubmitting} type="submit">Nominate</Button>
-        </Card.Body></Card>
+        <Button block variant="primary" disabled={isSubmitting} type="submit">Nominate a collective</Button>
+        
+        </Card.Body>
+        <Card.Footer>
+        <p className="text-center">Or</p> 
+        <Button block variant="outline-primary" href="https://opencollective.com/create" target="_blank">Create your collective</Button>
+
+        </Card.Footer>
+        </Card>
       </Form>
     )}
     </Formik>
