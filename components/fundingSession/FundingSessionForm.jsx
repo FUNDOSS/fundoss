@@ -209,6 +209,19 @@ const FundingSessionForm = ({ sessionData }) => {
             <Form.Control.Feedback type="invalid">{errors.collectives}</Form.Control.Feedback>
           </Form.Group>
 
+          <Form.Group controlId="sponsors">
+            <Form.Label>Html with logos and links for the sponsors</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={3}
+              value={values.sponsors}
+              onChange={handleChange}
+              isValid={touched.sponsors && !errors.sponsors}
+              isInvalid={touched.sponsors && errors.sponsors}
+            />
+            <Form.Control.Feedback type="invalid">{errors.sponsors}</Form.Control.Feedback>
+          </Form.Group>
+
           <Form.Group>
             <Form.Label>Select tags to filter collectives</Form.Label>
             <Select

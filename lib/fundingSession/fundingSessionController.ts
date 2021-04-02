@@ -38,14 +38,13 @@ export async function getCurrentSession():Promise<IFundingSession> {
     const totals = col.totals ? col.totals[session._id] : {amount: 0, donations: []}
     if(!Array.isArray(totals?.donations)){
       col.totals = {amount: 0, donations: []};
+      updateCollectivesTotals([col._id],session._id);
     } else {
       col.totals = totals;
     }
-     // updateCollectivesTotals([col._id],session._id);
     return col
     }
   )
-
   session.collectives = collectives;
   return session;
 }

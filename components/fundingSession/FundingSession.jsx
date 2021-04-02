@@ -4,19 +4,20 @@ import Container from 'react-bootstrap/Container';
 import Link from 'next/link';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Image from 'react-bootstrap/Image';
 import FormControl from 'react-bootstrap/FormControl';
 import moment from 'moment';
 import Button from 'react-bootstrap/Button';
 import CollectiveCard from '../collective/CollectiveCard';
 import FeaturedCollectiveCard from '../collective/FeaturedCollectiveCard';
-import OscLogo from '../../svg/osc.svg';
-import GitcoinLogo from '../../svg/gitcoin.svg';
-import { Card } from 'react-bootstrap';
+import Sponsors from './Sponsors';
+import { Badge, Card, Image } from 'react-bootstrap';
+import Qf from '../../utils/qf';
+import { formatAmountForDisplay } from '../../utils/currency';
+import NominateForm from '../collective/NominateForm';
 
-const FundingSession = ({ session, featuredCollective }) => {
+const FundingSession = ({ session, featuredCollective, user }) => {
   const {
-    name, description, collectives, start, end, _id,
+    name, description, collectives, start, end, sponsors, totals
   } = session;
 
   const [collectivesList, setCollectivesList] = useState(collectives);
@@ -24,6 +25,22 @@ const FundingSession = ({ session, featuredCollective }) => {
   const [sortOn, setSortOn] = useState('total');
   const [tags, setTags] = useState([]);
   const [search, setSearch] = useState(null);
+  const started = moment() > moment(start);
+  const ended = moment() > moment(end);
+  const sessionInfo = collectives.reduce(
+    (info, c) => ({ 
+      match: info.match + (c.totals.donations?.reduce(
+          (total, d) => total + Qf.calculate(d),
+          0) || 0 ),
+      collectives:{...info.collectives, ...{[c._id]: c}}
+      }) ,
+     {match:0, collectives:{}});
+  
+  const totalMatches = sessionInfo.match;
+  const userDonations = user.donations ? Object.keys(user.donations).map(
+      key => ({collective:sessionInfo.collectives[key], amount:user.donations[key]}) 
+    ) : null;
+
   const change = ( filters ) => {
     if(filters.sort) setSort(filters.sort);
     if(filters.sortOn) setSortOn(filters.sortOn);
@@ -63,26 +80,49 @@ const FundingSession = ({ session, featuredCollective }) => {
         <Container>
           <Row>
             <Col md="5"  className="d-none d-lg-block">
-              <FeaturedCollectiveCard  collective={featuredCollective} />
+            {started ? (<FeaturedCollectiveCard  collective={featuredCollective} active={started && !ended} />) : (
+              <NominateForm />
+            )}
             </Col>
             <Col className="content">
-              <h1 className="display-4" style={{textShadow: '0 0 10px #000000'}}>{name}</h1>
-              <h2>
-                {moment(start).format('MMMM Do') || 'no start date yet'}
-            &nbsp;to&nbsp;
-                {moment(end).format('MMMM Do') || 'no end date yet'}
-              </h2>
-              <div className="session-description" dangerouslySetInnerHTML={{ __html: description }} />
-              <p><Link href="/quadratic-funding">Learn More about Democratic Funding</Link></p>
-              <p>Brought to You By</p>
-              <Button href="https://www.oscollective.org/" variant="link" target="_blank"><OscLogo /></Button>
-              &nbsp;&nbsp;
-              <Button href="https://gitcoin.co/" variant="link" target="_blank"><GitcoinLogo /></Button>
-              <br />
-              <Button href="#" variant="link" target="_blank"><Image src="/sponsors/sustain.svg" /></Button>
+              <h1 style={{textShadow: '0 0 10px #000000'}}>{name}</h1>
+              <Badge variant="danger">{started && !ended ? 'Ends ' + moment(end).fromNow() : null}</Badge>
+              {started && ended ? (<h2><small>Ended</small> {moment(end).format('MMMM Do YYYY')}</h2>) : null}
+              {!started && !ended ? (<>
+                <span className="lead">from {moment(start).format('MMMM Do')} to {moment(end).format('MMMM Do YYYY')}</span> 
               
-              <Button href="https://synthetix.io/" variant="link" target="_blank"><Image src="/sponsors/synthetix.svg" /></Button>
-              <Button href="#" variant="link" target="_blank"><Image src="/sponsors/OCF.png" /></Button>
+              <span className="display-2">
+                  {formatAmountForDisplay( session.matchedFunds - totalMatches, 'USD')}</span>
+                  <Badge variant="danger" style={{position:'absolute', marginLeft:'-50px'}}>in matched funding</Badge>
+              </>) : null}
+              {started ? (
+                <div>
+                   <span className="display-3">{formatAmountForDisplay(totals.amount)}</span>
+                   <span className="lead"></span>
+                   <Badge variant="success" style={{position:'absolute', marginLeft:'-50px'}}>{totals.donations} donors</Badge>
+                   &nbsp;+&nbsp;
+                  <span className="text-fat display-3 text-success">
+                  {formatAmountForDisplay( totalMatches, 'USD')}</span>
+                   <Badge variant="danger" style={{position:'absolute', marginLeft:'-50px'}}>est matched</Badge>
+
+                   <br />Left in the fund :<br /><span className="display-2">
+                  {formatAmountForDisplay( session.matchedFunds - totalMatches, 'USD')}</span>
+                  <Badge variant="danger" style={{position:'absolute', marginLeft:'-50px'}}>to be matched</Badge>
+                   </div>
+                   
+              ) : null }
+
+              {user.donations.length ? 
+              (<div style={{margin:'15px 0'}}>Your donnations : <br />{userDonations.map( 
+                donation => <Image width={30} height={30} key={donation.collective._id} src={donation.collective.imageUrl} roundedCircle fluid />
+              )}</div>) : (
+                <>
+               <div className="session-description" dangerouslySetInnerHTML={{ __html: description }} />
+              <p><Link href="/quadratic-funding">Learn More about Democratic Funding</Link></p>
+                </>
+              )}
+
+              <Sponsors sponsors={sponsors} />
             </Col>
           </Row>
           <p style={{ padding: '30px 0' }} className="text-center content">
@@ -124,7 +164,7 @@ const FundingSession = ({ session, featuredCollective }) => {
           collectivesList.map(
             (collective) => (
               <Col md={6} lg={4} key={collective.slug}>
-                <CollectiveCard collective={collective} />
+                <CollectiveCard collective={collective} active={started && !ended} />
               </Col>
             ),
           )

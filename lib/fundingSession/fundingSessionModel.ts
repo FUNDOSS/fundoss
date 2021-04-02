@@ -50,6 +50,9 @@ const FundingSessionSchema = new Schema({
   description: {
     type: String,
   },
+  sponsors: {
+    type: String,
+  },
   tags: [{
     type: String,
   }],
