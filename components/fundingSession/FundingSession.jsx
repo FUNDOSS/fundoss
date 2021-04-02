@@ -86,33 +86,51 @@ const FundingSession = ({ session, featuredCollective, user }) => {
             </Col>
             <Col className="content">
               <h1 style={{textShadow: '0 0 10px #000000'}}>{name}</h1>
-              <Badge variant="danger">{started && !ended ? 'Ends ' + moment(end).fromNow() : null}</Badge>
+
               {started && ended ? (<h2><small>Ended</small> {moment(end).format('MMMM Do YYYY')}</h2>) : null}
               {!started && !ended ? (<>
-                <span className="lead">from {moment(start).format('MMMM Do')} to {moment(end).format('MMMM Do YYYY')}</span> 
-              
-              <span className="display-2">
-                  {formatAmountForDisplay( session.matchedFunds - totalMatches, 'USD')}</span>
-                  <Badge variant="danger" style={{position:'absolute', marginLeft:'-50px'}}>in matched funding</Badge>
+                <span style={{display:'inline-block'}}>
+                  <span className="lead  text-fat">
+                    from {moment(start).format('MMMM Do')} <br />
+                    to {moment(end).format('MMMM Do YYYY')}
+                  </span> 
+                </span>
+                <span style={{display:'inline-block'}} className="text-center">
+                  in matched funding<br />
+                  <span className="display-2 text-success text-fat">
+                      {formatAmountForDisplay( session.matchedFunds, 'USD')}
+                  </span>
+                </span>
               </>) : null}
               {started ? (
                 <div>
-                   <span className="display-3">{formatAmountForDisplay(totals.amount)}</span>
-                   <span className="lead"></span>
-                   <Badge variant="success" style={{position:'absolute', marginLeft:'-50px'}}>{totals.donations} donors</Badge>
-                   &nbsp;+&nbsp;
-                  <span className="text-fat display-3 text-success">
-                  {formatAmountForDisplay( totalMatches, 'USD')}</span>
-                   <Badge variant="danger" style={{position:'absolute', marginLeft:'-50px'}}>est matched</Badge>
-
-                   <br />Left in the fund :<br /><span className="display-2">
-                  {formatAmountForDisplay( session.matchedFunds - totalMatches, 'USD')}</span>
-                  <Badge variant="danger" style={{position:'absolute', marginLeft:'-50px'}}>to be matched</Badge>
+                  <span style={{display:'inline-block'}} className="text-center">
+                   {totals.donations} donors<br />
+                    <span className="display-3">{formatAmountForDisplay(totals.amount)}</span>
+                  </span>
+                  &nbsp;&nbsp;+&nbsp;&nbsp;
+                   <span style={{display:'inline-block'}} className="text-center">
+                    Estimated match<br />
+                    <span className="text-fat display-3 text-success">
+                      {formatAmountForDisplay( Math.round(totalMatches), 'USD')}
+                    </span>
+                   </span>&nbsp;&nbsp;
+                   <span style={{display:'inline-block'}} className="text-center">
+                    Left to be matched<br /><span className="display-3">
+                    {formatAmountForDisplay( Math.round(session.matchedFunds - totalMatches), 'USD')}</span>
+                    </span>
                    </div>
                    
               ) : null }
 
-              {user.donations.length ? 
+              {started && !ended ? (
+                <span className="lead">
+                  ends {moment(end).format('MMMM Do')} <Badge variant="danger"> {moment(end).fromNow()}</Badge>
+                </span>
+              ) : null}
+
+
+              {user.donations?.length ? 
               (<div style={{margin:'15px 0'}}>Your donnations : <br />{userDonations.map( 
                 donation => <Image width={30} height={30} key={donation.collective._id} src={donation.collective.imageUrl} roundedCircle fluid />
               )}</div>) : (
