@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import nanoid from '../nanoid'
+import nanoid from '../nanoid';
 
 export interface IPaymentInput {
   _id?: string;
@@ -28,7 +28,7 @@ export interface IPayment extends Document {
 const PaymentSchema = new Schema({
   sid: {
     type: String,
-    default: () => nanoid()
+    default: () => nanoid(),
   },
   amount: {
     type: Number,

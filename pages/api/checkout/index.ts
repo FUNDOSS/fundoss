@@ -28,16 +28,16 @@ handler.post(async (req: any, res: NextApiResponse) => {
         .map((_id) => req.session.cart[_id])
         .reduce((acc, amt) => acc + Number(amt), 0);
 
-      const cartData = (await Cart.get(req.session.cart)).reduce( (data, item) => ( {
-          amount: data.amount + Number(item.amount),
-          meta: { ...data.meta, [item.collective.slug]:item.amount }
-        }), {amount:0, meta:{}});
+      const cartData = (await Cart.get(req.session.cart)).reduce((data, item) => ({
+        amount: data.amount + Number(item.amount),
+        meta: { ...data.meta, [item.collective.slug]: item.amount },
+      }), { amount: 0, meta: {} });
       const params: Stripe.PaymentIntentCreateParams = {
         payment_method_types: ['card'],
         amount: formatAmountForStripe(cartData.amount),
         currency: 'USD',
         description: process.env.STRIPE_PAYMENT_DESCRIPTION ?? '',
-        metadata:cartData.meta
+        metadata: cartData.meta,
       };
       const paymentIntent: Stripe.PaymentIntent = await stripe.paymentIntents.create(
         params,
@@ -59,9 +59,9 @@ handler.post(async (req: any, res: NextApiResponse) => {
       );
       payment.status = intent.status;
       payment.confirmation = intent;
-      payment.donations = (await Cart.get(req.session.cart)).reduce( (data, item) => (
-          { ...data, [item.collective._id]:item.amount }
-        ), {});
+      payment.donations = (await Cart.get(req.session.cart)).reduce((data, item) => (
+        { ...data, [item.collective._id]: item.amount }
+      ), {});
       await Payment.update(payment);
       req.session.cart = {};
       return res.status(200).json({ payment, intent });

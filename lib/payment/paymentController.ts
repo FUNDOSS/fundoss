@@ -19,7 +19,6 @@ export async function updatePayment(payment) {
   if (payment.donations) {
     const fee = payment.confirmation.charges.data
       .reduce((acc, charge) => acc + (charge.balance_transaction.fee / 100), 0);
-    const collectives = [];
     const donations = await Promise.all(
       Object.keys(payment.donations)
         .map(async (collectiveId) => {
@@ -39,14 +38,15 @@ export async function updatePayment(payment) {
         }),
     );
 
-
-
-    const sessionTotals = (await Donation.find(
-      { session: payment.session },
-    )).reduce((acc, don) => ({
-      donations: acc.donations + 1,
-      amount: acc.amount + don.amount,
-    }), { donations: 0, amount: 0 });
+    const sessionTotals = (await Donation
+      .aggregate([
+        { $match: { session: mongoose.Types.ObjectId(payment.session) } },
+        { $group: { _id: { user: '$user', collective: '$collective' }, amount: { $sum: '$amount' } } },
+      ]))
+      .reduce((acc, don) => ({
+        donations: [...acc.donations, don.amount],
+        amount: acc.amount + don.amount,
+      }), { donations: [], amount: 0 });
 
     await fundingSessionModel.updateOne({ _id: payment.session }, { totals: sessionTotals });
 
@@ -77,46 +77,58 @@ export async function getPayments(query) {
     .limit(20);
 }
 
-export async function getSessionDisbursement(sessionId){
+export async function getDonationsBySession(sessionId) {
+  return Donation
+    .aggregate([
+      { $match: { session: mongoose.Types.ObjectId(sessionId) } },
+      { $group: { _id: { user: '$user', collective: '$collective' }, amount: { $sum: '$amount' }, fee: { $sum: '$fee' } } },
+    ]);
+}
+
+export async function getSessionDisbursement(sessionId) {
   const session = await FundingSessions.getById(sessionId);
   const donations = await Donation
     .aggregate([
-      {$match: {session:mongoose.Types.ObjectId(sessionId)}},
-      {$group: {_id:{user:'$user', collective: '$collective'}, amount:{$sum:'$amount' }, fee:{$sum:'$fee' }}},
+      { $match: { session: mongoose.Types.ObjectId(sessionId) } },
+      { $group: { _id: { user: '$user', collective: '$collective' }, amount: { $sum: '$amount' }, fee: { $sum: '$fee' } } },
     ]);
-    const numDonations = donations.length;
-    const totalDonations = donations.reduce((total, d) => total += d.amount ,0);
-    const averageDonation = totalDonations / numDonations;
-    const averageMatch = session.matchedFunds / numDonations;
-    const matches = donations.map(d => ({
-      collective: d._id.collective,
-      amount: d.amount,
-      match: Qf.calculate(d.amount,averageDonation,averageMatch),
-      fee: d.fee,
-    }))
-    const totalMatches = matches.reduce((total, m) => total += m.match, 0)
-    const matchRatio = totalMatches/session.matchedFunds
-    const collectivesTotalsInit = session.collectives.reduce(
-      (cols,col)=> ({...cols, ...{[col._id]: {donation: 0, match:0, fee:0 } }})
-    , {})
-    const collectiveTotals = matches.reduce( (totals, m) => {
-      totals[m.collective].donation += m.amount;
-      totals[m.collective].match += m.match / matchRatio;
-      totals[m.collective].fee += m.fee;
-      return totals;
-    }, collectivesTotalsInit);
-    const disbursments = session.collectives.map(c=>{
-      const totals = collectiveTotals[c._id];
-      const matched = Math.round(totals.match*100)/100
-      const fee = Math.round(totals.fee*100)/100
-      const donation = Math.round(totals.donation*100)/100
-      return {
-        slug: c.slug,
-        donation,
-        matched,
-        fee,
-        total: Math.round((donation + matched - fee)*100)/100
-      }})
+  const numDonations = donations.length;
+  const totalDonations = donations.reduce((total, d) => total + d.amount, 0);
+  const averageDonation = totalDonations / numDonations;
+  const averageMatch = session.matchedFunds / numDonations;
+  const matches = donations.map((d) => ({
+    collective: d._id.collective,
+    amount: d.amount,
+    match: Qf.calculate(d.amount, averageDonation, averageMatch),
+    fee: d.fee,
+  }));
+  const totalMatches = matches.reduce((total, m) => total + m.match, 0);
+  const matchRatio = totalMatches / session.matchedFunds;
+  const collectivesTotalsInit = session.collectives.reduce(
+    (cols, col) => ({ ...cols, ...{ [col._id]: { donation: 0, match: 0, fee: 0 } } }),
+    {},
+  );
+  const collectiveTotals = matches.reduce((totals, m) => {
+    const collective = {
+      donation: totals[m.collective].donation + m.amount,
+      match: totals[m.collective].match + (m.match / matchRatio),
+      fee: totals[m.collective].fee + m.fee,
+    };
+    return { ...totals, ...{ [m.collective]: collective } };
+  }, collectivesTotalsInit);
+  const disbursments = session.collectives.map((c) => {
+    const totals = collectiveTotals[c._id];
+    const matched = Math.round(totals.match * 100) / 100;
+    const fee = Math.round(totals.fee * 100) / 100;
+    const donation = Math.round(totals.donation * 100) / 100;
+    return {
+      slug: c.slug,
+      donation,
+      matched,
+      fee,
+      total: Math.round((donation + matched - fee) * 100) / 100,
+    };
+  });
 
   return disbursments;
 }
@@ -136,7 +148,7 @@ export async function getPaymentsByUser(userId:string) {
     .limit(20);
 }
 
-export async function getDonationsByUser(userId:string){
+export async function getDonationsByUser(userId:string) {
   await dbConnect();
   return Donation.find({ user: userId })
     .populate({
@@ -150,15 +162,20 @@ export async function getDonationsByUser(userId:string){
     .sort('field -_id');
 }
 
-
-export async function getGroupedDonationsByUser(userId:string, sessionId:string){
+export async function getGroupedDonationsByUser(userId:string, sessionId:string) {
   await dbConnect();
   return (await Donation.aggregate([
-    {$match: {session:mongoose.Types.ObjectId(sessionId), user:mongoose.Types.ObjectId(userId)}},
-    {$group: {_id:{collective: '$collective'}, amount:{$sum:'$amount' }}},
-  ])).reduce((collectives, donation) => ({...collectives, ...{[donation._id.collective]: donation.amount}}), {});
+    {
+      $match: {
+        session: mongoose.Types.ObjectId(sessionId),
+        user: mongoose.Types.ObjectId(userId),
+      },
+    },
+    { $group: { _id: { collective: '$collective' }, amount: { $sum: '$amount' } } },
+  ])).reduce((collectives, donation) => (
+    { ...collectives, ...{ [donation._id.collective]: donation.amount } }
+  ), {});
 }
-
 
 export async function getLastPaymentByUser(userId:string) {
   await dbConnect();
@@ -188,12 +205,13 @@ export async function getSharedPayment(sid:string) {
       {
         path: 'user',
         select: 'name avatar',
-      })
+      },
+    )
     .populate(
       {
         path: 'session',
         select: 'sponsors',
-      }
+      },
     )
     .sort('field -time');
   return payment;
@@ -219,4 +237,6 @@ export default class Payments {
     static getShared = getSharedPayment
 
     static getGroupedDonationsByUser = getGroupedDonationsByUser
+
+    static getDonationsBySession = getDonationsBySession
 }

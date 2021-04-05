@@ -39,6 +39,11 @@
 @import "~bootstrap/scss/utilities";
 @import "~bootstrap/scss/print";
 
+@import "robot";
+
+
+
+
 body{
     padding-top: $navbar-brand-height + ( $navbar-brand-padding-y * 4);
     -webkit-font-smoothing: antialiased;
@@ -98,8 +103,12 @@ footer{
 
 .form-control, div.form-select, .btn,.input-group{
     box-shadow: $input-box-shadow;
-    
 }
+
+.shadow-light{
+    box-shadow: $input-box-shadow;
+}
+
 .input-group{
     .form-control{box-shadow:none}
     .input-group-prepend{background: none;font-size: 0.8rem;}
@@ -229,7 +238,8 @@ h4, h5 {font-family: $font-family-sans-serif; margin:20px 0 10px; text-transform
 h5{font-size: 1rem;}
 h4{font-size: 1.1rem;}
 h3{font-size: 1.2rem;}
-
+h1{margin:2rem 0}
+.no-margin{margin:0}
 .bg1{
     background-position: left top;
     background-repeat: no-repeat;

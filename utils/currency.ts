@@ -4,16 +4,16 @@ export function formatAmountForDisplay(
 ): string {
   const numberFormat = new Intl.NumberFormat(['en-US']);
   const floored = Math.floor(amount);
-  const digits = Math.floor(( amount * 100 ) - (floored * 100));
+  const digits = Math.floor((amount * 100) - (floored * 100));
   let digitsDisplay = '';
-  if(digits){
-    if(digits < 10) {
-      digitsDisplay = '.0'+ digits;
+  if (digits) {
+    if (digits < 10) {
+      digitsDisplay = `.0${digits}`;
     } else {
-      digitsDisplay = '.'+ digits;
+      digitsDisplay = `.${digits}`;
     }
   }
-  return '$' + numberFormat.format(floored) + digitsDisplay ;
+  return `$${numberFormat.format(floored)}${digitsDisplay}`;
 }
 
 export function formatAmountForStripe(

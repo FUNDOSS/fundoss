@@ -1,0 +1,125 @@
+.robot svg {
+    margin-top: -150px;
+  }
+  
+  
+  @-webkit-keyframes robot_bounce{
+  
+          0%{
+          transform:translateY(80px)}
+  
+          100%{
+          transform:translateY(30px)}}
+  
+          @keyframes robot_bounce{
+  
+          0%{
+          transform:translateY(80px)}
+  
+          100%{
+          transform:translateY(30px)}}
+  
+          @-webkit-keyframes shadow{
+  
+          0%{ 
+          transform:scale(1.5,1.2); 
+      }
+  
+          100%{
+          transform:scale(1,1); 
+      }}
+  
+          @keyframes shadow{
+  
+          0%{
+          transform:scale(1.5,1.2); 
+          opacity:0.4}
+  
+          100%{
+          transform:scale(1,1); 
+          opacity:0.2}}
+  
+          @-webkit-keyframes arms_bounce_left{
+  
+          0%{
+          transform:rotate(0deg)}
+  
+          100%{
+          transform:rotate(-15deg)}}
+  
+          @keyframes arms_bounce_left{
+  
+          0%{
+          transform:rotate(0deg)}
+  
+          100%{
+          transform:rotate(-15deg)}}
+  
+          @-webkit-keyframes arms_bounce_right{
+  
+          0%{
+          transform:rotate(0deg)}
+  
+          100%{
+          transform:rotate(15deg)}}
+  
+          @keyframes arms_bounce_right{
+  
+          0%{
+          transform:rotate(0deg)}
+  
+          100%{
+          transform:rotate(15deg)}}
+  
+          @-webkit-keyframes eyes_blink{
+  
+          0%{
+          transform:scale(1,1)}
+  
+          90%{ 
+          transform:scale(1,1)}
+  
+          95%{
+          transform:scale(0.8,0)}
+  
+          100%{
+          transform:scale(1,1)}}
+  
+          @keyframes eyes_blink{
+  
+          0%{
+          transform:scale(1,1)}
+  
+          90%{
+          transform:scale(1,1)}
+  
+          95%{
+          transform:scale(0.8,0)}
+  
+          100%{
+          transform:scale(1,1)}}
+  
+          #body{
+          animation:robot_bounce 1.1s ease-in-out 0s infinite alternate}
+  
+          #head{
+          animation:robot_bounce 1.1s ease-in-out 0.05s infinite alternate}
+  
+          #arms{
+          animation:robot_bounce 1.1s ease-in-out 0.1s infinite alternate}
+  
+          #arms #left{
+          transform-origin:center right; 
+          animation:arms_bounce_left 1.1s ease-in-out 0s infinite alternate}
+  
+          #arms #right{
+          transform-origin:center left; 
+          animation:arms_bounce_right 1.1s ease-in-out 0s infinite alternate}
+  
+          #eyes ellipse{
+          transform-origin:center center; 
+          animation:eyes_blink 2s ease-out 0s infinite alternate}
+  
+          #hover ellipse{
+          transform-origin:center center; 
+          animation:shadow 1.1s ease-in-out 0s infinite alternate}

@@ -19,7 +19,7 @@ handler.get(async (req:any, res:NextApiResponse) => {
 
 handler.post(async (req:any, res:NextApiResponse) => {
   const cart = req.session.cart || {};
-  const newCart = req.body.reduce((cart, item) => ({...cart, [item.collective] : item.amount}), cart)
+  const newCart = req.body.reduce((cart, item) => ({ ...cart, [item.collective]: item.amount }), cart);
   req.session.cart = newCart;
   return res.status(200).json(newCart);
 });

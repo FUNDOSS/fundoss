@@ -15,21 +15,20 @@ handler.get(async (req: any, res: NextApiResponse) => {
   if (req.user.role !== 'admin') {
     return res.status(403).send('Forbidden ');
   }
-  if(req.query.session) {
+  if (req.query.session) {
     const disbursments = await Payment.getSessionDisbursement(req.query.session);
-    res.setHeader('Content-Disposition', 'attachment; filename="' + 'fundoss-disbursments-' + Date.now() + '.csv"');
+    res.setHeader('Content-Disposition', `${'attachment; filename="' + 'fundoss-disbursments-'}${Date.now()}.csv"`);
     return res.status(200).send(csvify(disbursments, {
       header: true,
-      columns:{
-        slug:'Collective',
-        donation:'Donations',
-        matched:'Matched',
-        fee:'Stripe fee',
-        total:'Total',
-      }
-    } ));
+      columns: {
+        slug: 'Collective',
+        donation: 'Donations',
+        matched: 'Matched',
+        fee: 'Stripe fee',
+        total: 'Total',
+      },
+    }));
   }
-
 });
 
 export default handler;
