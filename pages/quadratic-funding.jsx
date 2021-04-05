@@ -13,8 +13,8 @@ const QFPage = ({ user }) => (
       <Card style={{ maxWidth: '650px' }}><Card.Body><Calculator /></Card.Body></Card>
       <Card style={{ maxWidth: '650px' }}><Card.Body><Calculator fudge={0.3} exp={1} /></Card.Body></Card>
       <Card style={{ maxWidth: '650px' }}><Card.Body><Calculator fudge={1.1} exp={3} /></Card.Body></Card>
-      <Card style={{ maxWidth: '650px' }}><Card.Body><Calculator fudge={0.6} exp={3} inout /></Card.Body></Card>
-      <Card style={{ maxWidth: '650px' }}><Card.Body><Calculator fudge={0.5} exp={1.8} inout /></Card.Body></Card>
+      <Card style={{ maxWidth: '650px' }}><Card.Body><Calculator fudge={0.6} exp={3} symetric /></Card.Body></Card>
+      <Card style={{ maxWidth: '650px' }}><Card.Body><Calculator fudge={0.5} exp={1.8} symetric /></Card.Body></Card>
     </Container>
   </Layout>
 );

@@ -11,7 +11,14 @@ const DisbursmentsTable = ({ donations, session }) => {
   const matches = donations.map((d) => ({
     collective: d._id.collective,
     amount: d.amount,
-    match: Qf.calculate(d.amount, averageDonation, averageMatch, 2, 1),
+    match: Qf.calculate(
+      d.amount, 
+      averageDonation, 
+      averageMatch, 
+      session.matchingCurve.exp, 
+      1,
+      session.matchingCurve.exp,
+    ),
     fee: d.fee,
   }));
   const totalMatches = matches.reduce((total, m) => total + m.match, 0);

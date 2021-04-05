@@ -3,7 +3,7 @@ import { Form, Row, Col } from 'react-bootstrap';
 import Graph from './graph';
 import Qf from '../../utils/qf';
 
-const Calculator = ({ exp, fudge, inout }) => {
+const Calculator = ({ exp, fudge, symetric }) => {
   const [form, setForm] = useState({
     matchedFunds: 75000,
     averageDonationEst: 20,
@@ -66,7 +66,7 @@ const Calculator = ({ exp, fudge, inout }) => {
           form.matchedFunds / form.numberDonationEst,
           exp, 
           fudge, 
-          inout,
+          symetric,
         )} 
         fudge={fudge} 
         exp={exp}
