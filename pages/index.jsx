@@ -4,6 +4,7 @@ import FundingSession from '../components/fundingSession/FundingSession';
 import middleware from '../middleware/all';
 import ServerProps from '../lib/serverProps';
 import serializable from '../lib/serializable';
+import CartController from '../lib/cart/CartController';
 
 const IndexPage = ({
   session, user, cart, featured, predicted,
@@ -23,7 +24,7 @@ const IndexPage = ({
 export async function getServerSideProps({ req, res }) {
   await middleware.run(req, res);
   const session = await ServerProps.getCurrentSession();
-  const cart = await ServerProps.getCart(req.session.cart);
+  const cart = await CartController.get(req.session.cart);
   const user = await ServerProps.getUser(req.user);
   const featured = session?.collectives[Math.floor(Math.random() * session.collectives.length)];
   return {
@@ -32,7 +33,7 @@ export async function getServerSideProps({ req, res }) {
       user,
       session: serializable(session),
       featured: serializable(featured),
-      cart,
+      cart: serializable(cart), 
     },
   };
 }

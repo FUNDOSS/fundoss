@@ -16,6 +16,7 @@ import Icons from '../../../components/icons';
 import CollectiveCard from '../../../components/collective/CollectiveCard';
 import ShareButton from '../../../components/social/ShareButton';
 import FundingSessionInfo from '../../../components/fundingSession/FundingSessionInfo';
+import CartController from '../../../lib/cart/CartController';
 
 const collectivePage = ({
   collective, user, cart, similar, session, sessions,
@@ -94,7 +95,10 @@ const collectivePage = ({
               ) : null}
               <div style={{ margin: '30px 0', padding: '10px' }}>
                 <h3>Share This Project</h3>
-                <p>Projects that get social boosts from donors have a higher likelihood of hitting their fundraising needs each year. Please considering lending your voice to suppor these OSS projects!</p>
+                <p>Projects that get social boosts from donors have a higher&nbsp;
+                  likelihood of hitting their fundraising needs each year.&nbsp;
+                  Please considering lending your voice to suppor these OSS projects!
+                </p>
                 <ShareButton platform="twitter" variant="link" url={`/collective/${slug}`} />
                 <ShareButton platform="facebook" variant="link" url={`/collective/${slug}`} />
                 <ShareButton platform="email" variant="link" url={`/collective/${slug}`} />
@@ -130,7 +134,7 @@ export async function getServerSideProps({ query, req, res }) {
   const session = await ServerProps.getCurrentSessionInfo();
   const collective = await collectives.findBySlug(query.slug);
   const sessions = await FundingSessions.getCollectiveSessions(collective._id);
-  const cart = await ServerProps.getCart(req.session.cart);
+  const cart = await CartController.get(req.session.cart);
   const user = await ServerProps.getUser(req.user);
   const similar = await collectives.similar();
   collective.totals = collective.sessionTotals.reduce(
@@ -141,7 +145,7 @@ export async function getServerSideProps({ query, req, res }) {
   return {
     props: {
       user,
-      cart,
+      cart: serializable(cart), 
       collective: serializable(collective),
       similar: serializable(similar),
       sessions: serializable(sessions),
