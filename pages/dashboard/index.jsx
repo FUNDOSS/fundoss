@@ -41,7 +41,7 @@ export async function getServerSideProps({ req, res }) {
   const user = await ServerProps.getUser(req.user);
   return {
     props: {
-      predicted: ServerProps.predicted,
+      predicted: serializable(ServerProps.predicted),
       user,
       sessions: serializable(sessions),
       payments: serializable(payments),

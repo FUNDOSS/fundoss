@@ -29,7 +29,7 @@ export async function getServerSideProps({ req, res }) {
   const featured = session?.collectives[Math.floor(Math.random() * session.collectives.length)];
   return {
     props: {
-      predicted: ServerProps.predicted,
+      predicted: serializable(ServerProps.predicted),
       user,
       session: serializable(session),
       featured: serializable(featured),
