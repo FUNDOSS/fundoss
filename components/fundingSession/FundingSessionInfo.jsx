@@ -4,7 +4,7 @@ import { Badge } from 'react-bootstrap';
 import Qf from '../../utils/qf';
 import { formatAmountForDisplay } from '../../utils/currency';
 
-const FundingSessionInfo = ({ session }) => {
+const FundingSessionInfo = ({ session, predicted }) => {
   const {
     start, end, totals,
   } = session;
@@ -13,7 +13,14 @@ const FundingSessionInfo = ({ session }) => {
   const ended = moment() > moment(end);
 
   const totalMatches = (totals?.donations || [0]).reduce(
-    (total, d) => total + Qf.calculate(d),
+    (total, d) => total + Qf.calculate(
+      d, 
+      predicted.donation, 
+      predicted.match, 
+      session.matchingCurve.exp,
+      predicted.fudge,
+      session.matchingCurve.inout,
+    ),
   );
 
   return (

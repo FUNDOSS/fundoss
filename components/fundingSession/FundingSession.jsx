@@ -7,18 +7,17 @@ import Col from 'react-bootstrap/Col';
 import FormControl from 'react-bootstrap/FormControl';
 import moment from 'moment';
 import Button from 'react-bootstrap/Button';
-import { Badge, Card, Image } from 'react-bootstrap';
+import { Card, Image } from 'react-bootstrap';
 import CollectiveCard from '../collective/CollectiveCard';
 import FeaturedCollectiveCard from '../collective/FeaturedCollectiveCard';
 import Sponsors from './Sponsors';
 import Qf from '../../utils/qf';
-import { formatAmountForDisplay } from '../../utils/currency';
 import FundingSessionInfo from './FundingSessionInfo';
 import Nominate from '../collective/NominateForm';
 
-const FundingSession = ({ session, featuredCollective, user }) => {
+const FundingSession = ({ session, featuredCollective, user, predicted }) => {
   const {
-    name, description, collectives, start, end, sponsors, totals,
+    name, description, collectives, start, end, sponsors, 
   } = session;
 
   const [collectivesList, setCollectivesList] = useState(collectives);
@@ -94,7 +93,7 @@ const FundingSession = ({ session, featuredCollective, user }) => {
             <Col className="content">
               <h1 className="no-margin" style={{ textShadow: '0 0 10px #000000' }}>{name}</h1>
 
-              <FundingSessionInfo session={session} />
+              <FundingSessionInfo session={session} predicted={predicted} />
 
               {user.donations?.length 
                 ? (
