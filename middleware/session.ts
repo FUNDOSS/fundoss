@@ -10,11 +10,16 @@ export default async function sessionMiddleware(req, res, next) {
   const mongoStore = new MongoStore({
     mongooseConnection: mongoose.connection,
   });
-  return session({
-    secure: true,
+  const sessionConfig = {
     secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: true,
     store: mongoStore,
-  })(req, res, next);
+    cookie: { secure: false },
+  };
+  if (process.env.HOSTING_URL.indexOf('https') === 0) {
+    sessionConfig.cookie.secure = true;
+  }
+  console.log('sessionConfig.cookie.secure', sessionConfig.cookie.secure);
+  return session(sessionConfig)(req, res, next);
 }
