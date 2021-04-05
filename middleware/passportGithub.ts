@@ -17,10 +17,8 @@ passport.use(new GithubStrategy(
   appConfig.github,
   async (accessToken, refreshToken, githubProfile: any, cb) => {
     try {
-      console.log(githubProfile)
       const existingUser:IUser = await Users.findByGithubId(githubProfile.id);
       if (existingUser?._id) {
-        console.log(existingUser)
         cb(null, existingUser);
       } else {
         const userInput:IUserInput = {
