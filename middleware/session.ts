@@ -11,7 +11,7 @@ export default async function sessionMiddleware(req, res, next) {
     mongooseConnection: mongoose.connection,
   });
   return session({
-    secure: false,
+    secure: true,
     secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: true,
