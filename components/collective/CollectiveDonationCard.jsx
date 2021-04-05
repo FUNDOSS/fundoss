@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Pluralize from 'pluralize';
-import { Badge, Col, Row, InputGroup } from 'react-bootstrap';
+import {
+  Badge, Col, Row, InputGroup, 
+} from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
@@ -29,26 +31,24 @@ const CollectiveDonationCard = ({ collective }) => {
   return (
     <Card>
       <Card.Body>
-      {totals?.donations.length ? (
-        <div style={{ margin: '10px 0 20px' }} className="text-center">
-          <b>{totals.donations.length}</b> {Pluralize('donor', totals.donations.length)} raised
-          <Row className="no-gutters text-center align-items-center">
-            <Col xs={5} className="text-right">
-              <span style={{ fontSize: '1.8rem' }}>
-              {formatAmountForDisplay(totals.amount)}
-              </span>
-              <div className="small">in donations</div>
-            </Col>
-            <Col>+</Col>
-            <Col xs={5} className="text-left">
-            <span className="text-fat text-success" style={{ fontSize: '1.8rem' }}>{formatAmountForDisplay( totals.donations.reduce( (total, amount) => total + Qf.calculate(amount), 0))}</span>
-            <div className="small">in estimated matches</div>
-            </Col>
-          </Row>
+        {totals?.donations.length ? (
+          <div style={{ margin: '10px 0 20px' }} className="text-center">
+            <b>{totals.donations.length}</b> {Pluralize('donor', totals.donations.length)} raised
+            <Row className="no-gutters text-center align-items-center">
+              <Col xs={5} className="text-right">
+                <span style={{ fontSize: '1.8rem' }}>
+                  {formatAmountForDisplay(totals.amount)}
+                </span>
+                <div className="small">in donations</div>
+              </Col>
+              <Col>+</Col>
+              <Col xs={5} className="text-left">
+                <span className="text-fat text-success" style={{ fontSize: '1.8rem' }}>{formatAmountForDisplay(totals.donations.reduce((total, amount) => total + Qf.calculate(amount), 0))}</span>
+                <div className="small">in estimated matches</div>
+              </Col>
+            </Row>
           </div>
         ) : null }  
-
-
 
         <Nav variant="tabs" fill activeKey={tab} onSelect={setTab}>
           <Nav.Item>
@@ -82,10 +82,8 @@ const CollectiveDonationCard = ({ collective }) => {
           )
           : (
             <div style={{ padding: '20px 0' }} className="text-center">
-              
- 
 
-              <InputGroup className="cart-amount round text-fat text-success" style={{maxWidth:'150px', margin:'5px auto'}}>
+              <InputGroup className="cart-amount round text-fat text-success" style={{ maxWidth: '150px', margin: '5px auto' }}>
                 <InputGroup.Prepend><InputGroup.Text>$</InputGroup.Text></InputGroup.Prepend>
                 <Form.Control
                   size="lg"
@@ -117,15 +115,15 @@ const CollectiveDonationCard = ({ collective }) => {
         ) : (
           <Row className="no-gutters">
             <Col xs={7}>
-                {inCart != amount ? (
-                  <Button block variant="outline-primary" onClick={() =>  Cart.addItem(collective, amount, false)}>
-                      <Icons.Cart size={18} /> Update cart
-                  </Button>
-                ) : (
-                  <Button block variant="outline-primary" onClick={() => Cart.show(collective._id)}>
-                      <Icons.Check size={18} /> In cart <Badge variant="danger">{formatAmountForDisplay(inCart, 'USD')}</Badge>
-                  </Button>
-                )}
+              {inCart != amount ? (
+                <Button block variant="outline-primary" onClick={() => Cart.addItem(collective, amount, false)}>
+                  <Icons.Cart size={18} /> Update cart
+                </Button>
+              ) : (
+                <Button block variant="outline-primary" onClick={() => Cart.show(collective._id)}>
+                  <Icons.Check size={18} /> In cart <Badge variant="danger">{formatAmountForDisplay(inCart, 'USD')}</Badge>
+                </Button>
+              )}
             </Col>
             <Col>
               <Button block variant="link" href="/checkout/">Checkout</Button>

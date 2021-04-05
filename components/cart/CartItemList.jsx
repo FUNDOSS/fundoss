@@ -9,7 +9,7 @@ import { formatAmountForDisplay } from '../../utils/currency';
 import Icons from '../icons';
 
 const CartItem = ({
-  item, onDelete, onSelect, selectedId, cartAmount, onChange, calculateMatch
+  item, onDelete, onSelect, selectedId, cartAmount, onChange, calculateMatch,
 }) => {
   const { collective } = item;
   const [amount, setAmount] = useState(cartAmount);
@@ -23,50 +23,51 @@ const CartItem = ({
           onSelect(selection);
           setSelected(selection);
         }}
-        style={{borderBottom:'1px solid #ccc', padding:'0.9rem', cursor: 'pointer'}}>
+        style={{ borderBottom: '1px solid #ccc', padding: '0.9rem', cursor: 'pointer' }}
+      >
         <Row className="no-gutters">
           <Col xs={1}>
             <span className={selected === collective._id ? 'with-caret-up' : 'with-caret'} />
-            <Image src={collective.imageUrl} width={30} roundedCircle fluid  />
+            <Image src={collective.imageUrl} width={30} roundedCircle fluid />
           </Col>
           <Col className="text-fat" style={{ fontSize: '1.1rem' }}>
             {collective.name}
           </Col>
           {selected !== collective._id ? (
             <Col xs={4} className="text-right text-nowrap">
-                <Badge className="round" style={{ fontSize: '0.8rem' }} variant="primary">
-                  {formatAmountForDisplay(amount, 'USD')}
-                </Badge> +&nbsp;
-                <span className="text-fat text-success">
-                  {formatAmountForDisplay(calculateMatch(amount, collective._id), 'USD')}
-                </span>
+              <Badge className="round" style={{ fontSize: '0.8rem' }} variant="primary">
+                {formatAmountForDisplay(amount, 'USD')}
+              </Badge> +&nbsp;
+              <span className="text-fat text-success">
+                {formatAmountForDisplay(calculateMatch(amount, collective._id), 'USD')}
+              </span>
               &nbsp;
               <Button
-              size="sm"
-              style={{ fontSize: '0.6rem', padding: '2px 3px' }} 
-              variant="outline-secondary round"
-              onClick={(e) => { onDelete(collective._id);}}
-            ><Icons.Trash size={15} />
-            </Button>
+                size="sm"
+                style={{ fontSize: '0.6rem', padding: '2px 3px' }} 
+                variant="outline-secondary round"
+                onClick={(e) => { onDelete(collective._id); }}
+              ><Icons.Trash size={15} />
+              </Button>
             </Col>
           ) : (
             <Col xs={2} className="text-right">
-            <Button
-              size="sm"
-              style={{ fontSize: '0.6rem', padding: '2px 3px' }} 
-              block
-              variant="outline-secondary round"
-              onClick={() => { onDelete(collective._id); }}
-            ><Icons.Trash size={15} /> Remove
-            </Button>
-          </Col>
+              <Button
+                size="sm"
+                style={{ fontSize: '0.6rem', padding: '2px 3px' }} 
+                block
+                variant="outline-secondary round"
+                onClick={() => { onDelete(collective._id); }}
+              ><Icons.Trash size={15} /> Remove
+              </Button>
+            </Col>
           ) }
 
         </Row>
-        </div>
+      </div>
         
-        {selected === collective._id ? (
-          <Card.Body style={{background:'#f8f9fa'}}>
+      {selected === collective._id ? (
+        <Card.Body style={{ background: '#f8f9fa' }}>
           <Row className="align-items-center">
             <Col xs={5}>
               <InputGroup className="cart-amount">
@@ -113,16 +114,16 @@ const CartItem = ({
                 ),
               )}
             </Col>
-          </Row></Card.Body>
-        ) : null }
-        
+          </Row>
+        </Card.Body>
+      ) : null }
       
     </div>
   );
 };
 
 const CartItemList = ({
-  cart, deleteItem, onSelect, selectedId, onChange,calculateMatch
+  cart, deleteItem, onSelect, selectedId, onChange, calculateMatch,
 }) => (
   cart.map(
     (item) => (

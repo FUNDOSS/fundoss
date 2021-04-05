@@ -16,7 +16,7 @@ import Qf from '../../utils/qf';
 
 const FeaturedCollectiveCard = ({ collective, active }) => {
   const {
-    name, description, imageUrl, slug, website, githubHandle, totals
+    name, description, imageUrl, slug, website, githubHandle, totals,
   } = collective;
   const [inCart, setInCart] = useState(false);
   const [amount, setAmount] = useState(30);
@@ -26,9 +26,9 @@ const FeaturedCollectiveCard = ({ collective, active }) => {
   }, []);
 
   return (
-    <Card className="collective-card" id={`collective-${slug}`} style={{maxWidth:'370px', margin: '0 auto'}}>
+    <Card className="collective-card" id={`collective-${slug}`} style={{ maxWidth: '370px', margin: '0 auto' }}>
       <Card.Header>
-      <Row>
+        <Row>
           <Col xs={2} md={3}>
             { imageUrl ? <Image src={imageUrl} roundedCircle fluid /> : null }
           </Col>
@@ -44,14 +44,15 @@ const FeaturedCollectiveCard = ({ collective, active }) => {
             </a>
           </Col>
         </Row>
-        <div className="text-center small" style={{margin:'10px 0 -20px'}}>
-      {totals?.donations.length ? (
-          <>
-          Raised <span className="text-fat">{formatAmountForDisplay(totals.amount)}</span> + 
-          est. <span className="text-fat text-success">{formatAmountForDisplay( totals.donations.reduce( (total, amount) => total + Qf.calculate(amount), 0))}</span> match 
-          from <span className="text-fat">{totals.donations.length}</span> {Pluralize('donor', totals.donations.length)}          </>
-        ) : null }        
-      </div>
+        <div className="text-center small" style={{ margin: '10px 0 -20px' }}>
+          {totals?.donations?.length ? (
+            <>
+              Raised <span className="text-fat">{formatAmountForDisplay(totals.amount)}</span> + 
+              est. <span className="text-fat text-success">{formatAmountForDisplay(totals.donations.reduce((total, amount) => total + Qf.calculate(amount), 0))}</span> match 
+              from <span className="text-fat">{totals.donations.length}</span> {Pluralize('donor', totals.donations.length)}          
+            </>
+          ) : null }        
+        </div>
       </Card.Header>
       <Card.Body>
               
@@ -61,51 +62,52 @@ const FeaturedCollectiveCard = ({ collective, active }) => {
         </Card.Text>
         
         <Row className="align-items-center no-gutters">
-            <Col xs={5}>
-              <InputGroup className="cart-amount round text-fat text-success">
-                <InputGroup.Prepend><InputGroup.Text>$</InputGroup.Text></InputGroup.Prepend>
-                <Form.Control
-                  size="lg"
-                  value={amount}
-                  type="number"
-                  max={5000}
-                  min={1}
-                  onChange={(e) => {
-                    const amt = e.currentTarget.value > 5000 ? 5000 : e.currentTarget.value;
-                    setAmount(amt);
-                  }}
-                />
-              </InputGroup>
-            </Col>
-            <Col className="text-center">
-              <span className="lead">+</span>
-            </Col>
-            <Col xs={5} className="text-right text-nowrap">
-              <div style={{ marginBottom: '-10px', fontSize: '1.6rem' }} className="text-fat text-success">
-                {formatAmountForDisplay(calculateMatch(amount, collective._id), 'USD')}
-              </div>
-              <small>estimated match</small>
-            </Col>
-          </Row>
+          <Col xs={5}>
+            <InputGroup className="cart-amount round text-fat text-success">
+              <InputGroup.Prepend><InputGroup.Text>$</InputGroup.Text></InputGroup.Prepend>
+              <Form.Control
+                size="lg"
+                value={amount}
+                type="number"
+                max={5000}
+                min={1}
+                onChange={(e) => {
+                  const amt = e.currentTarget.value > 5000 ? 5000 : e.currentTarget.value;
+                  setAmount(amt);
+                }}
+              />
+            </InputGroup>
+          </Col>
+          <Col className="text-center">
+            <span className="lead">+</span>
+          </Col>
+          <Col xs={5} className="text-right text-nowrap">
+            <div style={{ marginBottom: '-10px', fontSize: '1.6rem' }} className="text-fat text-success">
+              {formatAmountForDisplay(calculateMatch(amount, collective._id), 'USD')}
+            </div>
+            <small>estimated match</small>
+          </Col>
+        </Row>
       </Card.Body>
       <Card.Footer>
-      {active ? (<Row className="no-gutters">
-          <Col xs={7}>
-          {inCart != amount ? (
-              <Button block variant="outline-primary" onClick={() =>  Cart.addItem(collective, amount, false)}>
+        {active ? (
+          <Row className="no-gutters">
+            <Col xs={7}>
+              {inCart != amount ? (
+                <Button block variant="outline-primary" onClick={() => Cart.addItem(collective, amount, false)}>
                   <Icons.Cart size={18} /> Update cart
-              </Button>
-            ) : (
-              <Button block variant="outline-primary" onClick={() => Cart.show(collective._id)}>
+                </Button>
+              ) : (
+                <Button block variant="outline-primary" onClick={() => Cart.show(collective._id)}>
                   <Icons.Check size={18} /> In cart <Badge variant="danger">{formatAmountForDisplay(inCart, 'USD')}</Badge>
-              </Button>
-            )
-          }
-          </Col>
-          <Col>
-            <Button block variant="link" href={`/collective/${slug}`}>Read more</Button>
-          </Col>
-        </Row>) : null }
+                </Button>
+              )}
+            </Col>
+            <Col>
+              <Button block variant="link" href={`/collective/${slug}`}>Read more</Button>
+            </Col>
+          </Row>
+        ) : null }
       </Card.Footer>
     </Card>
   );
