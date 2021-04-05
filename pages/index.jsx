@@ -1,6 +1,6 @@
 import React from 'react';
 import Layout from '../components/layout';
-import { getPredictedAverages } from '../lib/fundingSession/fundingSessionController';
+import FundingSessions, { getPredictedAverages } from '../lib/fundingSession/fundingSessionController';
 import FundingSession from '../components/fundingSession/FundingSession';
 import middleware from '../middleware/all';
 import ServerProps from '../lib/serverProps';
@@ -24,7 +24,7 @@ const IndexPage = ({
 
 export async function getServerSideProps({ req, res }) {
   await middleware.run(req, res);
-  const session = await ServerProps.getCurrentSession();
+  const session = await FundingSessions.getCurrent();
   const cart = await CartController.get(req.session.cart);
   const user = await ServerProps.getUser(req.user);
   const featured = session?.collectives[Math.floor(Math.random() * session.collectives.length)];
