@@ -3,6 +3,7 @@ import Error from 'next/error';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import DashboardNav from '../../../components/dashboard/DashboardNav';
 import Layout from '../../../components/layout';
 import Payments from '../../../lib/payment/paymentController';
 import PaymentsTable from '../../../components/payment/PaymentsTable';
@@ -16,7 +17,8 @@ const PaymentsPage = ({ user, payments }) => {
 
   return (
     <Layout title="FundOSS | Dashboard" user={user} hidefooter={1}>
-      <Container style={{ paddingTop: '40px' }} >
+      <Container style={{ paddingTop: '40px' }}>
+        <DashboardNav />
         <h1>Payments</h1>
         <PaymentsTable payments={payments} />
       </Container>
@@ -27,7 +29,7 @@ const PaymentsPage = ({ user, payments }) => {
 export async function getServerSideProps({ req, res }) {
   await middleware.run(req, res);
   const payments = await Payments.get();
-  return { props: { user: serializable(req.user), payments: serializable(payments), } };
+  return { props: { user: serializable(req.user), payments: serializable(payments) } };
 }
 
 export default PaymentsPage;
