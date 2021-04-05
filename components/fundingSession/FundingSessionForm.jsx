@@ -49,7 +49,7 @@ const FundingSessionForm = ({ sessionData }) => {
     end: moment(session?.end || new Date()).format('YYYY-MM-DD'),
     collectives: (session?.collectives || []).map((collective) => `https://opencollective.com/${collective.slug}`).join('\n'),
     tags: session?.tags || [],
-    matchingCurve: session?.matchingCurve || { exp: 2, inout: true },
+    matchingCurve: session?.matchingCurve || { exp: 2, symetric: true },
   });
 
   const initialValues = toFormValues(sessionData);
@@ -166,10 +166,10 @@ const FundingSessionForm = ({ sessionData }) => {
 
             </Col>
           </Row>
-          <Form.Group controlId="matchingCurve.inout">
+          <Form.Group controlId="matchingCurve.symetric">
             <Form.Check 
-              label="symmetric curve" 
-              checked={values.matchingCurve.inout}
+              label="symetric curve" 
+              checked={values.matchingCurve.symetric}
               onChange={handleChange}
             />
           </Form.Group>
@@ -180,7 +180,7 @@ const FundingSessionForm = ({ sessionData }) => {
               values.matchedFunds / values.numberDonationEst,
               values.matchingCurve.exp,
               1,
-              values.matchingCurve.inout,
+              values.matchingCurve.symetric,
             )} 
             averageDonation={values.averageDonationEst} 
             averageMatch={values.matchedFunds / values.numberDonationEst} 

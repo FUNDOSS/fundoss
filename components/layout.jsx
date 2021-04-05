@@ -15,9 +15,11 @@ const Layout = ({
 }) => {
   if (predicted) {
     Qf.init(
-      predicted.donation, 
+      predicted.average, 
       predicted.match,
       predicted.fudge,
+      predicted.symetric,
+      predicted.exp,
     ); 
   }
   if (user) Cart.previousDonations = user.donations;

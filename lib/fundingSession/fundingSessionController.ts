@@ -50,7 +50,7 @@ export const getPredictedAverages = (session) => {
       average: (averageDonationEst * timeLeft + (amount / d) * timeElapsed) / totalTime,
       fudge: 1,
       exp: session.matchingCurve.exp,
-      inout: session.matchingCurve.inout,
+      symetric: session.matchingCurve.symetric,
     };
     const currentMatches = donations.reduce(
       (total, don) => total + Qf.calculate(
@@ -59,7 +59,7 @@ export const getPredictedAverages = (session) => {
         avg.match,
         session.matchingCurve.exp || 2,
         1,
-        session.matchingCurve.inout,
+        session.matchingCurve.symetric,
       ),
       0,
     );
@@ -71,7 +71,7 @@ export const getPredictedAverages = (session) => {
     donation: averageDonationEst * averageDonationEst,
     fudge: 1,
     exp: session.matchingCurve.exp,
-    inout: session.matchingCurve.inout,
+    symetric: session.matchingCurve.symetric,
   };
 };
 

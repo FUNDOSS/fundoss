@@ -28,9 +28,10 @@ export async function getServerSideProps({ req, res }) {
   const cart = await CartController.get(req.session.cart);
   const user = await ServerProps.getUser(req.user);
   const featured = session?.collectives[Math.floor(Math.random() * session.collectives.length)];
+  const predicted = serializable(getPredictedAverages(session));
   return {
     props: {
-      predicted: serializable(getPredictedAverages(session)),
+      predicted,
       user,
       session: serializable(session),
       featured: serializable(featured),

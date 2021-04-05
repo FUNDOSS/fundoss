@@ -7,30 +7,38 @@ const Qf = {
     averageMatch:number = null,
     exp = 2,
     fudge:number = null,
-    inout = false,
+    symetric = false,
   ) => {
-    const am = averageMatch || Qf.averageMatch || 120;
-    const ad = averageDonation || Qf.averageDonation || 120;
+    const am = averageMatch || Qf.averageMatch || 20;
+    const ad = averageDonation || Qf.averageDonation || 20;
     const f = fudge || Qf.fudge || 1;
-    if (inout) {
+    const e = exp || Qf.exp || 2;
+    const s = symetric || Qf.symetric;
+    if (s) {
       return amount < ad
-        ? (am * Math.pow(amount / ad, exp)) * f
-        : (am + am * Math.pow((amount - ad) / ad, 1 / exp)) * f;
+        ? (am * Math.pow(amount / ad, e)) * f
+        : (am + am * Math.pow((amount - ad) / ad, 1 / e)) * f;
     }
-    return (am * Math.pow(amount / ad, 1 / exp)) * f;
+    return (am * Math.pow(amount / ad, 1 / e)) * f;
   },
   init: (
     averageDonation:number,
     averageMatch:number,
     fudge:number,
+    symetric:boolean,
+    exp:number,
   ) => {
     Qf.averageDonation = averageDonation;
     Qf.averageMatch = averageMatch;
     Qf.fudge = fudge;
+    Qf.symetric = symetric;
+    Qf.exp = exp;
   },
   averageDonation: 15,
   averageMatch: 25,
-  fudge:1,
+  fudge: 1,
+  exp: 2,
+  symetric: false,
 };
 
 export default Qf;
