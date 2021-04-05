@@ -1,19 +1,18 @@
 import React from 'react';
 import moment from 'moment';
 import { Table, Image, Badge } from 'react-bootstrap';
+import { formatAmountForDisplay } from '../../utils/currency';
 
 const PaymentsTable = ({ payments }) => (
   <Table>
     {payments.map((payment) => (
       <tr key={payment._id}>
         <td>
+          <a href={`/dashboard/payment/${payment._id}`}><Image src={payment.user.avatar} roundedCircle width={20} /> {moment(payment.time).format('lll')}</a>
+          &nbsp;{payment.user.username}
           <Badge variant={payment.status === 'succeeded' ? 'success' : 'danger'}>{payment.status}</Badge>&nbsp;
-          $ {payment.amount} <small>-{payment.fee} fee</small>
+          {formatAmountForDisplay(payment.amount)} <small>-{payment.fee} fee</small>
         </td>
-        <td>
-          <Image src={payment.user.avatar} roundedCircle width={20} />&nbsp;{payment.user.username}
-        </td>
-        <td>{moment(payment.time).format('lll')}</td>
         <td>{ payment.donations.map((don, index) => {
           if (index < 6) {
             return (

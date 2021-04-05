@@ -59,7 +59,15 @@ export async function updatePayment(payment) {
 
 export async function findById(id:string) {
   await dbConnect();
-  return Payment.findOne({ _id: id });
+  return Payment.findOne({ _id: id }).select('user amount donations fee status time')
+    .populate({ path: 'user', select: 'avatar username' })
+    .populate({
+      path: 'donations',
+      populate: {
+        path: 'collective',
+        select: 'slug imageUrl',
+      },
+    });
 }
 
 export async function getPayments(query) {
