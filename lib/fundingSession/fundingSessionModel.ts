@@ -1,5 +1,6 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import mongooseSlugPlugin from 'mongoose-slug-plugin';
+import moment from 'moment';
 import { ICollective } from '../collectives/CollectiveModel';
 
 export interface IFundingSession extends Document {
@@ -11,6 +12,10 @@ export interface IFundingSession extends Document {
   matchedFunds: number;
   tags: Array<string>;
   collectives: Array<ICollective>;
+  predictedAverage:number;
+  predictedDonations:number;
+  predicted:any;
+  matchingCurve:any;
 }
 
 export interface IFundingSessionInput {
@@ -23,6 +28,7 @@ export interface IFundingSessionInput {
   collectives?: any;
   protytype?: any;
   tags: Array<string>;
+  matchingCurve:any;
 }
 
 const FundingSessionSchema = new Schema({
@@ -46,6 +52,9 @@ const FundingSessionSchema = new Schema({
   },
   numberDonationEst: {
     type: Number,
+  },
+  matchingCurve: {
+    type: Schema.Types.Mixed,
   },
   description: {
     type: String,

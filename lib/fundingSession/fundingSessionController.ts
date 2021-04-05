@@ -1,5 +1,9 @@
+/* eslint-disable no-param-reassign */
+import moment from 'moment';
 import FundingSession, { IFundingSession, IFundingSessionInput } from './fundingSessionModel';
-import Collectives, { updateCollectivesTotals } from '../collectives/CollectivesController';
+import Collectives from '../collectives/CollectivesController';
+import CollectiveSessionTotals from '../payment/collectiveSessionTotalsModel';
+import Qf from '../../utils/qf';
 import dbConnect from '../dbConnect';
 
 const getCollectivesFromInput = async (session) => {
@@ -13,6 +17,62 @@ const getCollectivesFromInput = async (session) => {
     .reduce((obj, value:any) => ({ ...obj as any, [value.slug]: value.error }), {});
 
   return { collectives, collectiveImportErrors };
+};
+
+const setCollectiveTotals = async (session) => {
+  const totals = (await CollectiveSessionTotals.find({ session: session._id }))
+    .reduce((totalsMap, tot) => ({
+      ...totalsMap,
+      ...{ [tot.collective]: { donations: tot.donations, amount: tot.amount } },
+    }), {});
+  const collectives = session.collectives.map(
+    (collective) => {
+      collective.totals = totals[collective._id] || { donations: [], amount: 0 };
+      return collective;
+    },
+  );
+  session.collectives = collectives;
+  return session;
+};
+
+export const getPredictedAverages = (session) => {
+  const timeElapsed = moment().diff(moment(session.start));
+  const {
+    totals, numberDonationEst, averageDonationEst, matchedFunds,
+  } = session;
+  if (timeElapsed) {
+    const timeLeft = moment(session.end).diff(moment());
+    const totalTime = timeElapsed + timeLeft;
+    const { donations, amount } = totals || { donations: [], amount: 0 };
+    const d = donations.length;
+    const avg = {
+      match: matchedFunds / ((numberDonationEst * timeLeft + d * timeElapsed) / totalTime),
+      average: (averageDonationEst * timeLeft + (amount / d) * timeElapsed) / totalTime,
+      fudge: 1,
+      exp: session.matchingCurve.exp,
+      inout: session.matchingCurve.inout,
+    };
+    const currentMatches = donations.reduce(
+      (total, don) => total + Qf.calculate(
+        don,
+        avg.average,
+        avg.match,
+        session.matchingCurve.exp,
+        1,
+        session.matchingCurve.inout,
+      ),
+      0,
+    );
+    avg.fudge = ((currentMatches / timeElapsed) * totalTime) / matchedFunds;
+    return avg;
+  }
+  return {
+    match: session.matchedFunds / numberDonationEst,
+    donation: averageDonationEst * averageDonationEst,
+    fudge: 1,
+    exp: session.matchingCurve.exp,
+    inout: session.matchingCurve.inout,
+  };
 };
 
 export async function insertSession(session):Promise<IFundingSession> {
@@ -31,22 +91,10 @@ export async function editSession(session:IFundingSessionInput):Promise<IFunding
   return FundingSession.findOne({ _id: session._id });
 }
 
-export async function getCurrentSession():Promise<IFundingSession> {
+export async function getCurrentSession():Promise<any> {
   await dbConnect();
-  const session = await FundingSession.findOne().populate('collectives');
-  const collectives = session.collectives.map((col) => {
-    const totals = col.totals ? col.totals[session._id] : {amount: 0, donations: []}
-    if(!Array.isArray(totals?.donations)){
-      col.totals = {amount: 0, donations: []};
-      updateCollectivesTotals([col._id],session._id);
-    } else {
-      col.totals = totals;
-    }
-    return col
-    }
-  )
-  session.collectives = collectives;
-  return session;
+  const session = await FundingSession.findOne().populate('collectives predicted');
+  return setCollectiveTotals(session);
 }
 
 export async function getCurrentSessionId():Promise<string> {
@@ -55,9 +103,9 @@ export async function getCurrentSessionId():Promise<string> {
   return session._id;
 }
 
-export async function getCurrentSessionInfo():Promise<string> {
+export async function getCurrentSessionInfo():Promise<any> {
   await dbConnect();
-  const session = await FundingSession.findOne().select('_id name start end averageDonationEst numberDonationEst matchedFunds');
+  const session = await FundingSession.findOne().select('_id name start end averageDonationEst numberDonationEst matchedFunds totals matchingCurve');
   return session;
 }
 
@@ -69,14 +117,34 @@ export async function getAll():Promise<IFundingSession[]> {
 
 export async function getById(id:string):Promise<IFundingSession> {
   await dbConnect();
-  const session = await FundingSession.findOne({ _id:id }).populate('collectives');
+  const session = await FundingSession.findOne({ _id: id }).populate('collectives');
   return session;
 }
 
 export async function getBySlug(slug:string):Promise<IFundingSession> {
   await dbConnect();
   const session = await FundingSession.findOne({ slug }).populate('collectives');
-  return session;
+  const sessionData = await setCollectiveTotals(session);
+  return sessionData;
+}
+
+export async function getCollectiveSessions(collectiveId) {
+  await dbConnect();
+  const sessions = await FundingSession.find({ collectives: collectiveId })
+    .select('_id name slug start end matchedFunds');
+  return sessions;
+}
+
+export async function nominate(sessionId, collectiveSlug) {
+  await dbConnect();
+  const collective = await Collectives.get(collectiveSlug);
+  if (collective._id) {
+    await FundingSession.updateOne(
+      { _id: sessionId },
+      { $push: { collectives: collective._id } as any },
+    );
+  }
+  return collective;
 }
 
 export default class FundingSessionController {
@@ -95,4 +163,8 @@ export default class FundingSessionController {
     static getBySlug = getBySlug
 
     static getCurrentSessionInfo = getCurrentSessionInfo
+
+    static nominate = nominate
+
+    static getCollectiveSessions = getCollectiveSessions
 }
