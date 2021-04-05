@@ -15,7 +15,7 @@ const FundingSessionInfo = ({ session, predicted }) => {
   const totalMatches = (totals?.donations || [0]).reduce(
     (total, d) => total + Qf.calculate(
       d, 
-      predicted.donation, 
+      predicted.average, 
       predicted.match, 
       session.matchingCurve.exp,
       predicted.fudge,
