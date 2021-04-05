@@ -25,7 +25,7 @@ const EditSessionPage = ({
       <Container style={{ paddingTop: '40px' }}>
         <DashboardNav />
         <h1>Edit {session.name}</h1>
-        <FundingSessionInfo session={session} />
+        <FundingSessionInfo session={session} predicted={predicted} />
         Predicted {Math.round(predicted.average)} {Math.round(predicted.match)}
         <br />
         <Button variant="outline-primary" className="pull-right" href={`/session/${session.slug}`}>View Session</Button>

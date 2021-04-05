@@ -8,11 +8,17 @@ import serializable from '../lib/serializable';
 const IndexPage = ({
   session, user, cart, featured, predicted,
 }) => (
-  <Layout title="FundOSS | Quadratic funding for open source projects" user={user} cart={cart} predicted={predicted}  >
-    {session._id ? <FundingSession session={session} featuredCollective={featured} user={user} /> : null }
+  <Layout title="FundOSS | Quadratic funding for open source projects" user={user} cart={cart} predicted={predicted}>
+    {session._id ? (
+      <FundingSession 
+        session={session} 
+        featuredCollective={featured} 
+        user={user}
+        predicted={predicted}
+      />
+    ) : null }
   </Layout>
 );
-
 
 export async function getServerSideProps({ req, res }) {
   await middleware.run(req, res);
@@ -22,7 +28,7 @@ export async function getServerSideProps({ req, res }) {
   const featured = session?.collectives[Math.floor(Math.random() * session.collectives.length)];
   return {
     props: {
-      predicted: session.predicted,
+      predicted: ServerProps.predicted,
       user,
       session: serializable(session),
       featured: serializable(featured),

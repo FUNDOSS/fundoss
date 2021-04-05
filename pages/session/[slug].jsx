@@ -14,6 +14,7 @@ const IndexPage = ({
       <FundingSession 
         session={session} 
         featuredCollective={featured} 
+        predicted={predicted}
         user={user}
       />
     ) : null }

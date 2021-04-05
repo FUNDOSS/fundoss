@@ -24,7 +24,7 @@ const DashboardPage = ({ user, sessions, payments, predicted }) => {
         <DashboardNav />
  
         <p style={{ marginTop: '30px' }}>Hi {user.name || user.username}        <Button href="dashboard/funding-session/create" variant="link">Create a new sesion</Button></p>
-        <FundingSessionsList sessions={sessions} />
+        <FundingSessionsList sessions={sessions} predicted={predicted} />
         <br />
         <h4>Latest Payments</h4>
         <PaymentsTable payments={payments} />

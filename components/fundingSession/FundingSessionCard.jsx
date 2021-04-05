@@ -5,7 +5,7 @@ import Graph from '../qf/graph';
 import Qf from '../../utils/qf';
 import FundingSessionInfo from './FundingSessionInfo';
 
-const FundingSessionCard = ({ session }) => {
+const FundingSessionCard = ({ session, predicted }) => {
   const {
     name, slug,
   } = session;
@@ -14,7 +14,7 @@ const FundingSessionCard = ({ session }) => {
       <Card.Body className="text-center">
         <h3>{name}</h3>
         <Card.Text>
-          <FundingSessionInfo session={session} />
+          <FundingSessionInfo session={session} predicted={predicted} />
         </Card.Text>
         <Button variant="outline-primary" href={`/dashboard/funding-session/${slug}/edit`}>edit</Button>&nbsp;
         <Button variant="outline-secondary" href={`/session/${slug}`}>view</Button>&nbsp;

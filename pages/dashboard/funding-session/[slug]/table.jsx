@@ -27,7 +27,7 @@ const EditSessionPage = ({
         <DashboardNav />
         <div className="text-center">
           <h1>Disbursments {session.name}</h1>
-          <FundingSessionInfo session={session} />
+          <FundingSessionInfo session={session} predicted={predicted} />
           Predicted {Math.round(predicted.average)} {Math.round(predicted.match)}
         </div>
 
