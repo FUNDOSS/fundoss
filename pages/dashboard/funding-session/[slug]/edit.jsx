@@ -25,10 +25,12 @@ const EditSessionPage = ({
       <Container style={{ paddingTop: '40px' }}>
         <DashboardNav />
         <h1>Edit {session.name}</h1>
-        <FundingSessionInfo session={session} predicted={predicted} />
-        Predicted {Math.round(predicted.average)} {Math.round(predicted.match)}
+        <div className="text-center">
+          <FundingSessionInfo session={session} predicted={predicted} />
+          Predicted {Math.round(predicted.average)} {Math.round(predicted.match)}
+        </div>
         <br />
-        <Button variant="outline-primary" className="pull-right" href={`/session/${session.slug}`}>View Session</Button>
+        <Button variant="outline-primary" href={`/session/${session.slug}`}>View Session</Button>
         <Button variant="outline-secondary" href={`/dashboard/funding-session/${session.slug}/table`}>disbursments</Button> 
 
         <hr />

@@ -30,11 +30,9 @@ const EditSessionPage = ({
           <FundingSessionInfo session={session} predicted={predicted} />
           Predicted {Math.round(predicted.average)} {Math.round(predicted.match)}
         </div>
-
         <br />
         <Button variant="outline-primary" href={`/dashboard/funding-session/${session.slug}/edit`}>edit</Button>&nbsp;
         <Button variant="outline-primary" className="pull-right" href={`/session/${session.slug}`}>View Session</Button>
-        <Button variant="outline-secondary" href={`/api/payment/?session=${session._id}`}>disbursments csv</Button> 
         <hr />
         <Row>
           <Col md={{ offset: 3, span: 6 }}>
