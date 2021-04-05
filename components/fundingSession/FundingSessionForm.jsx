@@ -1,11 +1,14 @@
 import React from 'react';
+import { useRouter } from 'next/router';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { Formik } from 'formik';
 import moment from 'moment';
 import * as Yup from 'yup';
-import { Alert, Badge, Col, Row } from 'react-bootstrap';
-import Select from 'react-select'
+import {
+  Alert, Badge, Col, Row, 
+} from 'react-bootstrap';
+import Select from 'react-select';
 import Graph from '../qf/graph';
 import Qf from '../../utils/qf';
 
@@ -16,26 +19,26 @@ const FundingSessionForm = ({ sessionData }) => {
     description: Yup.string()
       .required('Please provide a description'),
   });
-
+  const router = useRouter();
   const availableTags = () => {
     const tagsMap = sessionData?.collectives.reduce((tags, col) => {
-      col.tags?.map(tag => {
-        tags[tag] ? tags[tag] += 1 :  tags[tag] = 1;
-      })
+      col.tags?.map((tag) => {
+        tags[tag] ? tags[tag] += 1 : tags[tag] = 1;
+      });
       return tags;
-     }, {}) || {};
+    }, {}) || {};
     return Object.keys(tagsMap)
-      .map((key) => ({label:key, count:tagsMap[key]}))
-      .sort((a, b) => b.count - a.count)
-  }
+      .map((key) => ({ label: key, count: tagsMap[key] }))
+      .sort((a, b) => b.count - a.count);
+  };
 
   const tagOptions = availableTags().map(
     (tag) => ({
-      label:<>{tag.label} <Badge variant="primary">{tag.count} </Badge></>, 
+      label: <>{tag.label} <Badge variant="primary">{tag.count} </Badge></>, 
       value: tag.label,
-      isSelected : sessionData?.tags.indexOf(tag.label) > -1
-    })
-  )
+      isSelected: sessionData?.tags.indexOf(tag.label) > -1,
+    }),
+  );
 
   const toFormValues = (session) => ({
     ...session,
@@ -46,12 +49,12 @@ const FundingSessionForm = ({ sessionData }) => {
     end: moment(session?.end || new Date()).format('YYYY-MM-DD'),
     collectives: (session?.collectives || []).map((collective) => `https://opencollective.com/${collective.slug}`).join('\n'),
     tags: session?.tags || [],
+    matchingCurve: session?.matchingCurve || { exp: 2, inout: true },
   });
 
   const initialValues = toFormValues(sessionData);
 
   const handleSubmit = async (values, { setStatus }) => {
-    console.log(values)
     const body = JSON.stringify(values);
     const res = await fetch('/api/funding-session', {
       method: 'POST',
@@ -60,6 +63,7 @@ const FundingSessionForm = ({ sessionData }) => {
     });
     if (res.status === 200) {
       setStatus({ saved: true });
+      values._id ? router.reload() : router.push(`/dashboard/funding-session/${session.slug}`);
     } else {
       setStatus({ error: res.json() });
     }
@@ -115,7 +119,7 @@ const FundingSessionForm = ({ sessionData }) => {
             </Col>
             <Col>
               <Form.Group controlId="averageDonationEst">
-                <Form.Label>Average donation estimate</Form.Label>
+                <Form.Label>Avg est</Form.Label>
                 <Form.Control
                   required
                   type="number"
@@ -131,7 +135,7 @@ const FundingSessionForm = ({ sessionData }) => {
             </Col>
             <Col>
               <Form.Group controlId="numberDonationEst">
-                <Form.Label># donations estimate</Form.Label>
+                <Form.Label># est</Form.Label>
                 <Form.Control
                   required
                   step={100}
@@ -146,16 +150,43 @@ const FundingSessionForm = ({ sessionData }) => {
                 <Form.Control.Feedback type="invalid">{errors.numberDonationEst}</Form.Control.Feedback>
               </Form.Group>
             </Col>
+            <Col>
+              <Form.Group controlId="matchingCurve.exp">
+                <Form.Label>exp</Form.Label>
+                <Form.Control
+                  required
+                  step={0.1}
+                  type="number"
+                  min={0.5}
+                  max={3}
+                  value={values.matchingCurve.exp}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+
+            </Col>
           </Row>
+          <Form.Group controlId="matchingCurve.inout">
+            <Form.Check 
+              label="symmetric curve" 
+              checked={values.matchingCurve.inout}
+              onChange={handleChange}
+            />
+          </Form.Group>
           <Graph 
             plot={(x) => Qf.calculate(
-                x, 
-                values.averageDonationEst, 
-                values.matchedFunds / values.numberDonationEst
-              )} 
+              x, 
+              values.averageDonationEst, 
+              values.matchedFunds / values.numberDonationEst,
+              values.matchingCurve.exp,
+              1,
+              values.matchingCurve.inout,
+            )} 
             averageDonation={values.averageDonationEst} 
             averageMatch={values.matchedFunds / values.numberDonationEst} 
-            width={720}
+            fudge={1}
+            exp={values.matchingCurve.exp}
+            width={520}
             height={300}
           />
           <Form.Group controlId="description">
@@ -230,9 +261,8 @@ const FundingSessionForm = ({ sessionData }) => {
               isMulti
               onChange={(inputValue) => {
                 values.tags = inputValue.map((selected) => selected.value);
-                //console.log(e,v);
               }}
-              defaultValue={tagOptions.filter( tag => values.tags.indexOf(tag.value) > -1 )}
+              defaultValue={tagOptions.filter((tag) => values.tags.indexOf(tag.value) > -1)}
               options={tagOptions}
             />
           </Form.Group>
@@ -244,9 +274,6 @@ const FundingSessionForm = ({ sessionData }) => {
               )}
             </Alert>
           ) : null}
-
-
-
 
           {status?.saved ? (<Alert variant="success">Session saved!</Alert>) : null}
           {status?.error ? (<Alert variant="danger">{status.error.message}</Alert>) : null}

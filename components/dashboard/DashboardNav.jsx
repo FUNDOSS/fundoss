@@ -1,21 +1,19 @@
 import React from 'react';
 import Nav from 'react-bootstrap/Nav';
+import { useRouter } from 'next/router';
 
-const DashboardNav = () => (
-  <Nav variant="tabs" fill>
-    <Nav.Item>
-      <Nav.Link active>Home</Nav.Link>
-    </Nav.Item>
-    <Nav.Item>
-      <Nav.Link href="/dashboard/payment">Payments</Nav.Link>
-    </Nav.Item>
-    <Nav.Item>
-      <Nav.Link disabled>Collectives</Nav.Link>
-    </Nav.Item>
-    <Nav.Item>
-      <Nav.Link disabled>Users</Nav.Link>
-    </Nav.Item>
-  </Nav>
-);
+const DashboardNav = () => {
+  const router = useRouter();
+  return (
+    <Nav variant="tabs" activeKey={router.pathname}>
+      <Nav.Item>
+        <Nav.Link href="/dashboard">Dashboard</Nav.Link>
+      </Nav.Item>
+      <Nav.Item>
+        <Nav.Link href="/dashboard/payment">Payments</Nav.Link>
+      </Nav.Item>
+    </Nav>
+  ); 
+};
 
 export default DashboardNav;
