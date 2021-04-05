@@ -6,15 +6,15 @@ import { formatAmountForDisplay } from '../../utils/currency';
 
 const FundingSessionInfo = ({ session }) => {
   const {
-    collectives, start, end, totals,
+    start, end, totals,
   } = session;
 
   const started = moment() > moment(start);
   const ended = moment() > moment(end);
 
-  const totalMatches = totals?.donations.reduce(
+  const totalMatches = (totals?.donations || [0]).reduce(
     (total, d) => total + Qf.calculate(d),
-  ) || 0;
+  );
 
   return (
     <>
