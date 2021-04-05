@@ -12,6 +12,8 @@ import Cart, { cartEvents, getCartTotals } from '../components/cart/Cart';
 import ServerProps from '../lib/serverProps';
 import { formatAmountForDisplay } from '../utils/currency';
 import Icons from '../components/icons';
+import CartController from '../lib/cart/CartController';
+import serializable from '../lib/serializable';
 
 const CheckoutPage = ({
   user, cart, stripekey, cartValue, session, predicted,
@@ -107,12 +109,12 @@ export async function getServerSideProps({ req, res }) {
   const stripekey = process.env.STRIPE_PUBLISHABLE_KEY;
   const session = await ServerProps.getCurrentSessionInfo();
   const user = await ServerProps.getUser(req.user);
-  const cart = await ServerProps.getCart(req.session.cart);
+  const cart = await CartController.get(req.session.cart);
   return {
     props: {
-      predicted:ServerProps.predicted,
+      predicted: ServerProps.predicted,
       user, 
-      cart, 
+      cart: serializable(cart), 
       session, 
       stripekey,
     },
