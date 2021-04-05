@@ -49,7 +49,7 @@ const FundingSessionForm = ({ sessionData }) => {
     end: moment(session?.end || new Date()).format('YYYY-MM-DD'),
     collectives: (session?.collectives || []).map((collective) => `https://opencollective.com/${collective.slug}`).join('\n'),
     tags: session?.tags || [],
-    matchingCurve: session?.matchingCurve || { exp: 2, symetric: true },
+    matchingCurve: session?.matchingCurve || { exp: 2, symetric: false },
   });
 
   const initialValues = toFormValues(sessionData);
