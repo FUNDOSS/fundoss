@@ -7,138 +7,116 @@ import Col from 'react-bootstrap/Col';
 import FormControl from 'react-bootstrap/FormControl';
 import moment from 'moment';
 import Button from 'react-bootstrap/Button';
+import { Badge, Card, Image } from 'react-bootstrap';
 import CollectiveCard from '../collective/CollectiveCard';
 import FeaturedCollectiveCard from '../collective/FeaturedCollectiveCard';
 import Sponsors from './Sponsors';
-import { Badge, Card, Image } from 'react-bootstrap';
 import Qf from '../../utils/qf';
 import { formatAmountForDisplay } from '../../utils/currency';
-import NominateForm from '../collective/NominateForm';
+import FundingSessionInfo from './FundingSessionInfo';
+import Nominate from '../collective/NominateForm';
 
 const FundingSession = ({ session, featuredCollective, user }) => {
   const {
-    name, description, collectives, start, end, sponsors, totals
+    name, description, collectives, start, end, sponsors, totals,
   } = session;
 
   const [collectivesList, setCollectivesList] = useState(collectives);
   const [sort, setSort] = useState('desc');
-  const [sortOn, setSortOn] = useState('total');
+  const [setSortOn] = useState('total');
   const [tags, setTags] = useState([]);
   const [search, setSearch] = useState(null);
   const started = moment() > moment(start);
   const ended = moment() > moment(end);
   const sessionInfo = collectives.reduce(
     (info, c) => ({ 
-      match: info.match + (c.totals.donations?.reduce(
-          (total, d) => total + Qf.calculate(d),
-          0) || 0 ),
-      collectives:{...info.collectives, ...{[c._id]: c}}
-      }) ,
-     {match:0, collectives:{}});
+      match: info.match + (c.totals?.donations?.reduce(
+        (total, d) => total + Qf.calculate(d),
+        0,
+      ) || 0),
+      collectives: { ...info.collectives, ...{ [c._id]: c } },
+    }),
+    { match: 0, collectives: {} },
+  );
   
   const totalMatches = sessionInfo.match;
   const userDonations = user.donations ? Object.keys(user.donations).map(
-      key => ({collective:sessionInfo.collectives[key], amount:user.donations[key]}) 
-    ) : null;
+    (key) => ({ collective: sessionInfo.collectives[key], amount: user.donations[key] }), 
+  ) : null;
 
-  const change = ( filters ) => {
-    if(filters.sort) setSort(filters.sort);
-    if(filters.sortOn) setSortOn(filters.sortOn);
-    if(filters.search) setSearch(filters.search)
-    if(filters.tags) setTags(filters.tags)
+  const change = (filters) => {
+    if (filters.sort) setSort(filters.sort);
+    if (filters.sortOn) setSortOn(filters.sortOn);
+    if (filters.search) setSearch(filters.search);
+    if (filters.tags) setTags(filters.tags);
     let list = collectives;
-    if(filters.search || search){
+    if (filters.search || search) {
       const src = filters.search || search;
       list = collectives.filter((col) => col.name.toLowerCase().indexOf(src) > -1
       || col.description?.toLowerCase().indexOf(src) > -1
-      || col.longDescription?.toLowerCase().indexOf(src) > -1)
+      || col.longDescription?.toLowerCase().indexOf(src) > -1);
     }
-    if(filters.tags?.length || (tags?.length && !filters.tags) ){
+    if (filters.tags?.length || (tags?.length && !filters.tags)) {
       const tagsFilter = filters.tags || tags;
-      console.log(tagsFilter)
       list = collectives.filter(
         (col) => {
-          let found = col.tags?.reduce( (found, tag) => tagsFilter.includes(tag) || found, false)
-          return found
-        }
-      )
+          const found = col.tags?.reduce((found, tag) => tagsFilter.includes(tag) || found, false);
+          return found;
+        },
+      );
     }
-    if(filters.sort || sort){
+    if (filters.sort || sort) {
       const srt = filters.sort || sort;
       list = list.sort((a, b) => {
-        const at = parseInt(a.totals?.amount), bt = parseInt(b.totals?.amount);
-        return srt == 'asc' ? at - bt : bt - at;
-      })
+        const at = parseInt(a.totals?.amount, 10); const 
+          bt = parseInt(b.totals?.amount, 10);
+        return srt === 'asc' ? at - bt : bt - at;
+      });
     }
 
-
     setCollectivesList(list);
-  }
+  };
   return (
     <>
       <div className="confetti trapezoid">
         <Container>
           <Row>
-            <Col md="5"  className="d-none d-lg-block">
-            {started ? (<FeaturedCollectiveCard  collective={featuredCollective} active={started && !ended} />) : (
-              <NominateForm />
-            )}
+            <Col md="5" className="d-none d-lg-block">
+              {started ? (
+                <FeaturedCollectiveCard 
+                  collective={featuredCollective} 
+                  active={started && !ended} 
+                />
+              ) : (
+                <Nominate sessionId={session._id} />
+              )}
             </Col>
             <Col className="content">
-              <h1 style={{textShadow: '0 0 10px #000000'}}>{name}</h1>
+              <h1 className="no-margin" style={{ textShadow: '0 0 10px #000000' }}>{name}</h1>
 
-              {started && ended ? (<h2><small>Ended</small> {moment(end).format('MMMM Do YYYY')}</h2>) : null}
-              {!started && !ended ? (<>
-                <span style={{display:'inline-block'}}>
-                  <span className="lead  text-fat">
-                    from {moment(start).format('MMMM Do')} <br />
-                    to {moment(end).format('MMMM Do YYYY')}
-                  </span> 
-                </span>
-                <span style={{display:'inline-block'}} className="text-center">
-                  in matched funding<br />
-                  <span className="display-2 text-success text-fat">
-                      {formatAmountForDisplay( session.matchedFunds, 'USD')}
-                  </span>
-                </span>
-              </>) : null}
-              {started ? (
-                <div>
-                  <span style={{display:'inline-block'}} className="text-center">
-                   {totals.donations} donors<br />
-                    <span className="display-3">{formatAmountForDisplay(totals.amount)}</span>
-                  </span>
-                  &nbsp;&nbsp;+&nbsp;&nbsp;
-                   <span style={{display:'inline-block'}} className="text-center">
-                    Estimated match<br />
-                    <span className="text-fat display-3 text-success">
-                      {formatAmountForDisplay( Math.round(totalMatches), 'USD')}
-                    </span>
-                   </span>&nbsp;&nbsp;
-                   <span style={{display:'inline-block'}} className="text-center">
-                    Left to be matched<br /><span className="display-3">
-                    {formatAmountForDisplay( Math.round(session.matchedFunds - totalMatches), 'USD')}</span>
-                    </span>
-                   </div>
-                   
-              ) : null }
+              <FundingSessionInfo session={session} />
 
-              {started && !ended ? (
-                <span className="lead">
-                  ends {moment(end).format('MMMM Do')} <Badge variant="danger"> {moment(end).fromNow()}</Badge>
-                </span>
-              ) : null}
-
-
-              {user.donations?.length ? 
-              (<div style={{margin:'15px 0'}}>Your donnations : <br />{userDonations.map( 
-                donation => <Image width={30} height={30} key={donation.collective._id} src={donation.collective.imageUrl} roundedCircle fluid />
-              )}</div>) : (
-                <>
-               <div className="session-description" dangerouslySetInnerHTML={{ __html: description }} />
-              <p><Link href="/quadratic-funding">Learn More about Democratic Funding</Link></p>
-                </>
-              )}
+              {user.donations?.length 
+                ? (
+                  <div style={{ margin: '15px 0' }}>Your donnations : <br />{userDonations.map( 
+                    (donation) => (
+                      <Image 
+                        width={30} 
+                        height={30} 
+                        key={donation.collective._id} 
+                        src={donation.collective.imageUrl} 
+                        roundedCircle 
+                        fluid
+                      />
+                    ),
+                  )}
+                  </div>
+                ) : (
+                  <>
+                    <div className="session-description" dangerouslySetInnerHTML={{ __html: description }} />
+                    <p><Link href="/quadratic-funding">Learn More about Democratic Funding</Link></p>
+                  </>
+                )}
 
               <Sponsors sponsors={sponsors} />
             </Col>
@@ -151,28 +129,29 @@ const FundingSession = ({ session, featuredCollective, user }) => {
         </Container>
       </div>
       <Container>
-        <Card style={{margin: '10px 0 28px', padding: '5px'}}>
-          <Row  className="no-gutters">
+        <Card style={{ margin: '10px 0 28px', padding: '5px' }}>
+          <Row className="no-gutters">
             <Col>
-            <FormControl
-              type="text"
-              placeholder="Filter by name and description"
-              className="mr-sm-2"
-              onChange={(e) => {
-                change({search: e.target.value.toLowerCase()});
-              }}
-            />
+              <FormControl
+                type="text"
+                placeholder="Filter by name and description"
+                className="mr-sm-2"
+                onChange={(e) => {
+                  change({ search: e.target.value.toLowerCase() });
+                }}
+              />
             </Col>
             { started ? (
               <Col xs={4} lg={2} className="text-center"><small>Sort by</small>
                 <Button 
-                  style={{margin:'0 10px'}}
-                  onClick={() => change({sort: sort === 'desc' ? 'asc' : 'desc'})} 
-                  variant="link">
+                  style={{ margin: '0 10px' }}
+                  onClick={() => change({ sort: sort === 'desc' ? 'asc' : 'desc' })} 
+                  variant="link"
+                >
                   {sort === 'asc' ? (
-                    <><span className="with-caret-up"></span>Least funded</>
+                    <><span className="with-caret-up" />Least funded</>
                   ) : (
-                    <><span className="with-caret"></span>Most funded</>
+                    <><span className="with-caret" />Most funded</>
                   )}
                 </Button>
               </Col>
