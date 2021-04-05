@@ -1,5 +1,6 @@
 import React from 'react';
 import Layout from '../components/layout';
+import { getPredictedAverages } from '../lib/fundingSession/fundingSessionController';
 import FundingSession from '../components/fundingSession/FundingSession';
 import middleware from '../middleware/all';
 import ServerProps from '../lib/serverProps';
@@ -29,7 +30,7 @@ export async function getServerSideProps({ req, res }) {
   const featured = session?.collectives[Math.floor(Math.random() * session.collectives.length)];
   return {
     props: {
-      predicted: serializable(ServerProps.predicted),
+      predicted: serializable(getPredictedAverages(session)),
       user,
       session: serializable(session),
       featured: serializable(featured),
