@@ -16,10 +16,10 @@ import CartController from '../lib/cart/CartController';
 import serializable from '../lib/serializable';
 
 const CheckoutPage = ({
-  user, cart, stripekey, cartValue, session, predicted,
+  user, cart, stripekey, session, predicted,
 }) => {
   const stripePromise = loadStripe(stripekey);
-  const [total, setTotal] = useState(cartValue);
+  const [total, setTotal] = useState(cart.reduce((total, item) => total + item.amount, 0));
   const [totalMatch, setTotalMatch] = useState();
   useEffect(() => {
     const onCartChange = () => {
