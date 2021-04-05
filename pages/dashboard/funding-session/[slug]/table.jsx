@@ -52,7 +52,7 @@ export async function getServerSideProps({ req, res, query }) {
   const donations = await Payments.getDonationsBySession(session._id);
   return {
     props: { 
-      predicted: getPredictedAverages(session),
+      predicted: serializable(getPredictedAverages(session)),
       user: serializable(req.user), 
       session: serializable(session), 
       donations: serializable(donations), 

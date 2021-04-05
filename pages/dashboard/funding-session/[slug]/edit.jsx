@@ -12,8 +12,6 @@ import FundingSessionForm from '../../../../components/fundingSession/FundingSes
 import middleware from '../../../../middleware/all';
 import serializable from '../../../../lib/serializable';
 import FundingSessions, { getPredictedAverages } from '../../../../lib/fundingSession/fundingSessionController';
-import Payments from '../../../../lib/payment/paymentController';
-import DisbursmentsTable from '../../../../components/fundingSession/DisbursmentTable';
 import FundingSessionInfo from '../../../../components/fundingSession/FundingSessionInfo';
 
 const EditSessionPage = ({
@@ -49,7 +47,7 @@ export async function getServerSideProps({ req, res, query }) {
   const session = await FundingSessions.getBySlug(query.slug);
   return {
     props: { 
-      predicted: getPredictedAverages(session),
+      predicted: serializable(getPredictedAverages(session)),
       user: serializable(req.user), 
       session: serializable(session), 
     }, 
