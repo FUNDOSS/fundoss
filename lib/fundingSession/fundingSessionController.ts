@@ -57,7 +57,7 @@ export const getPredictedAverages = (session) => {
         don,
         avg.average,
         avg.match,
-        session.matchingCurve.exp,
+        session.matchingCurve.exp || 2,
         1,
         session.matchingCurve.inout,
       ),

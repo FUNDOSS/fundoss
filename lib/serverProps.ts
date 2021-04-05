@@ -1,7 +1,7 @@
 import serializable from './serializable';
 import Cart from './cart/CartController';
 import Payments from './payment/paymentController';
-import FundingSession, {getPredictedAverages} from './fundingSession/fundingSessionController';
+import FundingSession, { getPredictedAverages } from './fundingSession/fundingSessionController';
 
 const ServerProps = {
   getUser: async (reqUser) => {
@@ -16,9 +16,9 @@ const ServerProps = {
     return user;
   },
   getCurrentSession: async () => {
-    if (!ServerProps.currentSession){
+    if (!ServerProps.currentSession) {
       ServerProps.currentSession = await FundingSession.getCurrent();
-      ServerProps.currentSession.predicted = getPredictedAverages(ServerProps.currentSession);
+      ServerProps.predicted = serializable(getPredictedAverages(ServerProps.currentSession));
     }
     ServerProps.currentSessionId = ServerProps.currentSession._id;
     return ServerProps.currentSession;
@@ -31,7 +31,7 @@ const ServerProps = {
     if (!ServerProps.currentSessionInfo) {
       const info = await FundingSession.getCurrentSessionInfo();
       ServerProps.currentSessionId = info._id;
-      ServerProps.predicted = getPredictedAverages(info);
+      ServerProps.predicted = serializable(getPredictedAverages(info));
       ServerProps.currentSessionInfo = info;
     }
     return serializable(ServerProps.currentSessionInfo);
