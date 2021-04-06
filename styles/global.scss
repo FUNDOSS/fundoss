@@ -264,3 +264,16 @@ h1{margin:2rem 0}
 .session-sponsors{
     a{margin:20px 10px}
 }
+
+.input-group.cart-amount{
+    @extend .text-fat;
+    box-shadow: none;
+    border:none;
+    .input-group-prepend,.input-group-text{background: transparent;}
+    input{border: 1px solid $gray-400;font-size: 1.5rem;}
+}
+
+.match{
+    @extend .text-fat;
+    @extend .text-success;
+}

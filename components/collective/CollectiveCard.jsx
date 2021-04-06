@@ -46,7 +46,7 @@ const CollectiveCard = ({ collective, active }) => {
           {totals?.donations?.length ? (
             <>
               Raised <span className="text-fat">{formatAmountForDisplay(totals.amount)}</span> + 
-              est. <span className="text-fat text-success">{formatAmountForDisplay(totals.donations.reduce((total, amount) => total + Qf.calculate(amount), 0))}</span> match 
+              est. <span className="match">{formatAmountForDisplay(totals.donations.reduce((total, amount) => total + Qf.calculate(amount), 0))}</span> match 
               from <span className="text-fat">{totals.donations.length}</span> {Pluralize('donor', totals.donations.length)}
             </>
           ) : null }        
@@ -65,7 +65,7 @@ const CollectiveCard = ({ collective, active }) => {
             <span className="text-fat"> 
               {formatAmountForDisplay(Cart.previousDonations[collective._id], 'USD')}
             </span>&nbsp;
-            for a <span className="text-fat text-success"> 
+            for a <span className="match"> 
               {formatAmountForDisplay(Qf.calculate(Cart.previousDonations[collective._id]), 'USD')}
             </span> match
           </div>

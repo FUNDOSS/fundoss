@@ -39,7 +39,7 @@ const CartItem = ({
               <Badge className="round" style={{ fontSize: '0.8rem' }} variant="primary">
                 {formatAmountForDisplay(amount, 'USD')}
               </Badge> +&nbsp;
-              <span className="text-fat text-success">
+              <span className="match">
                 {formatAmountForDisplay(calculateMatch(amount, collective._id), 'USD')}
               </span>
               &nbsp;
@@ -91,7 +91,7 @@ const CartItem = ({
               <span className="lead">+</span>
             </Col>
             <Col xs={5} className="text-right">
-              <div style={{ marginBottom: '-10px', fontSize: '2rem' }} className="text-fat text-success">
+              <div style={{ marginBottom: '-10px', fontSize: '2rem' }} className="match">
                 {formatAmountForDisplay(calculateMatch(amount, collective._id), 'USD')}
               </div>
               <small>estimated match</small>
@@ -101,7 +101,7 @@ const CartItem = ({
                 <div className="previous text-center">
                   <div className="small">Your match is calculated on the sum of your donations.</div>
                   {formatAmountForDisplay(item.previous)} + est.
-                  <span className="text-fat text-success">{formatAmountForDisplay(item.previousMatch)}</span> match
+                  <span className="match">{formatAmountForDisplay(item.previousMatch)}</span> match
                 </div>
               ) : null }
             </Col>

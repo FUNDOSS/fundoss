@@ -31,7 +31,7 @@ const CollectiveDonationCard = ({ collective }) => {
   }, []);
 
   return (
-    <Card>
+    <Card className="donation-card">
       <Card.Body>
         {totals?.donations.length ? (
           <div style={{ margin: '10px 0 20px' }} className="text-center">
@@ -45,7 +45,7 @@ const CollectiveDonationCard = ({ collective }) => {
               </Col>
               <Col>+</Col>
               <Col xs={5} className="text-left">
-                <span className="text-fat text-success" style={{ fontSize: '1.8rem' }}>{formatAmountForDisplay(totals.donations.reduce((total, amount) => total + Qf.calculate(amount), 0))}</span>
+                <span className="match" style={{ fontSize: '1.8rem' }}>{formatAmountForDisplay(totals.donations.reduce((total, amount) => total + Qf.calculate(amount), 0))}</span>
                 <div className="small">in estimated matches</div>
               </Col>
             </Row>
@@ -85,7 +85,7 @@ const CollectiveDonationCard = ({ collective }) => {
           : (
             <div style={{ padding: '20px 0' }} className="text-center">
 
-              <InputGroup className="cart-amount round text-fat text-success" style={{ maxWidth: '150px', margin: '5px auto' }}>
+              <InputGroup className="cart-amount" style={{ maxWidth: '150px', margin: '5px auto' }}>
                 <InputGroup.Prepend><InputGroup.Text>$</InputGroup.Text></InputGroup.Prepend>
                 <Form.Control
                   size="lg"
@@ -100,7 +100,7 @@ const CollectiveDonationCard = ({ collective }) => {
                 />
               </InputGroup>
               
-              + <span style={{ fontSize: '2.3rem' }} className="text-fat text-success">
+              + <span style={{ fontSize: '2.3rem' }} className="match">
                 {formatAmountForDisplay(calculateMatch(Number(amount), collective._id), 'USD')}
               </span>
               <div className="small">estimated match</div>
@@ -114,7 +114,7 @@ const CollectiveDonationCard = ({ collective }) => {
           <div className="previous text-center" style={{ margin: '-10px 0 10px' }}>
             <div className="small">Your previous donations are taken into account for calculating this match</div>
             {formatAmountForDisplay(previousDonation)} + est.
-            <span className="text-fat text-success">{formatAmountForDisplay(getPreviousMatch(collective._id))}</span> match
+            <span className="match">{formatAmountForDisplay(getPreviousMatch(collective._id))}</span> match
           </div>
         ) : null }
 

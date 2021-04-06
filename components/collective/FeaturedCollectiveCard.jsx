@@ -51,7 +51,7 @@ const FeaturedCollectiveCard = ({ collective, active }) => {
           {totals?.donations?.length ? (
             <>
               Raised <span className="text-fat">{formatAmountForDisplay(totals.amount)}</span> + 
-              est. <span className="text-fat text-success">{formatAmountForDisplay(totals.donations.reduce((total, amount) => total + Qf.calculate(amount), 0))}</span> match 
+              est. <span className="match">{formatAmountForDisplay(totals.donations.reduce((total, amount) => total + Qf.calculate(amount), 0))}</span> match 
               from <span className="text-fat">{totals.donations.length}</span> {Pluralize('donor', totals.donations.length)}          
             </>
           ) : null }        
@@ -66,7 +66,7 @@ const FeaturedCollectiveCard = ({ collective, active }) => {
         
         <Row className="align-items-center no-gutters">
           <Col xs={5}>
-            <InputGroup className="cart-amount round text-fat text-success">
+            <InputGroup className="cart-amount round match">
               <InputGroup.Prepend><InputGroup.Text>$</InputGroup.Text></InputGroup.Prepend>
               <Form.Control
                 size="lg"
@@ -85,7 +85,7 @@ const FeaturedCollectiveCard = ({ collective, active }) => {
             <span className="lead">+</span>
           </Col>
           <Col xs={5} className="text-right text-nowrap">
-            <div style={{ marginBottom: '-10px', fontSize: '1.6rem' }} className="text-fat text-success">
+            <div style={{ marginBottom: '-10px', fontSize: '1.6rem' }} className="match">
               {formatAmountForDisplay(calculateMatch(amount, collective._id), 'USD')}
             </div>
             <small>estimated match</small> 
@@ -96,7 +96,7 @@ const FeaturedCollectiveCard = ({ collective, active }) => {
           <div className="previous text-center">
             <div className="small">Your previous donations are taken into account for calculating this match</div>
             {formatAmountForDisplay(previousDonation)} + est.
-            <span className="text-fat text-success">{formatAmountForDisplay(getPreviousMatch(collective._id))}</span> match
+            <span className="match">{formatAmountForDisplay(getPreviousMatch(collective._id))}</span> match
           </div>
         ) : null }
       </Card.Body>
