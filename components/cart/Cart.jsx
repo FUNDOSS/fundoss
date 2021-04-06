@@ -89,7 +89,13 @@ const Cart = ({ cart, display, user }) => {
     ));
     const data = cartData.filter((item) => collectiveIds.indexOf(item.collective._id) === -1);
     items.map((item) => data.unshift(
-      { ...item, ...{ previous: getPreviousDonation(item.collective._id) } },
+      {
+        ...item,
+        ...{ 
+          previous: getPreviousDonation(item.collective._id),
+          previousMatch: getPreviousMatch(item.collective._id),
+        }, 
+      },
     ));
     changeCart(data);
     if (open) Cart.show();
