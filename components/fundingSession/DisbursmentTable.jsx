@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Image, Badge } from 'react-bootstrap';
+import { Table, Badge } from 'react-bootstrap';
 import Qf from '../../utils/qf';
 import { formatAmountForDisplay } from '../../utils/currency';
 
@@ -82,7 +82,9 @@ const DisbursmentsTable = ({ donations, session }) => {
         </tr>
       </Table>
       {Object.keys(collectiveTotals).map(
-        (key) => (!collectiveTotals[key].found ? (<b>{key}{collectiveTotals[key].match}</b>) : null), 
+        (key) => (!collectiveTotals[key].found ? (
+          <b>{key}{collectiveTotals[key].match}</b>
+        ) : null), 
       )}
     </div>
   ); 
