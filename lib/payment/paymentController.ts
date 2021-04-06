@@ -59,20 +59,22 @@ export async function updatePayment(payment) {
 
 export async function findById(id:string) {
   await dbConnect();
-  return Payment.findOne({ _id: id }).select('user amount donations fee status time')
-    .populate({ path: 'user', select: 'avatar username' })
+  return Payment.findOne({ _id: id }).select('user session amount donations fee status time confirmation')
+    .populate({ path: 'user', select: 'avatar username email' })
+    .populate({ path: 'session', select: 'name' })
     .populate({
       path: 'donations',
       populate: {
         path: 'collective',
-        select: 'slug imageUrl',
+        select: 'slug imageUrl name',
       },
     });
 }
 
 export async function getPayments(query) {
   await dbConnect();
-  return Payment.find(query).select('user amount donations fee status time')
+  return Payment.find(query).select('user session amount donations fee status time')
+    .populate({ path: 'session', select: 'name' })
     .populate({ path: 'user', select: 'avatar username' })
     .populate({
       path: 'donations',
@@ -81,8 +83,7 @@ export async function getPayments(query) {
         select: 'slug imageUrl',
       },
     })
-    .sort('field -time')
-    .limit(20);
+    .sort('field -time');
 }
 
 export async function getDonationsBySession(sessionId) {

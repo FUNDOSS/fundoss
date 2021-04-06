@@ -38,7 +38,7 @@ const DashboardPage = ({
 export async function getServerSideProps({ req, res }) {
   await middleware.run(req, res);
   const sessions = await FundingSessions.getAll();
-  const payments = await Payments.get();
+  const payments = await Payments.get({ status: 'succeeded' });
   const session = await ServerProps.getCurrentSessionInfo();
   const user = await ServerProps.getUser(req.user);
   return {
