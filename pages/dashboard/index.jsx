@@ -7,13 +7,15 @@ import Layout from '../../components/layout';
 import FundingSessionsList from '../../components/fundingSession/FundungSessionList';
 import DashboardNav from '../../components/dashboard/DashboardNav';
 import PaymentsTable from '../../components/payment/PaymentsTable';
-import FundingSessions from '../../lib/fundingSession/fundingSessionController';
+import FundingSessions, { getPredictedAverages } from '../../lib/fundingSession/fundingSessionController';
 import Payments from '../../lib/payment/paymentController';
 import middleware from '../../middleware/all';
 import serializable from '../../lib/serializable';
 import ServerProps from '../../lib/serverProps';
 
-const DashboardPage = ({ user, sessions, payments, predicted }) => {
+const DashboardPage = ({
+  user, sessions, payments, predicted, 
+}) => {
   if (user?.role !== 'admin') {
     return <Error statusCode={403} />;
   }
@@ -41,7 +43,7 @@ export async function getServerSideProps({ req, res }) {
   const user = await ServerProps.getUser(req.user);
   return {
     props: {
-      predicted: serializable(ServerProps.predicted),
+      predicted: serializable(getPredictedAverages(session)),
       user,
       sessions: serializable(sessions),
       payments: serializable(payments),
