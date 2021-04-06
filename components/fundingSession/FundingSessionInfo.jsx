@@ -36,7 +36,7 @@ const FundingSessionInfo = ({ session, predicted }) => {
           </span>
           <span style={{ display: 'inline-block' }} className="text-center">
             in matched funding<br />
-            <span className="display-2 text-success text-fat">
+            <span className="display-2 match">
               {formatAmountForDisplay(session.matchedFunds, 'USD')}
             </span>
           </span>

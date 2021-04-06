@@ -34,7 +34,7 @@ const CheckoutPage = ({ user, payment, session }) => (
               <span className="text-fat ">
                 {formatAmountForDisplay(payment.amount, 'USD')}
               </span> you donated will be matched<br />with an estimated &nbsp;
-              <span className="text-fat text-success ">
+              <span className="match ">
                 {formatAmountForDisplay(payment.donations.reduce(
                   (acc, donation) => {
                     const match = Qf.calculate(Number(donation.amount));

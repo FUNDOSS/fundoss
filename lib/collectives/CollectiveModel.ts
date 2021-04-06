@@ -12,6 +12,9 @@ export interface ICollective extends Document {
   tags:string;
   description:string;
   longDescription:string;
+  membersCount:number;
+  members:Array<string>;
+  totals:any
 }
 
 const CollectiveSchema = new Schema({
@@ -47,6 +50,9 @@ const CollectiveSchema = new Schema({
   },
   longDescription: {
     type: String,
+  },
+  membersCount: {
+    type: Number,
   },
   members: {
     type: Schema.Types.Mixed,

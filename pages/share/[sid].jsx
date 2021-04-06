@@ -32,7 +32,7 @@ const SharePage = ({
               {payment.user.name} has backed<br /> {Pluralize('awesome collective', payment.donations.length, true)}
             </h2>
             <p className="lead">And unlocked 
-              <span className="text-fat text-success">{
+              <span className="match">{
                 formatAmountForDisplay(payment.donations.reduce(
                   (total, donation) => total + Qf.calculate(donation.amount),
                   0,

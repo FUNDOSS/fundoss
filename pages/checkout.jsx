@@ -52,7 +52,7 @@ const CheckoutPage = ({
                     <Col className="lead text-fat">Total: {formatAmountForDisplay(total, 'USD')}</Col>
                     <Col className="lead">+</Col>
                     <Col>
-                      <div className="text-success text-fat display-4">
+                      <div className="match display-4">
                         {totalMatch ? formatAmountForDisplay(totalMatch, 'USD') : ''}
                       </div>
                       <small>estimated match</small>

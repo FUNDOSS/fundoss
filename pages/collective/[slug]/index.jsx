@@ -63,7 +63,7 @@ const collectivePage = ({
               <div className="collective-content" dangerouslySetInnerHTML={{ __html: longDescription }} style={{ padding: '20px 0' }} />
               <h3>Community</h3>
               <div style={{ borderLeft: ' 5px solid #02E2AC', padding: '10px 0 10px 20px' }}>
-                <p>{members.length} {Pluralize('member', members.length)}</p>
+                <p>{collective.membersCount || members.length} {Pluralize('member', collective.membersCount || members.length)}</p>
                 {members.map(
                   (member, index) => (
                     index < 10 ? (
@@ -94,7 +94,11 @@ const collectivePage = ({
                     <FundingSessionInfo session={sessions[0]} />
                   </Card.Body>
                   <Card.Footer className="text-center">
-                    <NominateBtn nominated={hasNominated} collective={collective} session={upComingSession} />
+                    <NominateBtn 
+                      nominated={hasNominated}
+                      collective={collective}
+                      session={upComingSession}
+                    />
 
                   </Card.Footer>
                 </Card>

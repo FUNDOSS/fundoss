@@ -28,7 +28,7 @@ const CartButtonMultiple = ({ nominated, session, collective }) => {
         block
         variant="outline-primary"
       >
-        Nominate {collective.name} for {session.name}
+        <Icons.Award /> Nominate {collective.name} for {session.name}
       </Button>
     )}
     </>

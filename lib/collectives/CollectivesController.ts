@@ -103,7 +103,8 @@ export async function getCollective(slug:string):Promise<any> {
       description
       longDescription
       categories
-      members {
+      members (limit:20){
+        totalCount
         nodes {
           account{
             imageUrl
@@ -118,6 +119,7 @@ export async function getCollective(slug:string):Promise<any> {
   const client = new GraphQLClient(endpoint);
   try {
     const data = await client.request(query, variables);
+    data.collective.membersCount = data.collective.members.totalCount;
     data.collective.members = data.collective.members.nodes
       .map((member) => member.account.imageUrl);
     data.collective.lastUpdate = new Date();

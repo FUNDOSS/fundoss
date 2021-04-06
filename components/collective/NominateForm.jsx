@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Card } from 'react-bootstrap';
+import Icons from '../icons';
 
 export const NominateForm = ({ sessionId }) => {
   const userValidationSchema = Yup.object({
@@ -59,7 +60,9 @@ export const NominateForm = ({ sessionId }) => {
               />
               <Form.Control.Feedback type="invalid">{errors.url}</Form.Control.Feedback>
             </Form.Group>
-            <Button block variant="primary" disabled={isSubmitting} type="submit">Nominate a collective</Button>
+            <Button block variant="primary" disabled={isSubmitting} type="submit">
+              <Icons.Award size={22}/> Nominate a collective
+            </Button>
           </Card.Body>
           <Card.Footer>
             <p className="text-center">Or</p> 
