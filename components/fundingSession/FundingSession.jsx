@@ -90,7 +90,7 @@ const FundingSession = ({ session, featuredCollective, user, predicted }) => {
                 <Nominate sessionId={session._id} />
               )}
             </Col>
-            <Col className="content">
+            <Col className="content text-center text-lg-left">
               <h1 className="no-margin" style={{ textShadow: '0 0 10px #000000' }}>{name}</h1>
 
               <FundingSessionInfo session={session} predicted={predicted} />
@@ -141,16 +141,16 @@ const FundingSession = ({ session, featuredCollective, user, predicted }) => {
               />
             </Col>
             { started ? (
-              <Col xs={4} lg={2} className="text-center"><small>Sort by</small>
+              <Col xs={4} lg={2} className="text-center"><small className="d-none d-md-inline">Sort by</small>
                 <Button 
                   style={{ margin: '0 10px' }}
                   onClick={() => change({ sort: sort === 'desc' ? 'asc' : 'desc' })} 
                   variant="link"
                 >
                   {sort === 'asc' ? (
-                    <><span className="with-caret-up" />Least funded</>
+                    <><span className="with-caret-up" />Funding</>
                   ) : (
-                    <><span className="with-caret" />Most funded</>
+                    <><span className="with-caret" />Funding</>
                   )}
                 </Button>
               </Col>
