@@ -8,7 +8,7 @@ import {
 import ServerProps from '../../../lib/serverProps';
 import Layout from '../../../components/layout';
 import collectives from '../../../lib/collectives/CollectivesController';
-import FundingSessions from '../../../lib/fundingSession/fundingSessionController';
+import FundingSessions, {getPredictedAverages} from '../../../lib/fundingSession/fundingSessionController';
 import serializable from '../../../lib/serializable';
 import middleware from '../../../middleware/all';
 import CollectiveDonationCard from '../../../components/collective/CollectiveDonationCard';
@@ -19,7 +19,7 @@ import FundingSessionInfo from '../../../components/fundingSession/FundingSessio
 import CartController from '../../../lib/cart/CartController';
 
 const collectivePage = ({
-  collective, user, cart, similar, session, sessions,
+  collective, user, cart, similar, session, sessions, predicted,
 }) => {
   if (!collective) {
     return <Error statusCode={404} />;
@@ -36,7 +36,7 @@ const collectivePage = ({
   } = collective;
   return (
     <div className="bg1">
-      <Layout title={`FundOSS | ${name}`} user={user} cart={cart} session={session}>
+      <Layout title={`FundOSS | ${name}`} user={user} cart={cart} session={session} predicted={predicted}>
       
         <Container>
           <Row style={{ padding: '40px 0' }}>
@@ -79,7 +79,13 @@ const collectivePage = ({
               </div>
             </Col>
             <Col>
-              {isInCurrentSession ? <CollectiveDonationCard collective={collective} /> : null}
+              {isInCurrentSession ? (
+                <CollectiveDonationCard 
+                  collective={collective}
+                  session={session}
+                  predicted={predicted}
+                />
+              ) : null}
               {!isInCurrentSession ? (
                 <Card>
                   <Card.Header className="text-center"><h3>Nominate {name}</h3></Card.Header>
@@ -137,6 +143,7 @@ export async function getServerSideProps({ query, req, res }) {
   const cart = await CartController.get(req.session.cart);
   const user = await ServerProps.getUser(req.user);
   const similar = await collectives.similar();
+  const predicted = serializable(getPredictedAverages(session));
   collective.totals = collective.sessionTotals.reduce(
     (totals, sess) => (sess.session == session._id ? sess : totals),
     { amount: 0, donations: [] },
@@ -144,6 +151,7 @@ export async function getServerSideProps({ query, req, res }) {
 
   return {
     props: {
+      predicted,
       user,
       cart: serializable(cart), 
       collective: serializable(collective),

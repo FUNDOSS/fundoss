@@ -7,7 +7,9 @@ import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Button from 'react-bootstrap/Button';
-import Cart, { cartEvents, calculateMatch, getPreviousDonation, getPreviousMatch } from '../cart/Cart';
+import Cart, {
+  cartEvents, calculateMatch, getPreviousDonation, getPreviousMatch, 
+} from '../cart/Cart';
 import Icons from '../icons';
 import { formatAmountForDisplay } from '../../utils/currency';
 import Qf from '../../utils/qf';
@@ -109,7 +111,7 @@ const CollectiveDonationCard = ({ collective }) => {
       <Card.Footer>
 
         { previousDonation ? (
-          <div className="previous text-center" style={{margin:'-10px 0 10px'}}>
+          <div className="previous text-center" style={{ margin: '-10px 0 10px' }}>
             <div className="small">Your previous donations are taken into account for calculating this match</div>
             {formatAmountForDisplay(previousDonation)} + est.
             <span className="text-fat text-success">{formatAmountForDisplay(getPreviousMatch(collective._id))}</span> match
