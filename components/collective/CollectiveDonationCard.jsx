@@ -119,7 +119,7 @@ const CollectiveDonationCard = ({ collective }) => {
         ) : null }
 
         { !inCart && amount == inCart ? (
-          <Button block variant="link" href="/quadratic-funding">
+          <Button block variant="link" href="/democratic-funding">
             How does Democratic Funding Work?
           </Button>
         ) : (

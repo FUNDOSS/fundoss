@@ -5,6 +5,7 @@ import Collectives from '../collectives/CollectivesController';
 import CollectiveSessionTotals from '../payment/collectiveSessionTotalsModel';
 import Qf from '../../utils/qf';
 import dbConnect from '../dbConnect';
+import NominationModel from '../collectives/NominationModel';
 
 const getCollectivesFromInput = async (session) => {
   const collectivesSlugs = session.collectives.split('\n')
@@ -49,8 +50,8 @@ export const getPredictedAverages = (session) => {
       match: matchedFunds / ((numberDonationEst * timeLeft + d * timeElapsed) / totalTime),
       average: (averageDonationEst * timeLeft + (amount / d) * timeElapsed) / totalTime,
       fudge: 1,
-      exp: session.matchingCurve.exp,
-      symetric: session.matchingCurve.symetric,
+      exp: session.matchingCurve?.exp || 2,
+      symetric: session.matchingCurve?.symetric || false,
     };
     const currentMatches = donations.reduce(
       (total, don) => total + Qf.calculate(
@@ -93,8 +94,19 @@ export async function editSession(session:IFundingSessionInput):Promise<IFunding
 
 export async function getCurrentSession():Promise<any> {
   await dbConnect();
-  const session = await FundingSession.findOne().populate('collectives predicted');
+  const session = await FundingSession.findOne({
+    start: { $lte: new Date() },
+    end: { $gte: new Date() },
+  }).populate('collectives predicted');
   return setCollectiveTotals(session);
+}
+
+export async function getUpcomingSessionInfo():Promise<any> {
+  await dbConnect();
+  const session = await FundingSession.findOne({
+    start: { $gte: new Date() },
+  }).select('_id name start end averageDonationEst numberDonationEst matchedFunds totals matchingCurve');
+  return session;
 }
 
 export async function getCurrentSessionId():Promise<string> {
@@ -135,7 +147,7 @@ export async function getCollectiveSessions(collectiveId) {
   return sessions;
 }
 
-export async function nominate(sessionId, collectiveSlug) {
+export async function nominate(sessionId, collectiveSlug, userId = null) {
   await dbConnect();
   const collective = await Collectives.get(collectiveSlug);
   if (collective._id) {
@@ -143,7 +155,15 @@ export async function nominate(sessionId, collectiveSlug) {
       { _id: sessionId },
       { $push: { collectives: collective._id } as any },
     );
+    if (userId) {
+      NominationModel.create({
+        session: sessionId,
+        collective: collective._id,
+        user: userId,
+      });
+    }
   }
+
   return collective;
 }
 
@@ -167,4 +187,6 @@ export default class FundingSessionController {
     static nominate = nominate
 
     static getCollectiveSessions = getCollectiveSessions
+
+    static getUpcomingSessionInfo = getUpcomingSessionInfo
 }

@@ -6,6 +6,7 @@ import FundingSessions from '../fundingSession/fundingSessionController';
 import Donation from '../payment/donationModel';
 import CollectiveSessionTotals from '../payment/collectiveSessionTotalsModel';
 import dbConnect from '../dbConnect';
+import NominationModel from './NominationModel';
 
 export async function findBySlug(slug:string):Promise<any> {
   await dbConnect();
@@ -13,6 +14,38 @@ export async function findBySlug(slug:string):Promise<any> {
   const totals = await CollectiveSessionTotals.find({ collective: collective._id });
   collective.sessionTotals = totals;
   return collective;
+}
+
+export async function nominateCollective(
+  session:string,
+  collective:string,
+  user,
+) {
+  await dbConnect();
+  const nominateUpdate = await NominationModel.findOneAndUpdate(
+    { session, collective, user },
+    { session, collective, user },
+    { upsert: true, new: true, setDefaultsOnInsert: true },
+  );
+  return nominateUpdate;
+}
+
+export async function getNominations(
+  collective:string,
+  user,
+):Promise<any> {
+  await dbConnect();
+  return NominationModel.find({ collective, user });
+}
+
+export async function hasNominated(
+  collective:string,
+  session:string,
+  user:string,
+):Promise<any> {
+  await dbConnect();
+  const has = await NominationModel.countDocuments({ collective, user, session });
+  return has;
 }
 
 export async function updateCollectivesTotals(ids:Array<string>, session:string) {
@@ -107,4 +140,10 @@ export default class Collectives {
     static updateTotals = updateCollectivesTotals;
 
     static similar = similarCollectives;
+
+    static nominate = nominateCollective;
+
+    static getNominations = getNominations;
+
+    static hasNominated = hasNominated;
 }

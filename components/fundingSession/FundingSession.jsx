@@ -113,7 +113,7 @@ const FundingSession = ({ session, featuredCollective, user, predicted }) => {
                 ) : (
                   <>
                     <div className="session-description" dangerouslySetInnerHTML={{ __html: description }} />
-                    <p><Link href="/quadratic-funding">Learn More about Democratic Funding</Link></p>
+                    <p><Link href="/democratic-funding">Learn More about Democratic Funding</Link></p>
                   </>
                 )}
 

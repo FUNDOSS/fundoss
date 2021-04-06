@@ -7,7 +7,7 @@ import FundingSessionInfo from './FundingSessionInfo';
 
 const FundingSessionCard = ({ session, predicted }) => {
   const {
-    name, slug,
+    name, slug, start
   } = session;
   return (
     <Card key={slug}>
@@ -16,10 +16,15 @@ const FundingSessionCard = ({ session, predicted }) => {
         <Card.Text>
           <FundingSessionInfo session={session} predicted={predicted} />
         </Card.Text>
+
+      </Card.Body>
+      <Card.Footer>
         <Button variant="outline-primary" href={`/dashboard/funding-session/${slug}/edit`}>edit</Button>&nbsp;
         <Button variant="outline-secondary" href={`/session/${slug}`}>view</Button>&nbsp;
-        <Button variant="outline-secondary" href={`/dashboard/funding-session/${slug}/table`}>disbursments</Button> 
-      </Card.Body>
+        {moment(start) < moment() ? (
+          <Button variant="outline-secondary" href={`/dashboard/funding-session/${slug}/table`}>disbursments</Button>
+        ) : null}
+      </Card.Footer>
     </Card>
   );
 };
