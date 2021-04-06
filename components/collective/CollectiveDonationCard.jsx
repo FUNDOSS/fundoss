@@ -7,7 +7,7 @@ import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Button from 'react-bootstrap/Button';
-import Cart, { cartEvents, calculateMatch } from '../cart/Cart';
+import Cart, { cartEvents, calculateMatch, getPreviousDonation, getPreviousMatch } from '../cart/Cart';
 import Icons from '../icons';
 import { formatAmountForDisplay } from '../../utils/currency';
 import Qf from '../../utils/qf';
@@ -17,7 +17,7 @@ const CollectiveDonationCard = ({ collective }) => {
   const [amount, setAmount] = useState(30);
   const [inCart, setInCart] = useState(false);
   const { totals } = collective;
-
+  const previousDonation = getPreviousDonation(collective._id);
   const onCartChange = () => {
     setAmount(Cart.collectives[collective._id] || 20);
     setInCart(Cart.collectives[collective._id]);
@@ -107,6 +107,14 @@ const CollectiveDonationCard = ({ collective }) => {
 
       </Card.Body>
       <Card.Footer>
+
+        { previousDonation ? (
+          <div className="previous text-center" style={{margin:'-10px 0 10px'}}>
+            <div className="small">Your previous donations are taken into account for calculating this match</div>
+            {formatAmountForDisplay(previousDonation)} + est.
+            <span className="text-fat text-success">{formatAmountForDisplay(getPreviousMatch(collective._id))}</span> match
+          </div>
+        ) : null }
 
         { !inCart && amount == inCart ? (
           <Button block variant="link" href="/quadratic-funding">

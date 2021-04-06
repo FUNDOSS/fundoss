@@ -9,7 +9,9 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Link from 'next/link';
-import Cart, { cartEvents, calculateMatch } from '../cart/Cart';
+import Cart, {
+  cartEvents, calculateMatch, getPreviousDonation, getPreviousMatch, 
+} from '../cart/Cart';
 import Icons from '../icons';
 import { formatAmountForDisplay } from '../../utils/currency';
 import Qf from '../../utils/qf';
@@ -20,6 +22,7 @@ const FeaturedCollectiveCard = ({ collective, active }) => {
   } = collective;
   const [inCart, setInCart] = useState(false);
   const [amount, setAmount] = useState(30);
+  const previousDonation = getPreviousDonation(collective._id);
   useEffect(() => {
     setInCart(Cart.collectives[collective._id]);
     cartEvents.on('cartChange', () => setInCart(Cart.collectives[collective._id]));
@@ -85,9 +88,17 @@ const FeaturedCollectiveCard = ({ collective, active }) => {
             <div style={{ marginBottom: '-10px', fontSize: '1.6rem' }} className="text-fat text-success">
               {formatAmountForDisplay(calculateMatch(amount, collective._id), 'USD')}
             </div>
-            <small>estimated match</small>
+            <small>estimated match</small> 
+
           </Col>
         </Row>
+        { previousDonation ? (
+          <div className="previous text-center">
+            <div className="small">Your previous donations are taken into account for calculating this match</div>
+            {formatAmountForDisplay(previousDonation)} + est.
+            <span className="text-fat text-success">{formatAmountForDisplay(getPreviousMatch(collective._id))}</span> match
+          </div>
+        ) : null }
       </Card.Body>
       <Card.Footer>
         {active ? (

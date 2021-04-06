@@ -33,6 +33,8 @@ export const getPreviousDonation = (collective) => (
   Cart.previousDonations ? Cart.previousDonations[collective] || 0 : 0
 );
 
+export const getPreviousMatch = (collective) => (Qf.calculate(getPreviousDonation(collective)));
+
 export const calculateMatch = (amount, collective) => {
   const prev = getPreviousDonation(collective);
   return Qf.calculate(Number(amount) + prev) - Qf.calculate(prev);
@@ -41,7 +43,7 @@ export const calculateMatch = (amount, collective) => {
 const Cart = ({ cart, display, user }) => {
   const data = cart.map((item) => {
     const previous = getPreviousDonation(item.collective._id);
-    return ({ ...item, ...{ previous: previous || 0 } });
+    return ({ ...item, ...{ previous: previous || 0, previousMatch: Qf.calculate(previous) } });
   });
   const [cartData, setCartData] = useState(data);
   const userPreviousDonations = user?.donations;
@@ -126,6 +128,7 @@ const Cart = ({ cart, display, user }) => {
           (item) => (item.collective._id === collective._id ? { 
             amount, 
             collective, 
+            previousMatch: getPreviousMatch(collective._id),
             previous: getPreviousDonation(collective._id),
           } : item),
         );

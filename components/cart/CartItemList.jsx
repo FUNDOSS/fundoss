@@ -9,7 +9,8 @@ import { formatAmountForDisplay } from '../../utils/currency';
 import Icons from '../icons';
 
 const CartItem = ({
-  item, onDelete, onSelect, selectedId, cartAmount, onChange, calculateMatch,
+  item, onDelete, onSelect, selectedId, cartAmount, onChange, 
+  calculateMatch, previousMatch, previousDonation,
 }) => {
   const { collective } = item;
   const [amount, setAmount] = useState(cartAmount);
@@ -95,7 +96,17 @@ const CartItem = ({
               </div>
               <small>estimated match</small>
             </Col>
+            <Col>
+              { item.previous ? (
+                <div className="previous text-center">
+                  <div className="small">Your match is calculated on the sum of your donations.</div>
+                  {formatAmountForDisplay(item.previous)} + est.
+                  <span className="text-fat text-success">{formatAmountForDisplay(item.previousMatch)}</span> match
+                </div>
+              ) : null }
+            </Col>
             <Col xs={12} style={{ marginTop: '10px' }}>
+
               {[10, 20, 30, 50, 100].map(
                 (amt) => (
                   <Button 
