@@ -40,6 +40,7 @@
 @import "~bootstrap/scss/print";
 
 @import "robot";
+@import "backgrounds";
 
 
 
@@ -240,11 +241,7 @@ h4{font-size: 1.1rem;}
 h3{font-size: 1.2rem;}
 h1{margin:2rem 0}
 .no-margin{margin:0}
-.bg1{
-    background-position: left top;
-    background-repeat: no-repeat;
-    background-image: url("data:image/svg+xml,%3Csvg width='2626' height='994' viewBox='0 0 2626 994' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath opacity='0.13' d='M4 0H2625.5L4 648V0Z' fill='url(%23paint0_linear)' fill-opacity='0.5'/%3E%3Crect width='4' height='994' fill='white'/%3E%3Cdefs%3E%3ClinearGradient id='paint0_linear' x1='711' y1='160.5' x2='592' y2='648' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%233744FF'/%3E%3Cstop offset='1' stop-color='%2313083B' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3C/svg%3E%0A");
-}
+
 
 @include media-breakpoint-up(lg) {
     .card-body{padding:1rem 2rem}

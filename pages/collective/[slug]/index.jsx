@@ -92,7 +92,7 @@ const collectivePage = ({
                   <Card.Header className="text-center"><h3>Nominate {name}</h3></Card.Header>
                   <Card.Body className="text-center">
                     <FundingSessionInfo session={sessions[0]} />
-                    <Button variant="primary" href={`/session/${upComingSession.slug}`}>{upComingSession.name}</Button>
+                    <Button block variant="primary" href={`/session/${upComingSession.slug}`}>{upComingSession.name}</Button>
                   </Card.Body>
                   <Card.Footer className="text-center">
                     <NominateBtn 

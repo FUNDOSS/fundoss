@@ -33,7 +33,7 @@ const NominateBtn = ({
           block={block}
           variant="outline-primary"
         >
-          <Icons.Award size={22} /> Nominate {collective.name} 
+          <Icons.Award size={22} /> Nominate
         </Button>
       ) 
         : (
