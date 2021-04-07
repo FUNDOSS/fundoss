@@ -41,9 +41,12 @@ export async function getServerSideProps({ req, res }) {
   const payments = await Payments.get({ status: 'succeeded' });
   const session = await ServerProps.getCurrentSessionInfo();
   const user = await ServerProps.getUser(req.user);
+  const predicted = await ServerProps.getPredicted(session);
+  
   return {
     props: {
-      predicted: serializable(getPredictedAverages(session)),
+      predicted,
+      session,
       user,
       sessions: serializable(sessions),
       payments: serializable(payments),

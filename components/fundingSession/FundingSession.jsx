@@ -16,7 +16,7 @@ import FundingSessionInfo from './FundingSessionInfo';
 import Nominate from '../collective/NominateForm';
 
 const FundingSession = ({
-  session, featuredCollective, user, predicted, nominations = { user: [] },
+  session, user, predicted, nominations = { user: [] },
 }) => {
   const {
     name, description, collectives, start, end, sponsors, 
@@ -40,6 +40,7 @@ const FundingSession = ({
     { match: 0, collectives: {} },
   );
   
+  const featuredCollective = { ...collectives[Math.floor(Math.random() * collectives.length)] };
   const totalMatches = sessionInfo.match;
   const userDonations = user.donations ? Object.keys(user.donations).map(
     (key) => ({ collective: sessionInfo.collectives[key], amount: user.donations[key] }), 
@@ -87,7 +88,7 @@ const FundingSession = ({
   };
   return (
     <>
-      <div className="confetti trapezoid">
+      <div className="seamless trapezoid">
         <Container>
           <Row>
             <Col md="5" className="d-none d-lg-block">
@@ -130,11 +131,18 @@ const FundingSession = ({
               <Sponsors sponsors={sponsors} />
             </Col>
           </Row>
-          <p style={{ padding: '30px 0' }} className="text-center content">
-            👇 Scroll to see the 
-            other {collectives.length - 1} amazing 
-            collectives we’re sustaining! 👇
-          </p>
+          { started ? (
+            <p style={{ padding: '30px 0' }} className="text-center content">
+              👇 Scroll to see the 
+              other {collectives.length - 1} amazing 
+              collectives we’re sustaining! 👇
+            </p>
+          ) : null }
+          { !started ? (
+            <p style={{ padding: '30px 0' }} className="text-center content">
+              👇 Nominate your favorite collectives 👇
+            </p>
+          ) : null }
         </Container>
       </div>
       <Container>

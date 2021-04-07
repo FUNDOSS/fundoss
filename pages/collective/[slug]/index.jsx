@@ -26,10 +26,10 @@ const collectivePage = ({
     return <Error statusCode={404} />;
   }
 
-  const isInCurrentSession = sessions?.reduce(
+  const isInCurrentSession = session ? sessions?.reduce(
     (is, sess) => (sess._id === session._id ? true : is),
     false,
-  );
+  ) : false;
 
   const {
     name, longDescription, imageUrl, slug,
@@ -145,11 +145,11 @@ export async function getServerSideProps({ query, req, res }) {
   const session = await ServerProps.getCurrentSessionInfo();
   const collective = await collectives.findBySlug(query.slug);
   const sessions = await FundingSessions.getCollectiveSessions(collective._id);
-  const upComingSession = await FundingSessions.getUpcomingSessionInfo();
-  const cart = await CartController.get(req.session.cart);
-  const user = await ServerProps.getUser(req.user);
+  const upComingSession = await ServerProps.getUpcoming();
+  const cart = await ServerProps.getCart(req.session.cart);
+  const user = await ServerProps.getUser(req.user, session._id);
   const similar = await collectives.similar();
-  const predicted = serializable(getPredictedAverages(session));
+  const predicted = await ServerProps.getPredicted(session);
   collective.totals = collective.sessionTotals.reduce(
     (totals, sess) => (sess.session == session._id ? sess : totals),
     { amount: 0, donations: [] },
@@ -163,7 +163,7 @@ export async function getServerSideProps({ query, req, res }) {
       hasNominated,
       predicted,
       user,
-      upComingSession: serializable(upComingSession),
+      upComingSession,
       cart: serializable(cart), 
       collective: serializable(collective),
       similar: serializable(similar),

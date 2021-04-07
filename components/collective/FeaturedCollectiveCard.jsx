@@ -21,7 +21,7 @@ const FeaturedCollectiveCard = ({ collective, active }) => {
     name, description, imageUrl, slug, website, githubHandle, totals,
   } = collective;
   const [inCart, setInCart] = useState(false);
-  const [amount, setAmount] = useState(30);
+  const [amount, setAmount] = useState(10);
   const previousDonation = getPreviousDonation(collective._id);
   useEffect(() => {
     setInCart(Cart.collectives[collective._id]);

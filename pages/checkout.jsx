@@ -108,13 +108,14 @@ export async function getServerSideProps({ req, res }) {
   await middleware.run(req, res);
   const stripekey = process.env.STRIPE_PUBLISHABLE_KEY;
   const session = await ServerProps.getCurrentSessionInfo();
-  const user = await ServerProps.getUser(req.user);
-  const cart = await CartController.get(req.session.cart);
+  const user = await ServerProps.getUser(req.user, session._id);
+  const predicted = await ServerProps.getPredicted(session);
+  const cart = await ServerProps.getCart(req.session.cart);
   return {
     props: {
-      predicted: ServerProps.predicted,
+      predicted,
       user, 
-      cart: serializable(cart), 
+      cart, 
       session, 
       stripekey,
     },

@@ -46,7 +46,7 @@ const FundingSessionInfo = ({ session, predicted }) => {
         <div>
           <span style={{ display: 'inline-block' }} className="text-center">
             {totals?.donations.length} donors<br />
-            <span className="display-3">{formatAmountForDisplay(totals.amount)}</span>
+            <span className="display-3">{formatAmountForDisplay(totals?.amount || 0)}</span>
           </span>
                   &nbsp;&nbsp;+&nbsp;&nbsp;
           <span style={{ display: 'inline-block' }} className="text-center">

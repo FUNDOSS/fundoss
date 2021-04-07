@@ -21,7 +21,7 @@ const CollectiveDonationCard = ({ collective }) => {
   const { totals } = collective;
   const previousDonation = getPreviousDonation(collective._id);
   const onCartChange = () => {
-    setAmount(Cart.collectives[collective._id] || 20);
+    setAmount(Cart.collectives[collective._id] || 10);
     setInCart(Cart.collectives[collective._id]);
   };
 

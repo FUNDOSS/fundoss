@@ -97,7 +97,7 @@ const CollectiveCard = ({
             {active ? (
               <>
                 { !inCart ? (
-                  <Button block variant="outline-primary" onClick={() => Cart.addItem(collective, 20, true)}>
+                  <Button block variant="outline-primary" onClick={() => Cart.addItem(collective, 10, true)}>
                     <Icons.Cart size={18} /> Add to cart
                   </Button>
                 ) : (

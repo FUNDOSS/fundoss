@@ -4,37 +4,45 @@ import Payments from './payment/paymentController';
 import FundingSession, { getPredictedAverages } from './fundingSession/fundingSessionController';
 
 const ServerProps = {
-  getUser: async (reqUser) => {
+  getUser: async (reqUser, session) => {
     let user = serializable(reqUser) || {};
-    if (user._id) {
+    if (user._id && session) {
       const donations = await Payments.getGroupedDonationsByUser(
         reqUser._id,
-        ServerProps.currentSessionId,
+        session,
       );
       user = { ...serializable(user), ...{ donations } };
     }
     return user;
   },
   getCurrentSession: async () => {
-    if (!ServerProps.currentSession) {
-      ServerProps.currentSession = await FundingSession.getCurrent();
-      ServerProps.predicted = serializable(getPredictedAverages(ServerProps.currentSession));
-    }
-    ServerProps.currentSessionId = ServerProps.currentSession._id;
-    return ServerProps.currentSession;
+    const session = await FundingSession.getCurrent();
+    return session ? serializable(session) : null;
   },
   getCart: async (reqCart) => {
-    if (!ServerProps.cart) ServerProps.cart = await Cart.get(reqCart);
-    return serializable(ServerProps.cart);
+    const cart = await Cart.get(reqCart);
+    return serializable(cart);
   },
   getCurrentSessionInfo: async () => {
-    if (!ServerProps.currentSessionInfo) {
-      const info = await FundingSession.getCurrentSessionInfo();
-      ServerProps.currentSessionId = info._id;
-      ServerProps.predicted = serializable(getPredictedAverages(info));
-      ServerProps.currentSessionInfo = info;
-    }
-    return serializable(ServerProps.currentSessionInfo);
+    const info = await FundingSession.getCurrentSessionInfo();
+    return info ? serializable(info) : null;
+  },
+  getUpcoming: async () => {
+    const info = await FundingSession.getUpcomingSession();
+    return info ? serializable(info) : null;
+  },
+  getNominations: async (session, user) => {
+    const nominations = await FundingSession.getNominations(session);
+    nominations.user = user
+      ? await FundingSession.getUserNominations(user, session)
+      : [];
+    return serializable(nominations);
+  },
+  getPredicted: async (info) => {
+    const defaultPrediction = {
+      fudge: 1, average: 10, match: 10, exp: 2, symetric: false,
+    };
+    return serializable(info ? getPredictedAverages(info) : defaultPrediction);
   },
   cart: null,
   currentSessionId: null,

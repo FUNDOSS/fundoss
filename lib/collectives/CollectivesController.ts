@@ -77,7 +77,8 @@ export async function updateCollectivesTotals(ids:Array<string>, session:string)
 
 export async function similarCollectives() {
   await dbConnect();
-  return (await FundingSessions.getCurrent()).collectives.filter(() => (Math.random() > 0.9));
+  const current = await FundingSessions.getCurrent();
+  return current ? current.collectives.filter(() => (Math.random() > 0.9)) : [];
 }
 
 export async function getCollective(slug:string):Promise<any> {
