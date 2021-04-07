@@ -8,11 +8,14 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Link from 'next/link';
 import Cart, { cartEvents, getPreviousDonation } from '../cart/Cart';
+import NominateBtn from './NominateBtn';
 import Icons from '../icons';
 import { formatAmountForDisplay } from '../../utils/currency';
 import Qf from '../../utils/qf';
 
-const CollectiveCard = ({ collective, active }) => {
+const CollectiveCard = ({
+  collective, active, nominate, session, nominations, nominated, user,
+}) => {
   const {
     name, description, imageUrl, slug, website, githubHandle, totals,
   } = collective;
@@ -65,7 +68,8 @@ const CollectiveCard = ({ collective, active }) => {
             <span className="text-fat"> 
               {formatAmountForDisplay(Cart.previousDonations[collective._id], 'USD')}
             </span>&nbsp;
-            for a <span className="match"> 
+            for a&nbsp;
+            <span className="match"> 
               {formatAmountForDisplay(Qf.calculate(Cart.previousDonations[collective._id]), 'USD')}
             </span> match
           </div>
@@ -88,7 +92,21 @@ const CollectiveCard = ({ collective, active }) => {
             </Col>
           </Row>
         ) : null}
-
+        {nominate ? (
+          <div className="text-center">
+            {nominations 
+              ? (<>{nominations} {Pluralize('nominations', nominations)}</>)
+              : 'Be the first to nominate'}
+            <NominateBtn
+              block
+              nominations={nominations} 
+              user={user}
+              session={session}
+              collective={collective}
+              nominated={nominated}
+            />
+          </div>
+        ) : null}
       </Card.Footer>
     </Card>
   );

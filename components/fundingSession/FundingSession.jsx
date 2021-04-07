@@ -15,7 +15,9 @@ import Qf from '../../utils/qf';
 import FundingSessionInfo from './FundingSessionInfo';
 import Nominate from '../collective/NominateForm';
 
-const FundingSession = ({ session, featuredCollective, user, predicted }) => {
+const FundingSession = ({
+  session, featuredCollective, user, predicted, nominations = { user: [] },
+}) => {
   const {
     name, description, collectives, start, end, sponsors, 
   } = session;
@@ -43,6 +45,14 @@ const FundingSession = ({ session, featuredCollective, user, predicted }) => {
     (key) => ({ collective: sessionInfo.collectives[key], amount: user.donations[key] }), 
   ) : null;
 
+  let timer;
+  const typeInSearch = (value) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      change({ search: value });
+      return () => clearTimeout(timer);
+    }, 500);
+  };
   const change = (filters) => {
     if (filters.sort) setSort(filters.sort);
     if (filters.sortOn) setSortOn(filters.sortOn);
@@ -135,9 +145,7 @@ const FundingSession = ({ session, featuredCollective, user, predicted }) => {
                 type="text"
                 placeholder="Filter by name and description"
                 className="mr-sm-2"
-                onChange={(e) => {
-                  change({ search: e.target.value.toLowerCase() });
-                }}
+                onChange={(e) => typeInSearch(e.target.value.toLowerCase())}
               />
             </Col>
             { started ? (
@@ -163,7 +171,15 @@ const FundingSession = ({ session, featuredCollective, user, predicted }) => {
           collectivesList.map(
             (collective) => (
               <Col md={6} lg={4} key={collective.slug}>
-                <CollectiveCard collective={collective} active={started && !ended} />
+                <CollectiveCard 
+                  collective={collective}
+                  active={started && !ended}
+                  nominate={!started}
+                  nominations={nominations[collective._id]}
+                  nominated={nominations.user.indexOf(collective._id) > -1}
+                  session={session}
+                  user={user}
+                />
               </Col>
             ),
           )

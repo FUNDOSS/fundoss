@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 import moment from 'moment';
+import mongoose from 'mongoose';
 import FundingSession, { IFundingSession, IFundingSessionInput } from './fundingSessionModel';
 import Collectives from '../collectives/CollectivesController';
 import CollectiveSessionTotals from '../payment/collectiveSessionTotalsModel';
@@ -97,7 +98,7 @@ export async function getCurrentSession():Promise<any> {
   const session = await FundingSession.findOne({
     start: { $lte: new Date() },
     end: { $gte: new Date() },
-  }).populate('collectives predicted');
+  }).populate('collectives');
   return setCollectiveTotals(session);
 }
 
@@ -105,7 +106,7 @@ export async function getUpcomingSessionInfo():Promise<any> {
   await dbConnect();
   const session = await FundingSession.findOne({
     start: { $gte: new Date() },
-  }).select('_id name start end averageDonationEst numberDonationEst matchedFunds totals matchingCurve');
+  }).select('_id slug name start end averageDonationEst numberDonationEst matchedFunds totals matchingCurve');
   return session;
 }
 
@@ -117,7 +118,7 @@ export async function getCurrentSessionId():Promise<string> {
 
 export async function getCurrentSessionInfo():Promise<any> {
   await dbConnect();
-  const session = await FundingSession.findOne().select('_id name start end averageDonationEst numberDonationEst matchedFunds totals matchingCurve');
+  const session = await FundingSession.findOne().select('_id name slug start end averageDonationEst numberDonationEst matchedFunds totals matchingCurve');
   return session;
 }
 
@@ -151,10 +152,18 @@ export async function nominate(sessionId, collectiveSlug, userId = null) {
   await dbConnect();
   const collective = await Collectives.get(collectiveSlug);
   if (collective._id) {
-    await FundingSession.updateOne(
-      { _id: sessionId },
-      { $push: { collectives: collective._id } as any },
-    );
+    const collectiveInSession = await FundingSession.find({
+      _id: sessionId,
+      collectives: collective._id,
+    });
+    console.log('collectiveInSession', collectiveInSession)
+    if (!collectiveInSession.length) {
+      await FundingSession.updateOne(
+        { _id: sessionId },
+        { $push: { collectives: collective._id } as any },
+      );
+    }
+
     if (userId) {
       NominationModel.create({
         session: sessionId,
@@ -163,8 +172,33 @@ export async function nominate(sessionId, collectiveSlug, userId = null) {
       });
     }
   }
-
   return collective;
+}
+
+export async function getNominations(sesion) {
+  await dbConnect();
+  const nominations = await NominationModel.aggregate([
+    { $match: { session: mongoose.Types.ObjectId(sesion) } },
+    { $group: { _id: { collective: '$collective' }, count: { $sum: 1 } } },
+  ]);
+  return nominations.reduce((noms, collective) => ({
+    ...noms,
+    ...{ [collective._id.collective]: collective.count },
+  }));
+}
+
+export async function getUserNominations(user, sesion) {
+  await dbConnect();
+  const nominations = await NominationModel.aggregate([
+    {
+      $match: {
+        session: mongoose.Types.ObjectId(sesion),
+        user: mongoose.Types.ObjectId(user),
+      },
+    },
+    { $group: { _id: { collective: '$collective' }, count: { $sum: 1 } } },
+  ]);
+  return nominations.map((collective) => collective._id.collective);
 }
 
 export default class FundingSessionController {
@@ -189,4 +223,8 @@ export default class FundingSessionController {
     static getCollectiveSessions = getCollectiveSessions
 
     static getUpcomingSessionInfo = getUpcomingSessionInfo
+
+    static getNominations = getNominations
+
+    static getUserNominations = getUserNominations
 }

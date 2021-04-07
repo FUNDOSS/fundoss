@@ -1,38 +1,52 @@
 import React, { useState } from 'react';
+import { Alert } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
+import GithubLoginButton from '../auth/GithubLoginButton';
 import Icons from '../icons';
 
-const CartButtonMultiple = ({ nominated, session, collective }) => {
+const NominateBtn = ({
+  nominated, session, collective, user, block,
+}) => {
   const [hasNominated, setHasNominated] = useState(nominated);
 
   return (
     <>{hasNominated ? (
-      <><Icons.Check size={22} />You have nominated this collective</>
+      <Alert variant="success small"><Icons.Check size={22} />You have nominated this collective</Alert>
     ) : (
-      <Button 
-        onClick={async () => {
-          const body = JSON.stringify({ 
-            session: session._id, 
-            collective: collective._id,
-          });
-          const res = await fetch('/api/funding-session/nominate', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body,
-          });
-          if (res.status === 200) {
-            setHasNominated(true);
-          } 
-          return false;
-        }}
-        block
-        variant="outline-primary"
-      >
-        <Icons.Award /> Nominate {collective.name} for {session.name}
-      </Button>
+      <>{ user._id ? (
+        <Button 
+          onClick={async () => {
+            const body = JSON.stringify({ 
+              session: session._id, 
+              collective: collective._id,
+            });
+            const res = await fetch('/api/funding-session/nominate', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body,
+            });
+            if (res.status === 200) {
+              setHasNominated(true);
+            } 
+            return false;
+          }}
+          block={block}
+          variant="outline-primary"
+        >
+          <Icons.Award size={22} /> Nominate {collective.name} 
+        </Button>
+      ) 
+        : (
+          <GithubLoginButton 
+            block={block}
+            text="Log in to nominate"
+            redirect={`/collective/${collective.slug}`}  
+          />
+        )}
+      </>
     )}
     </>
   );
 };
 
-export default CartButtonMultiple;
+export default NominateBtn;
