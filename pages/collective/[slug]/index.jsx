@@ -99,6 +99,7 @@ const collectivePage = ({
                       nominated={hasNominated}
                       collective={collective}
                       session={upComingSession}
+                      user={user}
                     />
                   </Card.Footer>
                 </Card>
