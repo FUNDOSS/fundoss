@@ -64,22 +64,6 @@ div#main{
     }
 }
 
-.confetti{
-    @extend .invert;
-    background: $darkpurple url('/bgconfetti.png') top repeat-x;
-    padding: 40px 0;
-}
-
-.trapezoid{
-    clip-path: polygon(100% 0%, 100% 90%, 0 100%, 0 0);
-    margin-bottom: -80px
-}
-
-.illu-hand{
-    @extend .invert;
-    background: $darkpurple url('/illu-hand.svg') no-repeat top left/contain ;
-    padding: 30px;
-}
 
 .collective-card{
     color: $black;
