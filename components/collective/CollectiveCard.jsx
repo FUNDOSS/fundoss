@@ -59,7 +59,13 @@ const CollectiveCard = ({
         <Card.Text className="text-center" style={{ maxHeight: '80px', overflow: 'hidden' }}>
           {description}
         </Card.Text>
-
+        {nominate ? (
+          <div className="text-center">
+            {nominations 
+              ? (<Badge variant="primary">{nominations} {Pluralize('nominations', nominations)}</Badge>)
+              : 'Be the first to nominate'}
+          </div>
+        ) : null}
       </Card.Body>
       <Card.Footer>
         {getPreviousDonation(collective._id) ? (
@@ -74,39 +80,39 @@ const CollectiveCard = ({
             </span> match
           </div>
         ) : null }
-        {active ? (
-          <Row className="no-gutters">
-            <Col xs={7}>
-              { !inCart ? (
-                <Button block variant="outline-primary" onClick={() => Cart.addItem(collective, 20, true)}>
-                  <Icons.Cart size={18} /> Add to cart
-                </Button>
-              ) : (
-                <Button block variant="primary" onClick={() => Cart.show(collective._id)}>
-                  <Icons.Check size={18} /> In cart <Badge variant="danger">{formatAmountForDisplay(inCart, 'USD')}</Badge>
-                </Button>
-              )}
-            </Col>
-            <Col>
-              <Button block variant="link" href={`/collective/${slug}`}>Read more</Button>
-            </Col>
-          </Row>
-        ) : null}
-        {nominate ? (
-          <div className="text-center">
-            {nominations 
-              ? (<>{nominations} {Pluralize('nominations', nominations)}</>)
-              : 'Be the first to nominate'}
-            <NominateBtn
-              block
-              nominations={nominations} 
-              user={user}
-              session={session}
-              collective={collective}
-              nominated={nominated}
-            />
-          </div>
-        ) : null}
+        
+        <Row className="no-gutters">
+          <Col xs={7}>
+            {nominate ? (
+              <NominateBtn
+                block
+                nominations={nominations} 
+                user={user}
+                session={session}
+                collective={collective}
+                nominated={nominated}
+              />
+
+            ) : null}
+            {active ? (
+              <>
+                { !inCart ? (
+                  <Button block variant="outline-primary" onClick={() => Cart.addItem(collective, 20, true)}>
+                    <Icons.Cart size={18} /> Add to cart
+                  </Button>
+                ) : (
+                  <Button block variant="primary" onClick={() => Cart.show(collective._id)}>
+                    <Icons.Check size={18} /> In cart <Badge variant="danger">{formatAmountForDisplay(inCart, 'USD')}</Badge>
+                  </Button>
+                )}
+              </>
+            ) : null}
+          </Col>
+          <Col>
+            <Button block variant="link" href={`/collective/${slug}`}>Read more</Button>
+          </Col>
+        </Row>
+
       </Card.Footer>
     </Card>
   );

@@ -11,7 +11,7 @@ const NominateBtn = ({
 
   return (
     <>{hasNominated ? (
-      <Alert variant="success small"><Icons.Check size={22} />You have nominated this collective</Alert>
+      <Alert size="sm" variant="success small"><Icons.Check size={22} />Nominated</Alert>
     ) : (
       <>{ user._id ? (
         <Button 
