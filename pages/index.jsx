@@ -1,11 +1,8 @@
 import React from 'react';
 import Layout from '../components/layout';
-import FundingSessionController, { getPredictedAverages } from '../lib/fundingSession/fundingSessionController';
 import FundingSession from '../components/fundingSession/FundingSession';
 import middleware from '../middleware/all';
 import ServerProps from '../lib/serverProps';
-import serializable from '../lib/serializable';
-import CartController from '../lib/cart/CartController';
 
 const IndexPage = ({
   session, user, cart, featured, predicted, nominations,
@@ -26,13 +23,20 @@ const IndexPage = ({
 export async function getServerSideProps({ req, res }) {
   await middleware.run(req, res);
   let session = await ServerProps.getCurrentSession();
+  let user;
+  let predicted = {}; 
+  let cart = false;
+  let nominations = { user: [] };
+  
   if (!session) {
     session = await ServerProps.getUpcoming();
+    user = await ServerProps.getUser(req.user);
+    nominations = await ServerProps.getNominations(session._id, user._id);
+  } else {
+    user = await ServerProps.getUser(req.user, session._id);
+    predicted = await ServerProps.getPredicted(session);
+    cart = await ServerProps.getCart(req.session.cart);
   }
-  const user = await ServerProps.getUser(req.user, session._id);
-  const nominations = await ServerProps.getNominations(session._id, user._id);
-  const cart = await ServerProps.getCart(req.session.cart);
-  const predicted = await ServerProps.getPredicted(session);
   
   return {
     props: {

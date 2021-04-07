@@ -22,7 +22,7 @@ const CollectiveCard = ({
   const [inCart, setInCart] = useState(false);
 
   useEffect(() => {
-    setInCart(Cart.collectives[collective._id]);
+    setInCart(Cart.collectives ? Cart.collectives[collective._id] : 0);
     cartEvents.on('cartChange', () => setInCart(Cart.collectives[collective._id]));
   }, []);
 
@@ -46,7 +46,7 @@ const CollectiveCard = ({
           </Col>
         </Row>
         <div className="text-center small" style={{ margin: '10px 0 -10px 0' }}>
-          {totals?.donations?.length ? (
+          {active && totals?.donations?.length ? (
             <>
               Raised <span className="text-fat">{formatAmountForDisplay(totals.amount)}</span> + 
               est. <span className="match">{formatAmountForDisplay(totals.donations.reduce((total, amount) => total + Qf.calculate(amount), 0))}</span> match 
@@ -68,7 +68,7 @@ const CollectiveCard = ({
         ) : null}
       </Card.Body>
       <Card.Footer>
-        {getPreviousDonation(collective._id) ? (
+        { active && getPreviousDonation(collective._id) ? (
           <div className="text-center small" style={{ margin: '-20px 0 5px 0' }}>
             You donated&nbsp;
             <span className="text-fat"> 

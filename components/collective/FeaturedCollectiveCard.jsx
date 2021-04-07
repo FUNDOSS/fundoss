@@ -29,7 +29,7 @@ const FeaturedCollectiveCard = ({ collective, active }) => {
   }, []);
 
   return (
-    <Card className="collective-card" id={`collective-${slug}`} style={{ maxWidth: '370px', margin: '0 auto' }}>
+    <Card className="collective-card" id={`collective-${slug}`} >
       <Card.Header>
         <Row>
           <Col xs={2} md={3}>
@@ -61,9 +61,9 @@ const FeaturedCollectiveCard = ({ collective, active }) => {
               
         <Card.Text className="text-center">
           {description}
-          <p>Every dollar you donate today is matched by a donation from our large-donor pool.</p>
+          
         </Card.Text>
-        
+        <p  className="text-center">Every dollar you donate today is matched by a donation from our large-donor pool.</p>
         <Row className="align-items-center no-gutters">
           <Col xs={5}>
             <InputGroup className="cart-amount round match">

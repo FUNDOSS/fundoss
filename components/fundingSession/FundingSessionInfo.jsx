@@ -24,19 +24,19 @@ const FundingSessionInfo = ({ session, predicted }) => {
   );
 
   return (
-    <>
+    <div className="session-info">
       {started && ended ? (<h2><small>Ended</small> {moment(end).format('MMMM Do YYYY')}</h2>) : null}
       {!started && !ended ? (
         <>
-          <span style={{ display: 'inline-block' }}>
-            <span className="lead  text-fat">
+          <span className="info-span">
+            <span className="lead text-fat">
               from {moment(start).format('MMMM Do')} <br />
               to {moment(end).format('MMMM Do YYYY')}
             </span> 
           </span>
-          <span style={{ display: 'inline-block' }} className="text-center">
+          <span className="info-span">
             in matched funding<br />
-            <span className="display-2 match">
+            <span className="display-3 match">
               {formatAmountForDisplay(session.matchedFunds, 'USD')}
             </span>
           </span>
@@ -44,34 +44,31 @@ const FundingSessionInfo = ({ session, predicted }) => {
       ) : null}
       {started ? (
         <div>
-          <span style={{ display: 'inline-block' }} className="text-center">
+          <span className="info-span text-center">
             {totals?.donations.length} donors<br />
             <span className="display-3">{formatAmountForDisplay(totals?.amount || 0)}</span>
           </span>
-                  &nbsp;&nbsp;+&nbsp;&nbsp;
-          <span style={{ display: 'inline-block' }} className="text-center">
+          <span className="display-4">+</span>
+          <span className="info-span text-center">
             Estimated match<br />
             <span className="text-fat display-3 text-success">
               {formatAmountForDisplay(Math.round(totalMatches), 'USD')}
             </span>
           </span>&nbsp;&nbsp;
-          <span style={{ display: 'inline-block' }} className="text-center">
+          <span className="info-span text-center">
             Remaining<br />
             <span className="display-3 text-fat">
               {formatAmountForDisplay(Math.round(session.matchedFunds - totalMatches), 'USD')}
             </span>
           </span>
         </div>
-                   
       ) : null }
-
       {started && !ended ? (
         <span className="lead text-fat">
           ends {moment(end).format('MMMM Do')} <Badge variant="danger"> {moment(end).fromNow()}</Badge>
         </span>
       ) : null}
-    </>
-
+    </div>
   );
 };
 

@@ -8,7 +8,7 @@ import {
 import ServerProps from '../../../lib/serverProps';
 import Layout from '../../../components/layout';
 import collectives from '../../../lib/collectives/CollectivesController';
-import FundingSessions, { getPredictedAverages } from '../../../lib/fundingSession/fundingSessionController';
+import FundingSessions from '../../../lib/fundingSession/fundingSessionController';
 import serializable from '../../../lib/serializable';
 import middleware from '../../../middleware/all';
 import CollectiveDonationCard from '../../../components/collective/CollectiveDonationCard';
@@ -17,7 +17,6 @@ import CollectiveCard from '../../../components/collective/CollectiveCard';
 import ShareButton from '../../../components/social/ShareButton';
 import NominateBtn from '../../../components/collective/NominateBtn';
 import FundingSessionInfo from '../../../components/fundingSession/FundingSessionInfo';
-import CartController from '../../../lib/cart/CartController';
 
 const collectivePage = ({
   collective, user, cart, similar, session, sessions, predicted, hasNominated, upComingSession,
@@ -92,7 +91,7 @@ const collectivePage = ({
                   <Card.Header className="text-center"><h3>Nominate {name}</h3></Card.Header>
                   <Card.Body className="text-center">
                     <FundingSessionInfo session={sessions[0]} />
-                    <Button block variant="primary" href={`/session/${upComingSession.slug}`}>{upComingSession.name}</Button>
+                    <Button size="lg" block variant="outline-primary" href={`/session/${upComingSession.slug}`}>{upComingSession.name}</Button>
                   </Card.Body>
                   <Card.Footer className="text-center">
                     <NominateBtn 
@@ -142,18 +141,29 @@ const collectivePage = ({
 
 export async function getServerSideProps({ query, req, res }) {
   await middleware.run(req, res);
-  const session = await ServerProps.getCurrentSessionInfo();
+
+  const session = await ServerProps.getCurrentSession();
   const collective = await collectives.findBySlug(query.slug);
+  let user;
+  let predicted = {}; 
+  let cart = false;
+  
+  if (session) {
+    user = await ServerProps.getUser(req.user, session._id);
+    predicted = await ServerProps.getPredicted(session);
+    cart = await ServerProps.getCart(req.session.cart);
+    collective.totals = collective.sessionTotals.reduce(
+      (totals, sess) => (sess.session == session._id ? sess : totals),
+      { amount: 0, donations: [] },
+    );
+  } else {
+    user = await ServerProps.getUser(req.user);
+  }
+
   const sessions = await FundingSessions.getCollectiveSessions(collective._id);
   const upComingSession = await ServerProps.getUpcoming();
-  const cart = await ServerProps.getCart(req.session.cart);
-  const user = await ServerProps.getUser(req.user, session._id);
   const similar = await collectives.similar();
-  const predicted = await ServerProps.getPredicted(session);
-  collective.totals = collective.sessionTotals.reduce(
-    (totals, sess) => (sess.session == session._id ? sess : totals),
-    { amount: 0, donations: [] },
-  );
+
   const hasNominated = user._id 
     ? (await collectives.hasNominated(collective._id, upComingSession._id, req.user._id)) > 0
     : false;
@@ -164,7 +174,7 @@ export async function getServerSideProps({ query, req, res }) {
       predicted,
       user,
       upComingSession,
-      cart: serializable(cart), 
+      cart, 
       collective: serializable(collective),
       similar: serializable(similar),
       sessions: serializable(sessions),

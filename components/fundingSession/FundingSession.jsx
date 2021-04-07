@@ -78,9 +78,16 @@ const FundingSession = ({
     if (filters.sort || sort) {
       const srt = filters.sort || sort;
       list = list.sort((a, b) => {
-        const at = parseInt(a.totals?.amount, 10); const 
-          bt = parseInt(b.totals?.amount, 10);
-        return srt === 'asc' ? at - bt : bt - at;
+        let av; let bv;
+        if (started) {
+          av = parseInt(a.totals?.amount, 10); 
+          bv = parseInt(b.totals?.amount, 10);
+        } else {
+          av = nominations[a._id];
+          bv = nominations[b._id];
+        }
+
+        return srt === 'asc' ? av - bv : bv - av;
       });
     }
 
@@ -92,14 +99,16 @@ const FundingSession = ({
         <Container>
           <Row>
             <Col md="5" className="d-none d-lg-block">
-              {started ? (
-                <FeaturedCollectiveCard 
-                  collective={featuredCollective} 
-                  active={started && !ended} 
-                />
-              ) : (
-                <Nominate sessionId={session._id} />
-              )}
+              <div style={{ maxWidth: '370px', margin: '0 auto' }}>
+                {started ? (
+                  <FeaturedCollectiveCard 
+                    collective={featuredCollective} 
+                    active={started && !ended}
+                  />
+                ) : (
+                  <Nominate sessionId={session._id} />
+                )}
+              </div>
             </Col>
             <Col className="content text-center text-lg-left">
               <h1 className="no-margin" style={{ textShadow: '0 0 10px #000000' }}>{name}</h1>
@@ -157,21 +166,40 @@ const FundingSession = ({
               />
             </Col>
             { started ? (
-              <Col xs={4} lg={2} className="text-center"><small className="d-none d-md-inline">Sort by</small>
-                <Button 
-                  style={{ margin: '0 10px' }}
-                  onClick={() => change({ sort: sort === 'desc' ? 'asc' : 'desc' })} 
-                  variant="link"
-                >
-                  {sort === 'asc' ? (
-                    <><span className="with-caret-up" />Funding</>
-                  ) : (
-                    <><span className="with-caret" />Funding</>
-                  )}
-                </Button>
+              <Col xs={4} lg={2} className="text-center">
+                <div className="sort">
+                  <small className="d-none d-md-inline">Sort by</small>
+                  <Button 
+                    style={{ margin: '0 10px' }}
+                    onClick={() => change({ sort: sort === 'desc' ? 'asc' : 'desc' })} 
+                    variant="link"
+                  >
+                    {sort === 'asc' ? (
+                      <><span className="with-caret-up" />Funding</>
+                    ) : (
+                      <><span className="with-caret" />Funding</>
+                    )}
+                  </Button>
+                </div>
               </Col>
             ) : null}
-
+            { !started ? (
+              <Col xs={4} lg={2} className="text-center">
+                <div className="sort"><small className="d-none d-md-inline">Sort by</small>
+                  <Button 
+                    style={{ margin: '0 10px' }}
+                    onClick={() => change({ sort: sort === 'desc' ? 'asc' : 'desc' })} 
+                    variant="link"
+                  >
+                    {sort === 'asc' ? (
+                      <><span className="with-caret-up" />Votes</>
+                    ) : (
+                      <><span className="with-caret" />Votes</>
+                    )}
+                  </Button>
+                </div>
+              </Col>
+            ) : null}
           </Row>
 
         </Card>

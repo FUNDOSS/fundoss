@@ -69,6 +69,19 @@ div#main{
     color: $black;
 }
 
+
+.card.invert{
+    background-color: rgba($darkpurple, 0.9);
+    border:1px solid rgba($white, 0.2);
+    .card-footer{
+        border-top:1px solid rgba($black, 0.7)
+    }
+    .card-header{
+        border-bottom:1px solid rgba($white, 0.2)
+    }
+    box-shadow: 0px 4px 24px rgba($black, 0.9);
+}
+
 footer{
     background: $darkpurple;
     color:$white;
@@ -260,3 +273,18 @@ h1{margin:2rem 0}
 }
 
 .alert.small{padding: 4px;}
+
+.session-info{
+    .info-span{
+        display: inline-block;
+        padding: 10px 15px 10px 0;
+    }
+}
+
+.sort{
+    text-transform: uppercase;
+    border: 1px solid $blue;
+    border-radius: $border-radius;
+    .btn.btn-link{text-transform: uppercase;text-decoration: none;}
+    margin-left:5px
+}
