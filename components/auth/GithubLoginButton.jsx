@@ -9,7 +9,7 @@ const GithubLoginButton = ({
     block={block}
     variant={variant || 'primary'}
     size={size || 'md'}
-    href={`/api/auth/github${redirect ? `?redirect=${redirect}` : ''}`}
+    href={`/api/auth/github${redirect ? `?redirect=${Buffer.from(redirect).toString('base64')}` : ''}`}
   >
     <Icons.Github size={{ sm: 18, lg: 25, md: 20 }[size]} />
     <span className={minify ? 'd-none d-md-inline' : ''}>&nbsp;{text}</span>
