@@ -58,29 +58,33 @@ const DisbursmentsTable = ({ donations, session }) => {
 
   return (
     <div>
-      {totalMatches} / {matchRatio} = {totalMatches / matchRatio}
-      <hr />
-      donations <Badge variant="info">{numDonations}</Badge>
-      average <Badge variant="info">{formatAmountForDisplay(averageDonation)}</Badge>
-      Match <Badge variant="success">{formatAmountForDisplay(averageMatch)}</Badge> 
-      fudge <Badge variant="warning">{Math.floor(100 / matchRatio) / 100}</Badge>
+      <p className="text-center">
+        current avg donation&nbsp;
+        <Badge variant="info">{formatAmountForDisplay(averageDonation)}</Badge>&nbsp;
+        match&nbsp;
+        <Badge variant="info">{formatAmountForDisplay(averageMatch)}</Badge>&nbsp;
+        fudge&nbsp;
+        <Badge variant="info">{Math.floor(100 / matchRatio) / 100}</Badge>&nbsp;
+      </p>
+
       <Table size="sm">
         <tr><th>collective</th><th>donations</th><th>matched</th><th>fee</th></tr>
         {disbursments.map((col) => (
           <tr key={col.slug}>
             <td>{col.slug}</td>
-            <td>{col.donation}</td>
-            <td>{col.matched}</td>
-            <td>{col.fee}</td>
+            <td>{formatAmountForDisplay(col.donation)}</td>
+            <td>{formatAmountForDisplay(col.matched)}</td>
+            <td>{formatAmountForDisplay(col.fee)}</td>
           </tr>
         ))}
-        <tr>
+        <tr className="lead text-fat">
           <td />
           <td>{formatAmountForDisplay(totals.donation)}</td>
           <td>{formatAmountForDisplay(totals.matched)}</td>
           <td>{formatAmountForDisplay(totals.fee)}</td>
         </tr>
       </Table>
+      
       {Object.keys(collectiveTotals).map(
         (key) => (!collectiveTotals[key].found ? (
           <b>{key}{collectiveTotals[key].match}</b>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Badge } from 'react-bootstrap';
+import { formatAmountForDisplay } from '../../utils/currency';
 
 const Prediction = ({ session, predicted }) => {
   const {
@@ -9,9 +10,9 @@ const Prediction = ({ session, predicted }) => {
   return (
     <>
       Predicted avg donation&nbsp;
-      <Badge variant="info">{Math.round(predicted.average)}</Badge>&nbsp;
+      <Badge variant="info">{formatAmountForDisplay(predicted.average)}</Badge>&nbsp;
       match&nbsp;
-      <Badge variant="info">{Math.round(predicted.match)}</Badge>&nbsp;
+      <Badge variant="info">{formatAmountForDisplay(predicted.match)}</Badge>&nbsp;
       fudge&nbsp;
       <Badge variant="info">{Math.round(predicted.fudge * 100) / 100}</Badge>&nbsp;
     </>
