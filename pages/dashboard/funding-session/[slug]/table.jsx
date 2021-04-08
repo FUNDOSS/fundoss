@@ -16,7 +16,6 @@ import DisbursmentsTable from '../../../../components/fundingSession/Disbursment
 import FundingSessionInfo from '../../../../components/fundingSession/FundingSessionInfo';
 import Prediction from '../../../../components/fundingSession/Prediction';
 
-
 const EditSessionPage = ({
   user, session, donations, predicted, 
 }) => {
@@ -30,7 +29,12 @@ const EditSessionPage = ({
         <div className="text-center">
           <h1>Disbursments {session.name}</h1>
           <FundingSessionInfo session={session} predicted={predicted} />
-          <Prediction predicted={predicted} session={session}/>
+          {moment(session.start) < moment() ? (
+            <Prediction 
+              predicted={predicted}
+              session={session}
+            />
+          ) : null }
           
         </div>
 

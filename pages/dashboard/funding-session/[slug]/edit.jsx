@@ -22,13 +22,18 @@ const EditSessionPage = ({
     return <Error statusCode={403} />;
   }
   return (
-    <Layout title="FundOSS | Dashboard" user={user} session={session} predicted={predicted} >
+    <Layout title="FundOSS | Dashboard" user={user} session={session} predicted={predicted}>
       <Container style={{ paddingTop: '40px' }}>
         <DashboardNav />
         <h1>Edit {session.name}</h1>
         <div className="text-center">
           <FundingSessionInfo session={session} predicted={predicted} />
-          <Prediction predicted={predicted} session={session}/>
+          {moment(session.start) < moment() ? (
+            <Prediction 
+              predicted={predicted}
+              session={session}
+            />
+          ) : null }
         </div>
         <br />
         <Button variant="outline-primary" href={`/session/${session.slug}`}>View Session</Button>
