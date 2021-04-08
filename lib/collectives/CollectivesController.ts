@@ -1,7 +1,7 @@
 import { GraphQLClient, gql } from 'graphql-request';
 import moment from 'moment';
 import mongoose from 'mongoose';
-import Collective, { ICollective } from './CollectiveModel';
+import Collective from './CollectiveModel';
 import FundingSessions from '../fundingSession/fundingSessionController';
 import Donation from '../payment/donationModel';
 import CollectiveSessionTotals from '../payment/collectiveSessionTotalsModel';
@@ -15,6 +15,13 @@ export async function findBySlug(slug:string):Promise<any> {
   collective.sessionTotals = totals;
   return collective;
 }
+
+export async function getIdBySlug(slug:string):Promise<any> {
+  await dbConnect();
+  const collective = await Collective.findOne({ slug }).select('_id');
+  return collective?._id;
+}
+
 
 export async function nominateCollective(
   session:string,
@@ -149,4 +156,6 @@ export default class Collectives {
     static getNominations = getNominations;
 
     static hasNominated = hasNominated;
+
+    static getIdBySlug = getIdBySlug;
 }

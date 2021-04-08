@@ -8,10 +8,26 @@ const handler = nextConnect();
 
 handler.use(all);
 
+handler.get(async (req: any, res: NextApiResponse) => {
+  if (req.query.collective && req.query.session && req.user?._id) {
+    const collectiveId = await Collectives.getIdBySlug(req.query.collective);
+    await Collectives.nominate(
+      req.query.session,
+      collectiveId,
+      req.user._id,
+    );
+    res.redirect(`/collective/${req.query.collective}`);
+  }
+});
+
 handler.post(async (req: any, res: NextApiResponse) => {
   if (req.body.url) {
     const matches = req.body.url.match(/^https?:\/\/(www\.)?opencollective\.com\/([^\/]+)(\/\w+)*$/);
-    const collective = await FundingSessions.nominate(req.body.sessionId, matches[2], req.user?._id);
+    const collective = await FundingSessions.nominate(
+      req.body.sessionId,
+      matches[2],
+      req.user?._id,
+    );
     return res.status(200).json(collective);
   }
   if (req.body.collective && req.body.session && req.user?._id) {
