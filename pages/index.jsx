@@ -7,7 +7,7 @@ import ServerProps from '../lib/serverProps';
 const IndexPage = ({
   session, user, cart, featured, predicted, nominations,
 }) => (
-  <Layout title="FundOSS | Quadratic funding for open source projects" user={user} cart={cart} predicted={predicted}>
+  <Layout title="FundOSS | Democratic funding for open source projects" user={user} cart={cart} predicted={predicted}>
     {session?._id ? (
       <FundingSession 
         session={session} 

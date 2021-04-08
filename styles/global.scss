@@ -282,9 +282,9 @@ h1{margin:2rem 0}
 }
 
 .sort{
+    @extend .form-control;
     text-transform: uppercase;
-    border: 1px solid $blue;
-    border-radius: $border-radius;
+    border: 1px solid rgba($blue,.5);
+    padding-top: 3px;
     .btn.btn-link{text-transform: uppercase;text-decoration: none;}
-    margin-left:5px
 }
