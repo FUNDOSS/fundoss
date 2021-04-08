@@ -1,5 +1,5 @@
 /* eslint-disable react/no-danger */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import Link from 'next/link';
 import Row from 'react-bootstrap/Row';
@@ -22,7 +22,7 @@ const FundingSession = ({
     name, description, collectives, start, end, sponsors, 
   } = session;
 
-  const [collectivesList, setCollectivesList] = useState(collectives);
+  const [collectivesList, setCollectivesList] = useState(collectives.map((c) => ({ ...c })));
   const [sort, setSort] = useState('desc');
   const [setSortOn] = useState('total');
   const [tags, setTags] = useState([]);
@@ -40,8 +40,8 @@ const FundingSession = ({
     { match: 0, collectives: {} },
   );
   
-  const featuredCollective = { ...collectives[Math.floor(Math.random() * collectives.length)] };
-  const totalMatches = sessionInfo.match;
+  const featuredCollective = collectives[Math.floor(Math.random() * collectives.length)];
+  
   const userDonations = user.donations ? Object.keys(user.donations).map(
     (key) => ({ collective: sessionInfo.collectives[key], amount: user.donations[key] }), 
   ) : null;
@@ -114,7 +114,7 @@ const FundingSession = ({
               <h1 className="no-margin" style={{ textShadow: '0 0 10px #000000' }}>{name}</h1>
 
               <FundingSessionInfo session={session} predicted={predicted} />
-
+              {user.role === 'admin' ? <Button variant="outline-light" href={`/dashboard/funding-session/${session._id}/edit`}>Edit</Button> : null}
               {user.donations?.length 
                 ? (
                   <div style={{ margin: '15px 0' }}>Your donnations : <br />{userDonations.map( 
@@ -170,6 +170,7 @@ const FundingSession = ({
                 <div className="sort">
                   <small className="d-none d-md-inline">Sort by</small>
                   <Button 
+                    size="sm"
                     style={{ margin: '0 10px' }}
                     onClick={() => change({ sort: sort === 'desc' ? 'asc' : 'desc' })} 
                     variant="link"
@@ -187,6 +188,7 @@ const FundingSession = ({
               <Col xs={4} lg={2} className="text-center">
                 <div className="sort"><small className="d-none d-md-inline">Sort by</small>
                   <Button 
+                    size="sm"
                     style={{ margin: '0 10px' }}
                     onClick={() => change({ sort: sort === 'desc' ? 'asc' : 'desc' })} 
                     variant="link"

@@ -37,9 +37,10 @@ const Layout = ({
           <Navbar.Brand href="/"><Logo /></Navbar.Brand>
           <Navbar.Collapse id="primary-nav">
             <Nav className="mr-auto">
-              <Nav.Link href="/about"><Icons.Code size={20} /> About</Nav.Link>
+              
               <Nav.Link href="https://blog.opencollective.com/fundoss-faqv1/"><Icons.Question size={20} /> FAQ</Nav.Link>
               <Nav.Link href="/democratic-funding"><Icons.Buoy size={20} /> How democratic funding works</Nav.Link>
+              <Nav.Link href="/upcoming"><Icons.Award size={20} /> Upcoming</Nav.Link>
             </Nav>
           </Navbar.Collapse>
           { cart ? <CartButton className="btn-cart" itemCount={cart?.length} /> : null }

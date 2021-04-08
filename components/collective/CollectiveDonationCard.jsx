@@ -84,7 +84,6 @@ const CollectiveDonationCard = ({ collective }) => {
           )
           : (
             <div style={{ padding: '20px 0' }} className="text-center">
-
               <InputGroup className="cart-amount" style={{ maxWidth: '150px', margin: '5px auto' }}>
                 <InputGroup.Prepend><InputGroup.Text>$</InputGroup.Text></InputGroup.Prepend>
                 <Form.Control
@@ -136,7 +135,7 @@ const CollectiveDonationCard = ({ collective }) => {
               )}
             </Col>
             <Col>
-              <Button block variant="link" href="/checkout/">Checkout</Button>
+              {inCart ? <Button block variant="link" href="/checkout/">Checkout</Button> : null}
             </Col>
           </Row>
         )}
