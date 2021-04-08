@@ -31,6 +31,10 @@ const ServerProps = {
     const info = await FundingSession.getUpcomingSession();
     return info ? serializable(info) : null;
   },
+  getUpcomingInfo: async () => {
+    const info = await FundingSession.getUpcomingSessionInfo();
+    return info ? serializable(info) : null;
+  },
   getNominations: async (session, user) => {
     const nominations = await FundingSession.getNominations(session);
     nominations.user = user

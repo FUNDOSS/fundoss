@@ -4,7 +4,7 @@ import { Badge } from 'react-bootstrap';
 import Qf from '../../utils/qf';
 import { formatAmountForDisplay } from '../../utils/currency';
 
-const FundingSessionInfo = ({ session, predicted }) => {
+const FundingSessionInfo = ({ session, predicted, size = 'md' }) => {
   const {
     start, end, totals,
   } = session;
@@ -24,7 +24,7 @@ const FundingSessionInfo = ({ session, predicted }) => {
   );
 
   return (
-    <div className="session-info">
+    <div className={`session-info info-${size}`}>
       {started && ended ? (<h2><small>Ended</small> {moment(end).format('MMMM Do YYYY')}</h2>) : null}
       {!started && !ended ? (
         <>

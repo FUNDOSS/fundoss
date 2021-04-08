@@ -24,7 +24,6 @@ export async function getServerSideProps({ req, res }) {
   await middleware.run(req, res);
   let session = await ServerProps.getCurrentSession();
   let user; 
-  let featured;
   let current = false;
   let predicted = {}; 
   let cart = false;
@@ -38,10 +37,11 @@ export async function getServerSideProps({ req, res }) {
     user = await ServerProps.getUser(req.user, session._id);
     predicted = await ServerProps.getPredicted(session);
     cart = await ServerProps.getCart(req.session.cart);
-    featured = session.collectives[Math.floor(Math.random() * session.collectives.length)];
     current = session;
   }
-  
+
+  const featured = session.collectives[Math.floor(Math.random() * session.collectives.length)];
+
   return {
     props: {
       nominations,

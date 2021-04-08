@@ -280,6 +280,9 @@ h1{margin:2rem 0}
         padding: 10px 15px 10px 0;
     }
 }
+.session-info.info-sm{
+    .display-3{font-size: 1.4rem}
+}
 
 .sort{
     @extend .form-control;

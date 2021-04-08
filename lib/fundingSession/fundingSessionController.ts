@@ -106,7 +106,7 @@ export async function getUpcomingSessionInfo():Promise<any> {
   await dbConnect();
   const session = await FundingSession.findOne({
     start: { $gte: new Date() },
-  }).select('_id slug name start end averageDonationEst numberDonationEst matchedFunds totals matchingCurve');
+  }).select('_id slug name start end averageDonationEst numberDonationEst matchedFunds totals matchingCurve description');
   return session;
 }
 

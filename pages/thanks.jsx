@@ -12,9 +12,10 @@ import Icons from '../components/icons';
 import ShareButton from '../components/social/ShareButton';
 import Robot from '../components/illustration/Robot';
 import ServerProps from '../lib/serverProps';
+import FundingSessionInfo from '../components/fundingSession/FundingSessionInfo';
 
 
-const CheckoutPage = ({ user, payment, session, hostingUrl }) => (
+const CheckoutPage = ({ user, payment, session, hostingUrl, upcoming }) => (
   <Layout title="FundOSS | Donations cart" user={user} current={session} style={{ background: '#0E0C4D' }}>
     <div className="confetti" style={{ marginBottom: '-60px', paddingBottom: '70px' }}>
       <Container>
@@ -79,16 +80,17 @@ const CheckoutPage = ({ user, payment, session, hostingUrl }) => (
                 <ShareButton platform="email" variant="link" url={hostingUrl} />
               </Col>
               <Col>
-                <h3>FundOSS  Round 2</h3>
-                <p>If there are projects you want to see in Round 2, &nbsp;
-                  please consider nominating them for FundOSS, currently set for late Summer 2021.
-                </p>
-                <Button block variant="outline-primary"><Icons.Award size={15} /> Collectives for round 2</Button>
+                <h3>{upcoming.name}</h3>
+                <FundingSessionInfo session={upcoming} size="sm" />
+                <p>{upcoming.description}</p>
+                <Button href="upcoming" block variant="outline-primary">
+                  <Icons.Award size={15} />nominate for {upcoming.name}
+                </Button>
               </Col>
             </Row>
           </Card.Body>
           <Card.Footer>
-            <Button size="lg" variant="primary" block href="/">Back to FundOSS.org</Button>
+            <Button size="lg" variant="outline-primary" block href="/">Back to FundOSS.org</Button>
           </Card.Footer>
         </Card>
       </Container>
@@ -100,6 +102,7 @@ export async function getServerSideProps({ req, res }) {
   await middleware.run(req, res);
   const payment = await Payments.getLastByUser(req.user._id);
   const session = await ServerProps.getCurrentSessionInfo();
+  const upcoming = await ServerProps.getUpcomingInfo();
   const user = await ServerProps.getUser(req.user, session?._id);
   const hostingUrl = process.env.HOSTING_URL;
   return {
@@ -108,6 +111,7 @@ export async function getServerSideProps({ req, res }) {
       payment: serializable(payment),
       session, 
       hostingUrl,
+      upcoming,
     }, 
   };
 }
