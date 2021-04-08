@@ -82,7 +82,7 @@ const CheckoutPage = ({ user, payment, session, hostingUrl, upcoming }) => (
               <Col>
                 <h3>{upcoming.name}</h3>
                 <FundingSessionInfo session={upcoming} size="sm" />
-                <p>{upcoming.description}</p>
+                <div dangerouslySetInnerHTML={{ __html:upcoming.description}}></div>
                 <Button href="upcoming" block variant="outline-primary">
                   <Icons.Award size={15} />nominate for {upcoming.name}
                 </Button>
