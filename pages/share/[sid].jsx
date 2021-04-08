@@ -7,17 +7,16 @@ import Layout from '../../components/layout';
 import middleware from '../../middleware/all';
 import serializable from '../../lib/serializable';
 import Payments from '../../lib/payment/paymentController';
-import CartController from '../../lib/cart/CartController';
-import FundingSessions from '../../lib/fundingSession/fundingSessionController'; 
 import Qf from '../../utils/qf';
 import AddMultipleToCartButton from '../../components/cart/AddMultipleToCartButton';
 import Sponsors from '../../components/fundingSession/Sponsors';
 import { formatAmountForDisplay } from '../../utils/currency';
+import ServerProps from '../../lib/serverProps';
 
 const SharePage = ({
   user, payment, session, cart, 
 }) => (
-  <Layout title="FundOSS | Donations cart" user={user} cart={cart} session={session} style={{ background: '#0E0C4D' }}>
+  <Layout title="FundOSS | Donations cart" user={user} current={session} cart={cart} style={{ background: '#0E0C4D' }}>
     <Container style={{ paddingTop: '40px', margin: '-60px 0' }} fluid>
       <Row className="no-gutter  row-eq-height">
         <Col md={6} className="illu-hand">
@@ -54,7 +53,7 @@ const SharePage = ({
               )}
             </Row>
 
-            {session._id === payment.session._id ? (
+            {session?._id === payment.session._id ? (
               <AddMultipleToCartButton items={payment.donations.map((d) => d.collective)} />
             ) : null }
             <Button variant="outline-primary" size="lg" block href="/">More collectives on FundOSS.org</Button>
@@ -68,16 +67,26 @@ const SharePage = ({
 export async function getServerSideProps({ query, req, res }) {
   await middleware.run(req, res);
   const payment = await Payments.getShared(query.sid);
-  const session = await FundingSessions.getCurrentSessionInfo();
-  const cart = await CartController.get(req.session.cart);
+  const session = await ServerProps.getCurrentSession();
+  let user;
+  let predicted = {}; 
+  let cart = false;
+  if (!session) {
+    user = await ServerProps.getUser(req.user);
+  } else {
+    user = await ServerProps.getUser(req.user, session?._id);
+    predicted = await ServerProps.getPredicted(session);
+    cart = await ServerProps.getCart(req.session.cart);
+  }
   return {
     props: { 
-      user: serializable(req.user), 
       payment: serializable(payment),
-      cart: serializable(cart), 
-      session: serializable(session), 
+      predicted,
+      user,
+      session,
+      cart, 
     }, 
   };
-}
+} 
 
 export default SharePage;

@@ -5,13 +5,13 @@ import middleware from '../middleware/all';
 import ServerProps from '../lib/serverProps';
 
 const IndexPage = ({
-  session, user, cart, featured, predicted, nominations,
+  session, user, cart, featured, predicted, nominations, current,
 }) => (
-  <Layout title="FundOSS | Democratic funding for open source projects" user={user} cart={cart} predicted={predicted}>
+  <Layout title="FundOSS | Democratic funding for open source projects" current={current} user={user} cart={cart} predicted={predicted}>
     {session?._id ? (
       <FundingSession 
         session={session} 
-        featuredCollective={featured} 
+        featured={featured} 
         user={user}
         predicted={predicted}
         nominations={nominations}
@@ -23,7 +23,9 @@ const IndexPage = ({
 export async function getServerSideProps({ req, res }) {
   await middleware.run(req, res);
   let session = await ServerProps.getCurrentSession();
-  let user;
+  let user; 
+  let featured;
+  let current = false;
   let predicted = {}; 
   let cart = false;
   let nominations = { user: [] };
@@ -36,6 +38,8 @@ export async function getServerSideProps({ req, res }) {
     user = await ServerProps.getUser(req.user, session._id);
     predicted = await ServerProps.getPredicted(session);
     cart = await ServerProps.getCart(req.session.cart);
+    featured = session.collectives[Math.floor(Math.random() * session.collectives.length)];
+    current = session;
   }
   
   return {
@@ -45,6 +49,8 @@ export async function getServerSideProps({ req, res }) {
       user,
       session,
       cart, 
+      current,
+      featured
     },
   };
 }

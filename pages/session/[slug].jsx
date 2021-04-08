@@ -7,13 +7,13 @@ import serializable from '../../lib/serializable';
 import ServerProps from '../../lib/serverProps';
 
 const IndexPage = ({
-  session, user, cart, featured, predicted, nominations,
+  session, user, cart, featured, predicted, nominations, current,
 }) => (
-  <Layout title={`FundOSS | ${session.name}`} user={user} cart={cart} session={session} predicted={predicted}>
+  <Layout title={`FundOSS | ${session.name}`} user={user} cart={cart} current={current} session={session} predicted={predicted}>
     {session._id ? (
       <FundingSession 
         session={session} 
-        featuredCollective={featured} 
+        featured={featured} 
         predicted={predicted}
         user={user}
         nominations={nominations}
@@ -25,29 +25,29 @@ const IndexPage = ({
 export async function getServerSideProps({ query, req, res }) {
   await middleware.run(req, res);
 
-  const currentSession = await ServerProps.getCurrentSessionInfo();
-  const user = await ServerProps.getUser(req.user, currentSession?._id);
+  const current = await ServerProps.getCurrentSessionInfo();
+  const user = await ServerProps.getUser(req.user, current?._id);
   let predicted = {}; 
   let cart = false;
   
-  if (currentSession) {
-    predicted = await ServerProps.getPredicted(currentSession);
+  if (current) {
+    predicted = await ServerProps.getPredicted(current);
     cart = await ServerProps.getCart(req.session.cart);
   }
   
   const session = await FundingSessions.getBySlug(query.slug);
+  const featured = serializable(session.collectives[Math.floor(Math.random() * session.collectives.length)]);
   const nominations = await ServerProps.getNominations(session._id, user._id);
 
   return {
     props: {
+      current,
       nominations,
       user,
       predicted,
       session: serializable(session),
       cart,
-      featured: serializable(
-        session?.collectives[Math.floor(Math.random() * session.collectives.length)],
-      ),
+      featured,
     },
   };
 }

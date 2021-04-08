@@ -6,15 +6,16 @@ import Layout from '../components/layout';
 import middleware from '../middleware/all';
 import serializable from '../lib/serializable';
 import Payments from '../lib/payment/paymentController';
-import FundingSessions from '../lib/fundingSession/fundingSessionController'; 
 import Qf from '../utils/qf';
 import { formatAmountForDisplay } from '../utils/currency';
 import Icons from '../components/icons';
 import ShareButton from '../components/social/ShareButton';
 import Robot from '../components/illustration/Robot';
+import ServerProps from '../lib/serverProps';
 
-const CheckoutPage = ({ user, payment, session }) => (
-  <Layout title="FundOSS | Donations cart" user={user} session={session} style={{ background: '#0E0C4D' }}>
+
+const CheckoutPage = ({ user, payment, session, hostingUrl }) => (
+  <Layout title="FundOSS | Donations cart" user={user} current={session} style={{ background: '#0E0C4D' }}>
     <div className="confetti" style={{ marginBottom: '-60px', paddingBottom: '70px' }}>
       <Container>
         <Card style={{ maxWidth: '750px', margin: '30px auto' }}>
@@ -57,7 +58,7 @@ const CheckoutPage = ({ user, payment, session }) => (
                   but don’t worry if you close this browser&nbsp;
                   tab. You can also see your shareable cart on your Account page!
                 </p>
-                <Form.Control onChange={() => null} value={`https://app.fundoss.org/share/${payment.sid}`} />
+                <Form.Control onChange={() => null} value={`${hostingUrl}/share/${payment.sid}`} />
                 <ShareButton platform="twitter" variant="link" url={`/share/${payment.sid}`} />
                 <ShareButton platform="facebook" variant="link" url={`/share/${payment.sid}`} />
                 <ShareButton platform="email" variant="link" url={`/share/${payment.sid}`} />
@@ -73,9 +74,9 @@ const CheckoutPage = ({ user, payment, session }) => (
                 </p>
                 <p>Please considering lending your voice to support these OSS projects!</p>
 
-                <ShareButton platform="twitter" variant="link" url="/" />
-                <ShareButton platform="facebook" variant="link" url="/" />
-                <ShareButton platform="email" variant="link" url="/" />
+                <ShareButton platform="twitter" variant="link" url={hostingUrl} />
+                <ShareButton platform="facebook" variant="link" url={hostingUrl} />
+                <ShareButton platform="email" variant="link" url={hostingUrl} />
               </Col>
               <Col>
                 <h3>FundOSS  Round 2</h3>
@@ -98,12 +99,15 @@ const CheckoutPage = ({ user, payment, session }) => (
 export async function getServerSideProps({ req, res }) {
   await middleware.run(req, res);
   const payment = await Payments.getLastByUser(req.user._id);
-  const session = await FundingSessions.getCurrentSessionInfo();
+  const session = await ServerProps.getCurrentSessionInfo();
+  const user = await ServerProps.getUser(req.user, session?._id);
+  const hostingUrl = process.env.HOSTING_URL;
   return {
     props: { 
-      user: serializable(req.user), 
+      user, 
       payment: serializable(payment),
-      session: serializable(session), 
+      session, 
+      hostingUrl,
     }, 
   };
 }

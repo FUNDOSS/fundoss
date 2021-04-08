@@ -17,7 +17,7 @@ import Nominate from '../collective/NominateForm';
 import AdminLinks from './AdminLinks';
 
 const FundingSession = ({
-  session, user, predicted, nominations = { user: [] },
+  session, user, predicted, nominations = { user: [] }, featured,
 }) => {
   const {
     name, description, collectives, start, end, sponsors, 
@@ -41,7 +41,7 @@ const FundingSession = ({
     { match: 0, collectives: {} },
   );
   
-  const featuredCollective = collectives[Math.floor(Math.random() * collectives.length)];
+  const featuredCollective = featured;
   
   const userDonations = user.donations ? Object.keys(user.donations).map(
     (key) => ({ collective: sessionInfo.collectives[key], amount: user.donations[key] }), 

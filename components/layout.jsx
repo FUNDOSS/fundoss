@@ -11,7 +11,7 @@ import Icons from './icons';
 import Qf from '../utils/qf';
 
 const Layout = ({
-  children, title = 'This is the default title', user, hidefooter, cart, predicted,
+  children, title = 'This is the default title', user, hidefooter, cart, predicted, current
 }) => {
   if (predicted) {
     Qf.init(
@@ -37,10 +37,9 @@ const Layout = ({
           <Navbar.Brand href="/"><Logo /></Navbar.Brand>
           <Navbar.Collapse id="primary-nav">
             <Nav className="mr-auto">
-              
               <Nav.Link href="https://blog.opencollective.com/fundoss-faqv1/"><Icons.Question size={20} /> FAQ</Nav.Link>
               <Nav.Link href="/democratic-funding"><Icons.Buoy size={20} /> How democratic funding works</Nav.Link>
-              <Nav.Link href="/upcoming"><Icons.Award size={20} /> Upcoming</Nav.Link>
+              { current ? <Nav.Link href="/upcoming"><Icons.Award size={20} /> Upcoming</Nav.Link> : null }
             </Nav>
           </Navbar.Collapse>
           { cart ? <CartButton className="btn-cart" itemCount={cart?.length} /> : null }
