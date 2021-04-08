@@ -24,12 +24,20 @@ const IndexPage = ({
 
 export async function getServerSideProps({ query, req, res }) {
   await middleware.run(req, res);
+
   const currentSession = await ServerProps.getCurrentSessionInfo();
+  const user = await ServerProps.getUser(req.user, currentSession?._id);
+  let predicted = {}; 
+  let cart = false;
+  
+  if (currentSession) {
+    predicted = await ServerProps.getPredicted(currentSession);
+    cart = await ServerProps.getCart(req.session.cart);
+  }
+  
   const session = await FundingSessions.getBySlug(query.slug);
-  const cart = await ServerProps.getCart(req.session.cart);
-  const user = await ServerProps.getUser(req.user);
   const nominations = await ServerProps.getNominations(session._id, user._id);
-  const predicted = await ServerProps.getPredicted(currentSession);
+
   return {
     props: {
       nominations,

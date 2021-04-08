@@ -16,6 +16,7 @@ import DisbursmentsTable from '../../../../components/fundingSession/Disbursment
 import FundingSessionInfo from '../../../../components/fundingSession/FundingSessionInfo';
 import Prediction from '../../../../components/fundingSession/Prediction';
 
+
 const EditSessionPage = ({
   user, session, donations, predicted, 
 }) => {
