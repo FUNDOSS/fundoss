@@ -40,7 +40,7 @@ const NominateBtn = ({
           <GithubLoginButton 
             block={block}
             text="Log in to nominate"
-            redirect={`/collective/${collective.slug}`}  
+            redirect={`/api/funding-session/nominate?collective=${collective.slug}&session=${session._id}`}  
           />
         )}
       </>

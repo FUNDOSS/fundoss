@@ -12,7 +12,7 @@ handler.get((req: any, res: NextApiResponse) => {
   if (!provider) {
     return { statusCode: 404 };
   }
-  const state = Buffer.from(redirect || req.headers.referer, 'ascii').toString('base64');
+  const state = redirect || Buffer.from(req.headers.referer).toString('base64');
   return passport.authenticate(
     provider,
     { scope: appConfig.github.scope, state },
