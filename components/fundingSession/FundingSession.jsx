@@ -14,6 +14,7 @@ import Sponsors from './Sponsors';
 import Qf from '../../utils/qf';
 import FundingSessionInfo from './FundingSessionInfo';
 import Nominate from '../collective/NominateForm';
+import AdminLinks from './AdminLinks';
 
 const FundingSession = ({
   session, user, predicted, nominations = { user: [] },
@@ -83,8 +84,8 @@ const FundingSession = ({
           av = parseInt(a.totals?.amount, 10); 
           bv = parseInt(b.totals?.amount, 10);
         } else {
-          av = nominations[a._id];
-          bv = nominations[b._id];
+          av = nominations[a._id] || 0;
+          bv = nominations[b._id] || 0;
         }
 
         return srt === 'asc' ? av - bv : bv - av;
@@ -114,7 +115,7 @@ const FundingSession = ({
               <h1 className="no-margin" style={{ textShadow: '0 0 10px #000000' }}>{name}</h1>
 
               <FundingSessionInfo session={session} predicted={predicted} />
-              {user.role === 'admin' ? <Button variant="outline-light" href={`/dashboard/funding-session/${session._id}/edit`}>Edit</Button> : null}
+              {user.role === 'admin' ? <AdminLinks disbursments edit session={session} /> : null}
               {user.donations?.length 
                 ? (
                   <div style={{ margin: '15px 0' }}>Your donnations : <br />{userDonations.map( 
