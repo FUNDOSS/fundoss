@@ -5,7 +5,7 @@ const Qf = {
     amount: number,
     averageDonation:number = null,
     averageMatch:number = null,
-    exp = 2,
+    exp:number = null,
     fudge:number = null,
     symetric = false,
   ) => {
