@@ -4,7 +4,7 @@ import OscLogo from '../../svg/osc.svg';
 import GitcoinLogo from '../../svg/gitcoin.svg';
 
 const Sponsors = ({ sponsors }) => (
-  <div className="content">
+  <div className="content" style={{marginTop:'10px'}}>
     <p>Brought to You By</p>
     <Button href="https://www.oscollective.org/" variant="link" target="_blank"><OscLogo /></Button>
     &nbsp;&nbsp;

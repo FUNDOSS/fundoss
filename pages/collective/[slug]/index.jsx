@@ -17,6 +17,7 @@ import CollectiveCard from '../../../components/collective/CollectiveCard';
 import ShareButton from '../../../components/social/ShareButton';
 import NominateBtn from '../../../components/collective/NominateBtn';
 import FundingSessionInfo from '../../../components/fundingSession/FundingSessionInfo';
+import Sponsors from '../../../components/fundingSession/Sponsors';
 
 const collectivePage = ({
   collective, user, cart, similar, session, sessions, predicted, hasNominated, upComingSession,
@@ -87,19 +88,24 @@ const collectivePage = ({
                 />
               ) : null}
               {!isInCurrentSession ? (
-                <Card>
-                  <Card.Header className="text-center"><h3>Nominate {name}</h3></Card.Header>
-                  <Card.Body className="text-center">
+                <Card className="invert">
+                  <Card.Header className="text-center content"><h3>Nominate {name}</h3></Card.Header>
+                  <Card.Body className="text-center content">
                     <FundingSessionInfo session={sessions[0]} />
                     <Button size="lg" block variant="outline-primary" href={`/session/${upComingSession.slug}`}>{upComingSession.name}</Button>
-                  </Card.Body>
-                  <Card.Footer className="text-center">
                     <NominateBtn 
+                      size="lg"
+                      block
+                      variant="outline-light"
                       nominated={hasNominated}
                       collective={collective}
                       session={upComingSession}
                       user={user}
                     />
+                  </Card.Body>
+                  <Card.Footer className="text-center content">
+
+                    <Sponsors sponsors={upComingSession.sponsors} /> 
                   </Card.Footer>
                 </Card>
               ) : null}

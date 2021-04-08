@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { Alert } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import GithubLoginButton from '../auth/GithubLoginButton';
 import Icons from '../icons';
 
 const NominateBtn = ({
-  nominated, session, collective, user, block,
+  nominated, session, collective, user, block, variant = 'outline-primary', size = 'md',
 }) => {
   const [hasNominated, setHasNominated] = useState(nominated);
 
@@ -15,6 +14,8 @@ const NominateBtn = ({
     ) : (
       <>{ user._id ? (
         <Button 
+          size={size}
+          variant={variant}
           onClick={async () => {
             const body = JSON.stringify({ 
               session: session._id, 
@@ -31,7 +32,6 @@ const NominateBtn = ({
             return false;
           }}
           block={block}
-          variant="outline-primary"
         >
           <Icons.Award size={22} /> Nominate
         </Button>
