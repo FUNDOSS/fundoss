@@ -13,6 +13,7 @@ import middleware from '../../../../middleware/all';
 import serializable from '../../../../lib/serializable';
 import FundingSessions, { getPredictedAverages } from '../../../../lib/fundingSession/fundingSessionController';
 import FundingSessionInfo from '../../../../components/fundingSession/FundingSessionInfo';
+import Prediction from '../../../../components/fundingSession/Prediction';
 
 const EditSessionPage = ({
   user, session, predicted, 
@@ -27,7 +28,7 @@ const EditSessionPage = ({
         <h1>Edit {session.name}</h1>
         <div className="text-center">
           <FundingSessionInfo session={session} predicted={predicted} />
-          Predicted {Math.round(predicted.average)} {Math.round(predicted.match)}
+          <Prediction predicted={predicted} session={session}/>
         </div>
         <br />
         <Button variant="outline-primary" href={`/session/${session.slug}`}>View Session</Button>

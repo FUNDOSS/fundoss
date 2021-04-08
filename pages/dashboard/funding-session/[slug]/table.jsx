@@ -5,7 +5,7 @@ import moment from 'moment';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { Button } from 'react-bootstrap';
+import { Button, Badge } from 'react-bootstrap';
 import DashboardNav from '../../../../components/dashboard/DashboardNav';
 import Layout from '../../../../components/layout';
 import middleware from '../../../../middleware/all';
@@ -14,6 +14,7 @@ import FundingSessions, { getPredictedAverages } from '../../../../lib/fundingSe
 import Payments from '../../../../lib/payment/paymentController';
 import DisbursmentsTable from '../../../../components/fundingSession/DisbursmentTable';
 import FundingSessionInfo from '../../../../components/fundingSession/FundingSessionInfo';
+import Prediction from '../../../../components/fundingSession/Prediction';
 
 const EditSessionPage = ({
   user, session, donations, predicted, 
@@ -28,8 +29,10 @@ const EditSessionPage = ({
         <div className="text-center">
           <h1>Disbursments {session.name}</h1>
           <FundingSessionInfo session={session} predicted={predicted} />
-          Predicted {Math.round(predicted.average)} {Math.round(predicted.match)}
+          <Prediction predicted={predicted} session={session}/>
+          
         </div>
+
         <br />
         <Button variant="outline-primary" href={`/dashboard/funding-session/${session.slug}/edit`}>edit</Button>&nbsp;
         <Button variant="outline-primary" className="pull-right" href={`/session/${session.slug}`}>View Session</Button>

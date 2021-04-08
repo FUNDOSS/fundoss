@@ -57,15 +57,15 @@ export const getPredictedAverages = (session) => {
     const currentMatches = donations.reduce(
       (total, don) => total + Qf.calculate(
         don,
-        avg.average,
-        avg.match,
+        amount / donations.length,
+        matchedFunds / donations.length,
         session.matchingCurve.exp || 2,
         1,
         session.matchingCurve.symetric,
       ),
       0,
     );
-    avg.fudge = ((currentMatches / timeElapsed) * totalTime) / matchedFunds;
+    avg.fudge = ((matchedFunds / donations.length) / (amount / donations.length)) / (currentMatches / amount)
     return avg;
   }
   return {
@@ -151,7 +151,7 @@ export async function getById(id:string):Promise<IFundingSession> {
 export async function getBySlug(slug:string):Promise<IFundingSession> {
   await dbConnect();
   const session = await FundingSession.findOne({ slug }).populate('collectives');
-  console.log('session._id',session._id)
+  console.log('session._id', session._id);
   if (session._id) {
     const sessionData = await setCollectiveTotals(session);
     return sessionData;
@@ -202,7 +202,7 @@ export async function getNominations(sesion) {
   return nominations.reduce((noms, collective) => ({
     ...noms,
     ...{ [collective._id.collective]: collective.count },
-  }),{});
+  }), {});
 }
 
 export async function getUserNominations(user, session) {
