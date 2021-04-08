@@ -13,11 +13,12 @@
 .seamless{
     
     @extend .invert;
-    background: $darkpurple;
+    background: $darkpurple url('/bg-seamless.svg') ;
     padding: 40px 0;
-    background: $darkpurple;
-    background-image: linear-gradient(rgba($darkpurple,.9), rgba($darkpurple,.7));
-    background-image: linear-gradient(rgba($darkpurple,.9), rgba($darkpurple,.7)), url('/bg-seamless.svg') ;
+    background:
+        radial-gradient(ellipse at bottom, rgba($darkpurple,.8), rgba($orange,.1)), 
+        linear-gradient(rgba($darkpurple,.3), rgba($teal,.4)), 
+        url('/bg-seamless.svg') ;
 }
 
 
@@ -28,6 +29,10 @@
 
 .illu-hand{
     @extend .invert;
-    background: $darkpurple url('/illu-hand.svg') no-repeat top left/contain ;
+    background: $darkpurple url('/hero.svg') no-repeat top center/contain;
+    background: 
+        url('/hero.svg') no-repeat bottom center/contain, 
+        url('/bg-seamless.svg') 0 0 /80% repeat, 
+        radial-gradient(ellipse at bottom, rgba($darkpurple,.2), rgba($teal,.3) );
     padding: 30px;
 }

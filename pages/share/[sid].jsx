@@ -21,7 +21,7 @@ const SharePage = ({
     <Container style={{ paddingTop: '40px', margin: '-60px 0' }} fluid>
       <Row className="no-gutter  row-eq-height">
         <Col md={6} className="illu-hand">
-          <div style={{ padding: '40px 0', margin: '100px 0 0', background: '#0e0c4da6' }} className="content">
+          <div style={{ padding: '40px 0', margin: '300px 0 0 -30px', background: '#0e0c4da6' }} className="content">
             <Sponsors sponsors={payment.session.sponsors} />
           </div>
         </Col>
