@@ -14,14 +14,13 @@ import Robot from '../components/illustration/Robot';
 import ServerProps from '../lib/serverProps';
 import FundingSessionInfo from '../components/fundingSession/FundingSessionInfo';
 
-
 const CheckoutPage = ({ user, payment, session, hostingUrl, upcoming }) => (
   <Layout title="FundOSS | Donations cart" user={user} current={session} style={{ background: '#0E0C4D' }}>
     <div className="confetti" style={{ marginBottom: '-60px', paddingBottom: '70px' }}>
       <Container>
         <Card style={{ maxWidth: '750px', margin: '30px auto' }}>
-          <Card.Body className="text-center">
-            <h1>Thank you for your<br />
+          <Card.Header className="text-center">
+          <h1>Thank you for your<br />
               donation, {user.name || user.username}!
             </h1>
             <div className="text-center">{payment.donations.map(
@@ -30,8 +29,11 @@ const CheckoutPage = ({ user, payment, session, hostingUrl, upcoming }) => (
               ),
             )}
             </div>
+          </Card.Header>
+          <Card.Body className="text-center">
+
             
-            <p>A receipt has been emailed to your email address</p>
+            <p className="lead">A receipt has been emailed to your email address</p>
             <p className="lead">The &nbsp;
               <span className="text-fat ">
                 {formatAmountForDisplay(payment.amount, 'USD')}
@@ -67,30 +69,21 @@ const CheckoutPage = ({ user, payment, session, hostingUrl, upcoming }) => (
             </Row>
 
             <hr />
+            <h2>{upcoming.name}</h2>
             <Row className="text-left">
               <Col>
-                <h3>Social</h3>
-                <p>Projects that get social boosts from donors have a higher&nbsp;
-                  likelihood of hitting their fundraising needs each year.
-                </p>
-                <p>Please considering lending your voice to support these OSS projects!</p>
-
-                <ShareButton platform="twitter" variant="link" url={hostingUrl} />
-                <ShareButton platform="facebook" variant="link" url={hostingUrl} />
-                <ShareButton platform="email" variant="link" url={hostingUrl} />
+                
+                <FundingSessionInfo session={upcoming} size="sm" />
               </Col>
               <Col>
-                <h3>{upcoming.name}</h3>
-                <FundingSessionInfo session={upcoming} size="sm" />
                 <div dangerouslySetInnerHTML={{ __html:upcoming.description}}></div>
-                <Button href="upcoming" block variant="outline-primary">
-                  <Icons.Award size={15} />nominate for {upcoming.name}
-                </Button>
               </Col>
             </Row>
           </Card.Body>
           <Card.Footer>
-            <Button size="lg" variant="outline-primary" block href="/">Back to FundOSS.org</Button>
+            <Button href="upcoming" size="lg" block variant="primary">
+              <Icons.Award size={25} />nominate for {upcoming.name}
+            </Button>
           </Card.Footer>
         </Card>
       </Container>

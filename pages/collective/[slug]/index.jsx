@@ -20,7 +20,10 @@ import FundingSessionInfo from '../../../components/fundingSession/FundingSessio
 import Sponsors from '../../../components/fundingSession/Sponsors';
 
 const collectivePage = ({
-  collective, user, cart, similar, session, sessions, predicted, hasNominated, upComingSession,
+  collective, user, cart, 
+  similar, session, sessions, 
+  predicted, hasNominated, upComingSession,
+  hostingUrl,
 }) => {
   if (!collective) {
     return <Error statusCode={404} />;
@@ -32,12 +35,23 @@ const collectivePage = ({
   ) : false;
 
   const {
-    name, longDescription, imageUrl, slug,
+    name, longDescription, imageUrl, slug, description,
     members, website, githubHandle, twitterHandle,
   } = collective;
   return (
     <div className="bg1">
-      <Layout title={`FundOSS | ${name}`} user={user} cart={cart} session={session} predicted={predicted}>
+      <Layout
+        title={`FundOSS | ${name}`}
+        user={user} 
+        cart={cart}
+        session={session}
+        predicted={predicted}
+        meta={{ 
+          img: `${hostingUrl}/api/image/${slug}`,
+          url: `${hostingUrl}/collective/${slug}`,
+          description,
+        }}
+      >
       
         <Container>
           <Row style={{ padding: '40px 0' }}>
@@ -185,6 +199,7 @@ export async function getServerSideProps({ query, req, res }) {
       similar: serializable(similar),
       sessions: serializable(sessions),
       session,
+      hostingUrl: process.env.HOSTING_URL,
     },
   };
 }

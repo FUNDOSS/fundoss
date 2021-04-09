@@ -189,8 +189,11 @@ header .navbar-toggler{
             color:$gray-500;
         }
     }
-    a.nav-link:hover {
+    a.nav-link:hover, a.nav-link.active {
         color:$purple-brand;
+        svg {
+            color:$teal;
+        }
     }
 }
 
@@ -290,4 +293,10 @@ h1{margin:2rem 0}
     border: 1px solid rgba($blue,.5);
     padding-top: 3px;
     .btn.btn-link{text-transform: uppercase;text-decoration: none;}
+}
+
+.sponsors{
+    margin-top: 1rem;
+    a{display: block;padding:10px 10px;margin-left: -10px;}
+    img{max-width: 100%;max-height:25px}
 }
