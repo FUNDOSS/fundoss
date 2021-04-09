@@ -241,7 +241,7 @@ const FundingSessionForm = ({ sessionData }) => {
           </Form.Group>
 
           <Form.Group controlId="sponsors">
-            <Form.Label>Html with logos and links for the sponsors</Form.Label>
+            <Form.Label>List of sponsors separated by \n (sponsorname|logo.svg|http://sponsor.com\n)</Form.Label>
             <Form.Control
               as="textarea"
               rows={3}

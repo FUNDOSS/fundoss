@@ -5,15 +5,16 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Badge from 'react-bootstrap/Badge';
+import Button from 'react-bootstrap/Button';
 import Image from 'react-bootstrap/Image';
 import DashboardNav from '../../../components/dashboard/DashboardNav';
 import UserCard from '../../../components/dashboard/UserCard';
 import Layout from '../../../components/layout';
 import Payments from '../../../lib/payment/paymentController';
-import PaymentsTable from '../../../components/payment/PaymentsTable';
 import middleware from '../../../middleware/all';
 import serializable from '../../../lib/serializable';
 import { formatAmountForDisplay } from '../../../utils/currency';
+import Dump from '../../../components/dashboard/Dump';
 
 const PaymentsPage = ({ user, payment }) => {
   if (user?.role !== 'admin') {
@@ -35,7 +36,7 @@ const PaymentsPage = ({ user, payment }) => {
             </h3>
             
             <h4>{moment(payment.time).format('lll')}</h4>
-            session : <a href={`/session/${payment.session._id}`}>{payment.session.name}</a>
+            session : <Button href={`/session/${payment.session.slug}`}>{payment.session.name}</Button>
 
           </Col>
           <Col><UserCard user={payment.user} /></Col>
@@ -49,9 +50,7 @@ const PaymentsPage = ({ user, payment }) => {
             </Badge>
           ))}
         </h3>
-        {Object.keys(payment.confirmation).map(
-          (field) => (<div key={field}>{field} {JSON.stringify(payment.confirmation[field])}</div>),
-        )}
+        <Dump data={payment.confirmation} />
       </Container>
     </Layout>
   );
