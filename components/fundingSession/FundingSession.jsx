@@ -98,20 +98,28 @@ const FundingSession = ({
     <>
       <div className="seamless trapezoid">
         <Container>
-          <Row>
-            <Col md="5" className="d-none d-lg-block">
-              <div style={{ maxWidth: '370px', margin: '0 auto' }}>
-                {started ? (
+          <Row className="align-items-center">
+            {started ? (
+              <Col xs={{ order: 1, span: 4 }} className="d-none d-lg-block">
+                <div style={{ maxWidth: '370px', margin: '0 auto' }}>
+                
                   <FeaturedCollectiveCard 
                     collective={featuredCollective} 
                     active={started && !ended}
                   />
-                ) : (
+                </div>
+              </Col>
+            ) : null}
+
+            {!started ? (
+              <Col xs={{ order: 2, span: 12 }} lg={{ order: 1, span: 4 }}>
+                <div style={{ maxWidth: '370px', margin: '0 auto' }}>
                   <Nominate sessionId={session._id} />
-                )}
-              </div>
-            </Col>
-            <Col className="content text-center text-lg-left">
+                </div>
+              </Col>
+            ) : null}
+
+            <Col xs={{ order: 1, span: 12 }} lg={{ order: 2, span: 7, offset:1 }} className="content text-center text-lg-left">
               <h1 className="no-margin" style={{ textShadow: '0 0 10px #000000' }}>{name}</h1>
 
               <FundingSessionInfo session={session} predicted={predicted} />
@@ -138,7 +146,7 @@ const FundingSession = ({
                   </>
                 )}
 
-              <Sponsors sponsors={sponsors} />
+              <Sponsors sponsors={sponsors} align="left" />
             </Col>
           </Row>
           { started ? (
