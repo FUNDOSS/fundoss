@@ -19,6 +19,9 @@ import Prediction from '../../../../components/fundingSession/Prediction';
 const EditSessionPage = ({
   user, session, donations, predicted, 
 }) => {
+  if (!user._id) {
+    return <Error statusCode={401} />;
+  }
   if (user?.role !== 'admin') {
     return <Error statusCode={403} />;
   }

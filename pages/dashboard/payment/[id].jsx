@@ -1,5 +1,4 @@
 import React from 'react';
-import Error from 'next/error';
 import moment from 'moment';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -7,6 +6,7 @@ import Col from 'react-bootstrap/Col';
 import Badge from 'react-bootstrap/Badge';
 import Button from 'react-bootstrap/Button';
 import Image from 'react-bootstrap/Image';
+import Error from '../../../components/Error';
 import DashboardNav from '../../../components/dashboard/DashboardNav';
 import UserCard from '../../../components/dashboard/UserCard';
 import Layout from '../../../components/layout';
@@ -17,6 +17,9 @@ import { formatAmountForDisplay } from '../../../utils/currency';
 import Dump from '../../../components/dashboard/Dump';
 
 const PaymentsPage = ({ user, payment }) => {
+  if (!user._id) {
+    return <Error statusCode={401} />;
+  }
   if (user?.role !== 'admin') {
     return <Error statusCode={403} />;
   }

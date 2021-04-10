@@ -1,8 +1,6 @@
 import React from 'react';
-import Error from 'next/error';
 import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import Error from '../../../components/Error';
 import DashboardNav from '../../../components/dashboard/DashboardNav';
 import Layout from '../../../components/layout';
 import Payments from '../../../lib/payment/paymentController';
@@ -11,6 +9,9 @@ import middleware from '../../../middleware/all';
 import serializable from '../../../lib/serializable';
 
 const PaymentsPage = ({ user, payments }) => {
+  if (!user._id) {
+    return <Error statusCode={401} />;
+  }
   if (user?.role !== 'admin') {
     return <Error statusCode={403} />;
   }

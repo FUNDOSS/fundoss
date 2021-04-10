@@ -1,13 +1,13 @@
 import React from 'react';
 import { withRouter } from 'next/router';
-import Error from 'next/error';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
+import Error from '../../components/Error';
 import Layout from '../../components/layout';
 import FundingSessionsList from '../../components/fundingSession/FundungSessionList';
 import DashboardNav from '../../components/dashboard/DashboardNav';
 import PaymentsTable from '../../components/payment/PaymentsTable';
-import FundingSessions, { getPredictedAverages } from '../../lib/fundingSession/fundingSessionController';
+import FundingSessions from '../../lib/fundingSession/fundingSessionController';
 import Payments from '../../lib/payment/paymentController';
 import middleware from '../../middleware/all';
 import serializable from '../../lib/serializable';
@@ -16,6 +16,9 @@ import ServerProps from '../../lib/serverProps';
 const DashboardPage = ({
   user, sessions, payments, predicted, 
 }) => {
+  if (!user._id) {
+    return <Error statusCode={401} />;
+  }
   if (user?.role !== 'admin') {
     return <Error statusCode={403} />;
   }

@@ -1,15 +1,18 @@
 import React from 'react';
 import { withRouter } from 'next/router';
-import Error from 'next/error';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Error from '../../../components/Error';
 import Layout from '../../../components/layout';
 import FundingSessionForm from '../../../components/fundingSession/FundingSessionForm';
 import middleware from '../../../middleware/all';
 import serializable from '../../../lib/serializable';
 
 const EditSessionPage = ({ user }) => {
+  if (!user._id) {
+    return <Error statusCode={401} />;
+  }
   if (user?.role !== 'admin') {
     return <Error statusCode={403} />;
   }
