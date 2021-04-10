@@ -1,8 +1,9 @@
 import React from 'react';
-import Error from 'next/error';
+
 import Container from 'react-bootstrap/Container';
 import { Col, Row, Image } from 'react-bootstrap';
 import Layout from '../components/layout';
+import Error from '../components/Error';
 import Payments from '../lib/payment/paymentController';
 import middleware from '../middleware/all';
 import serializable from '../lib/serializable';
@@ -12,7 +13,7 @@ import Cart from '../lib/cart/CartController';
 
 const AccountPage = ({ user, donations, cart }) => {
   if (!user._id) {
-    return <Error statusCode={403} />;
+    return <Error statusCode={401} />;
   }
 
   return (
@@ -32,7 +33,7 @@ const AccountPage = ({ user, donations, cart }) => {
                   Github Profile
                 </h5>
                 <a href={`https://github.com/${user.username}`}>https://github.com/{user.username}</a>
-              
+
               </Col>
               <Col>
                 <h2>Donations History</h2>
