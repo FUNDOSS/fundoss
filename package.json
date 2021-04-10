@@ -37,6 +37,7 @@
     "next": "^10.0.3",
     "next-connect": "^0.9.1",
     "next-cookies": "^2.0.3",
+    "nextjs-progressbar": "^0.0.8",
     "passport": "^0.4.1",
     "passport-github": "^1.1.0",
     "passport-local": "^1.0.0",

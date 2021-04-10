@@ -13,6 +13,7 @@ export interface ICollective extends Document {
   description:string;
   longDescription:string;
   membersCount:number;
+  shareImage:string;
   members:Array<string>;
   totals:any
 }
@@ -49,6 +50,9 @@ const CollectiveSchema = new Schema({
     type: String,
   },
   longDescription: {
+    type: String,
+  },
+  shareImage:{
     type: String,
   },
   membersCount: {

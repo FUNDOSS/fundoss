@@ -1,10 +1,10 @@
 /* eslint-disable react/no-danger */
 import React from 'react';
 import Pluralize from 'pluralize';
-import Error from 'next/error';
 import {
   Button, Image, Col, Row, Container, Card, 
 } from 'react-bootstrap';
+import Error from '../../../components/error';
 import ServerProps from '../../../lib/serverProps';
 import Layout from '../../../components/layout';
 import collectives from '../../../lib/collectives/CollectivesController';
@@ -36,7 +36,7 @@ const collectivePage = ({
 
   const {
     name, longDescription, imageUrl, slug, description,
-    members, website, githubHandle, twitterHandle,
+    members, website, githubHandle, twitterHandle, shareImage
   } = collective;
   return (
     <div className="bg1">
@@ -47,7 +47,7 @@ const collectivePage = ({
         session={session}
         predicted={predicted}
         meta={{ 
-          img: `${hostingUrl}/api/image/${slug}`,
+          img: shareImage ? hostingUrl+shareImage : `${hostingUrl}/api/image/collective/${slug}`,
           url: `${hostingUrl}/collective/${slug}`,
           description,
         }}

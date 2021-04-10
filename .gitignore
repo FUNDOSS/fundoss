@@ -64,3 +64,6 @@ typings/
 # package-lock
 package-lock.json
 yarn.lock
+
+# vscode workspace
+*.code-workspace

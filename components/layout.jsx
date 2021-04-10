@@ -33,7 +33,13 @@ const Layout = ({
         <meta charSet="utf-8" />
         <meta property="og:type" content="website" />
         <meta property="og:title" content={title} />
-        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png" />
+        <link rel="manifest" href="/static/site.webmanifest" />
+        <link rel="mask-icon" href="/static/safari-pinned-tab.svg" color="#5bbad5" />
+        <link rel="shortcut icon" href="/static/favicon.ico"></link>
         {meta?.img ? <meta property="og:image" content={meta?.img} /> : null }
         {meta?.img ? <meta property="twitter:image" content={meta?.img} /> : null }
         {meta?.url ? <meta property="og:url" content={meta?.url} /> : null }

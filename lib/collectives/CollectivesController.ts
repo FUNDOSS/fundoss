@@ -22,6 +22,10 @@ export async function getIdBySlug(slug:string):Promise<any> {
   return collective?._id;
 }
 
+export async function updateCollective(id, collective ):Promise<any> {
+  await dbConnect();
+  return Collective.updateOne({ _id:id }, collective);
+}
 
 export async function nominateCollective(
   session:string,
@@ -146,6 +150,8 @@ export default class Collectives {
     static get = getCollective;
 
     static findBySlug = findBySlug;
+
+    static update = updateCollective;
 
     static updateTotals = updateCollectivesTotals;
 

@@ -6,21 +6,30 @@
 
 .confetti{
     @extend .invert;
-    background: $darkpurple url('/bgconfetti.png') top repeat-x;
+    background: $darkpurple url('/static/bgconfetti.png') top repeat-x;
     padding: 40px 0;
 }
 
 .seamless{
-    
     @extend .invert;
-    background: $darkpurple url('/bg-seamless.svg') ;
+    background: $darkpurple url('/static/bg-seamless.svg') ;
     padding: 40px 0;
     background:
         radial-gradient(ellipse at bottom, rgba($darkpurple,.8), rgba($orange,.1)), 
         linear-gradient(rgba($darkpurple,.3), rgba($blue,.4)), 
-        url('/bg-seamless.svg') ;
+        url('/static/bg-seamless.svg') ;
 }
 
+.seamless-hand{
+    @extend .invert;
+    background: $darkpurple url('/static/bg-seamless.svg') ;
+    padding: 40px 0;
+    background:
+        url('/static/hero.svg') no-repeat bottom left/contain, 
+        radial-gradient(ellipse at bottom, rgba($darkpurple,.8), rgba($orange,.1)), 
+        linear-gradient(rgba($darkpurple,.3), rgba($blue,.4)), 
+        url('/static/bg-seamless.svg') ;
+}
 
 .trapezoid{
     clip-path: polygon(100% 0%, 100% 90%, 0 100%, 0 0);
@@ -29,10 +38,10 @@
 
 .illu-hand{
     @extend .invert;
-    background: $darkpurple url('/hero.svg') no-repeat top center/contain;
+    background: $darkpurple url('/static/hero.svg') no-repeat top center/contain;
     background: 
-        url('/hero.svg') no-repeat bottom center/contain, 
-        url('/bg-seamless.svg') 0 0 /80% repeat, 
+        url('/static/hero.svg') no-repeat bottom center/contain, 
+        url('/static/bg-seamless.svg') 0 0 /80% repeat, 
         radial-gradient(ellipse at bottom, rgba($darkpurple,.2), rgba($teal,.3) );
     padding: 30px;
 }
