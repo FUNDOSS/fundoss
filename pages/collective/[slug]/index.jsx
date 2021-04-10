@@ -4,7 +4,7 @@ import Pluralize from 'pluralize';
 import {
   Button, Image, Col, Row, Container, Card, 
 } from 'react-bootstrap';
-import Error from '../../../components/error';
+import Error from '../../../components/Error';
 import ServerProps from '../../../lib/serverProps';
 import Layout from '../../../components/layout';
 import collectives from '../../../lib/collectives/CollectivesController';
