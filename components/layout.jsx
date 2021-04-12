@@ -19,7 +19,7 @@ const Layout = ({
   },
 }) => {
   const router = useRouter();
-  const { user, cart, current } = state;
+  const { user, cart, current, upcoming } = state;
   if (state && state.current) {
     Qf.init(
       current.predicted.average, 
@@ -45,9 +45,9 @@ const Layout = ({
         <link rel="manifest" href="/static/site.webmanifest" />
         <link rel="mask-icon" href="/static/safari-pinned-tab.svg" color="#5bbad5" />
         <link rel="shortcut icon" href="/static/favicon.ico" />
-        {meta?.img ? <meta property="og:image" content={meta?.img} /> : null }
-        {meta?.img ? <meta property="twitter:image" content={meta?.img} /> : null }
-        {meta?.url ? <meta property="og:url" content={meta?.url} /> : null }
+        <meta property="og:image" content={meta?.img || '/static/twitter-default.png'} /> 
+        <meta property="twitter:image" content={meta?.img || '/static/twitter-default.png'} /> 
+        {meta?.url ? <meta property="og:url" /> : null }
         {meta?.description ? <meta property="og:description" content={meta?.description} /> : null }
         {meta?.description ? <meta property="twitter:description" content={meta?.description} /> : null }
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
@@ -67,7 +67,7 @@ const Layout = ({
                 </Nav.Link>
               </Link>
   
-              { current ? (
+              { current && upcoming._id ? (
                 <Link href="/upcoming">
                   <Nav.Link href="/upcoming">
                     <Icons.Award size={20} />Upcoming
