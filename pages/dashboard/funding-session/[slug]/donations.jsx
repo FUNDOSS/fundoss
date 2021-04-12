@@ -68,7 +68,6 @@ const DonationsBySessionPage = ({
     ),
     {});
 
-
   const collectiveTable = Object.keys(collectiveTotals).map(
     (slug) => ({ ...collectiveTotals[slug], ...{ slug } }),
   ).sort((a, b) => b.total - a.total);
@@ -82,7 +81,8 @@ const DonationsBySessionPage = ({
       <Container style={{ paddingTop: '40px' }}>
         <DashboardNav />
         <div className="text-center">
-          <h1>Disbursments {session.name}</h1>
+          <h1>Donations Summary</h1>
+          <h4>{session.name}</h4>
           <FundingSessionInfo session={session} predicted={state.current.predicted} />
           {moment(session.start) < moment() ? (
             <Prediction 
@@ -104,7 +104,7 @@ const DonationsBySessionPage = ({
               {userTable.map((u) => (
                 <tr key={u.username}>
                   <td>{u.username}</td>
-                  <td>{formatAmountForDisplay(u.total)}</td>
+                  <td className="text-fat">{formatAmountForDisplay(u.total)}</td>
                   <td className="text-fat text-success">
                     {formatAmountForDisplay(Object.keys(u.donations).reduce(
                       (total, slug) => total + cmatch(u.donations[slug]), 
@@ -114,13 +114,6 @@ const DonationsBySessionPage = ({
                 </tr>
               ))}
             </Table>
-            {formatAmountForDisplay(userTable.reduce(
-              (total, u) => total + Object.keys(u.donations).reduce( 
-                (total, slug) => total + cmatch(u.donations[slug]),
-                0,
-              ),
-              0,
-            ))}
           </Col>
           <Col md={6}>
             <h3>Donations by collective</h3>
@@ -129,7 +122,7 @@ const DonationsBySessionPage = ({
               {collectiveTable.map((c) => (
                 <tr key={c.slug}>
                   <td>{c.slug}</td>
-                  <td>{formatAmountForDisplay(c.total)}</td>
+                  <td className="text-fat">{formatAmountForDisplay(c.total)}</td>
                   <td className="text-fat text-success">
                     {formatAmountForDisplay(c.donations.reduce(
                       (total, d) => total + cmatch(d),
@@ -139,14 +132,6 @@ const DonationsBySessionPage = ({
                 </tr>
               ))}
             </Table>
-            {formatAmountForDisplay(collectiveTable.reduce(
-              (total, c) => total + c.donations.reduce( 
-                (total, d) => total + cmatch(d),
-                0,
-              ),
-              0,
-            ))}
-
           </Col>
         </Row>
         <h3>All payments for this session</h3>

@@ -32,7 +32,8 @@ const DisbursmentsTablePage = ({
       <Container style={{ paddingTop: '40px' }}>
         <DashboardNav />
         <div className="text-center">
-          <h1>Disbursments {session.name}</h1>
+          <h1>Disbursments</h1>
+          <h4>{session.name}</h4>
           <FundingSessionInfo session={session} predicted={state.current.predicted} />
           {moment(session.start) < moment() ? (
             <Prediction 

@@ -30,8 +30,9 @@ const EditSessionPage = ({
     <Layout title="FundOSS | Dashboard" state={state}>
       <Container style={{ paddingTop: '40px' }}>
         <DashboardNav />
-        <h1>Edit {session.name}</h1>
         <div className="text-center">
+          <h1>Edit</h1>
+          <h4>{session.name}</h4>
           <FundingSessionInfo session={session} />
           {moment(session.start) < moment() ? (
             <Prediction 
@@ -41,7 +42,7 @@ const EditSessionPage = ({
           ) : null }
         </div>
         <br />
-        <AdminLinks session={session} all/>
+        <AdminLinks session={session} all />
          
         <hr />
         <Row>
