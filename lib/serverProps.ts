@@ -58,10 +58,10 @@ const ServerProps = {
       );
       user = { ...serializable(user), ...{ donations } };
     }
-    const current = {
+    const current = currentInfo ? {
       ...serializable(currentInfo),
       ...{ predicted: getPredictedAverages(currentInfo) },
-    };
+    } : null;
     const cart = await Cart.get(sessionCart);
     const upcoming = await FundingSession.getUpcomingSession();
     return {

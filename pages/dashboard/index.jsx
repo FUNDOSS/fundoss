@@ -22,7 +22,10 @@ const DashboardPage = ({
   if (state.user?.role !== 'admin') {
     return <Error statusCode={403} />;
   }
-
+  const sessions = [];
+  if (state.upcoming._id) sessions.push(state.upcoming);
+  if (state.current) sessions.push(state.current);
+  console.log(sessions)
   return (
     <Layout title="FundOSS | Dashboard" state={state} hidefooter={1}>
       <Container style={{ paddingTop: '40px' }}>
@@ -33,10 +36,12 @@ const DashboardPage = ({
             <Link href="dashboard/funding-session/create">Create a new sesion</Link>
           </Button>
         </p>
-        <FundingSessionsList 
-          sessions={[state.current, state.upcoming]}
-          predicted={state.current?.predicted}
-        />
+        {sessions.length ? (
+          <FundingSessionsList 
+            sessions={sessions}
+            predicted={state.current?.predicted}
+          />
+        ) : 'No sessions yet. Create a session to start.'}
         <br />
         <h4>Latest Payments</h4>
         <PaymentsTable payments={payments} />

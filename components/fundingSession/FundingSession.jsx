@@ -156,7 +156,7 @@ const FundingSession = ({
               <Sponsors sponsors={sponsors} />
             </Col>
           </Row>
-          <div style={{ padding: '30px 0' }} className="text-center content">
+          <div style={{ padding: '30px 0', marginBottom: '20px' }} className="text-center content">
             { started ? (
               <span>👇 Scroll to see the 
                 other {collectives.length - 1} amazing 

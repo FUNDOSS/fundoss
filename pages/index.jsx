@@ -28,9 +28,12 @@ export async function getServerSideProps({ req, res }) {
   let nominations = { user: [] };
   if (!session) {
     session = await ServerProps.getUpcoming();
-    nominations = await ServerProps.getNominations(session._id, state.user._id);
+    nominations = await ServerProps.getNominations(session?._id, state.user._id);
   } 
-  const featured = session.collectives[Math.floor(Math.random() * session.collectives.length)];
+  const featured = session 
+    ? session.collectives[Math.floor(Math.random() * session.collectives.length)] 
+    : null;
+    
   return {
     props: {
       state,
