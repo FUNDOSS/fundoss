@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import Link from 'next/link';
 import { Table, Image, Badge } from 'react-bootstrap';
 import { formatAmountForDisplay } from '../../utils/currency';
 
@@ -8,7 +9,9 @@ const PaymentsTable = ({ payments }) => (
     {payments.map((payment) => (
       <tr key={payment._id}>
         <td>
-          <a href={`/dashboard/payment/${payment._id}`}><Image src={payment.user.avatar} roundedCircle width={20} /> {moment(payment.time).format('lll')}</a>
+          <Link href={`/dashboard/payment/${payment._id}`}>
+            <a><Image src={payment.user.avatar} roundedCircle width={20} /> {moment(payment.time).format('lll')}</a>
+          </Link> 
           &nbsp;{payment.user.username}
           <Badge variant={payment.status === 'succeeded' ? 'success' : 'danger'}>{payment.status}</Badge>&nbsp;
           {formatAmountForDisplay(payment.amount)} <small>-{payment.fee} fee</small>

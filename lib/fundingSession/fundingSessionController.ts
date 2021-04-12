@@ -65,7 +65,8 @@ export const getPredictedAverages = (session) => {
       ),
       0,
     );
-    avg.fudge = ((matchedFunds / donations.length) / (amount / donations.length)) / (currentMatches / amount)
+    avg.fudge = ((matchedFunds / donations.length) / (amount / donations.length))
+      / (currentMatches / amount);
     return avg;
   }
   return {
@@ -106,7 +107,7 @@ export async function getUpcomingSessionInfo():Promise<any> {
   await dbConnect();
   const session = await FundingSession.findOne({
     start: { $gte: new Date() },
-  }).select('_id slug name start end averageDonationEst numberDonationEst matchedFunds totals matchingCurve description');
+  }).select('_id slug name sponsors start end averageDonationEst numberDonationEst matchedFunds totals matchingCurve description');
   return session;
 }
 
@@ -132,7 +133,7 @@ export async function getCurrentSessionInfo():Promise<any> {
   const session = await FundingSession.findOne({
     start: { $lte: new Date() },
     end: { $gte: new Date() },
-  }).select('_id name slug start end averageDonationEst numberDonationEst matchedFunds totals matchingCurve');
+  }).select('_id name slug sponsors start end averageDonationEst numberDonationEst matchedFunds totals matchingCurve');
   return session;
 }
 
@@ -174,7 +175,6 @@ export async function nominate(sessionId, collectiveSlug, userId = null) {
       _id: sessionId,
       collectives: collective._id,
     });
-    console.log('collectiveInSession', collectiveInSession);
     if (!collectiveInSession.length) {
       await FundingSession.updateOne(
         { _id: sessionId },

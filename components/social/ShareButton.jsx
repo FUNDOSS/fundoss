@@ -1,11 +1,12 @@
 import React from 'react';
 import Button from 'react-bootstrap/Button';
 import Icons from '../icons';
+import { useRouter } from 'next/router';
 
 const ShareButton = ({
-  url, platform, size, variant, 
+  url = null, platform, size, variant, mini = false, siteUrl,
 }) => {
-  const shareUrl = `https://app.fundoss.org${url}`;
+  const shareUrl = `${siteUrl}${url || useRouter().asPath}`;
   const platforms = {
     twitter: {
       text: 'Twitter',
@@ -27,7 +28,7 @@ const ShareButton = ({
   return (
     <Button target="_blank" href={Sharer.url(shareUrl)} variant={variant || 'primary'} size={size || 'md'}>
       <Sharer.icon size={22} />
-    &nbsp;{Sharer.text}
+      { !mini ? <span>&nbsp;{Sharer.text}</span> : null}
     </Button>
   ); 
 };

@@ -60,8 +60,8 @@ export async function updatePayment(payment) {
 export async function findById(id:string) {
   await dbConnect();
   return Payment.findOne({ _id: id }).select('user session amount donations fee status time confirmation')
-    .populate({ path: 'user', select: 'avatar username email' })
-    .populate({ path: 'session', select: 'name' })
+    .populate({ path: 'user' })
+    .populate({ path: 'session', select: 'name slug' })
     .populate({
       path: 'donations',
       populate: {
@@ -87,11 +87,21 @@ export async function getPayments(query) {
 }
 
 export async function getDonationsBySession(sessionId) {
-  return Donation
+  const donations = Donation
     .aggregate([
       { $match: { session: mongoose.Types.ObjectId(sessionId) } },
-      { $group: { _id: { user: '$user', collective: '$collective' }, amount: { $sum: '$amount' }, fee: { $sum: '$fee' } } },
+      { $unwind: {path: '$user'}},
+      {
+        $group: {
+          _id: { user: '$user', collective: '$collective' },
+          amount: { $sum: '$amount' },
+          fee: { $sum: '$fee' },
+          avatar: {$first: '$avatar'}
+        },
+      },
+
     ]);
+  return Donation.populate(donations, { path: '_id.user' });
 }
 
 export async function getSessionDisbursement(sessionId) {
@@ -144,17 +154,16 @@ export async function getSessionDisbursement(sessionId) {
 
 export async function getPaymentsByUser(userId:string) {
   await dbConnect();
-  return Payment.find({ user: userId, status: 'succeeded' }).select('user amount donations fee status time')
-    .populate({ path: 'user', select: 'avatar username' })
+  return Payment.find({ user: userId, status: 'succeeded' }).select('sid session user amount donations fee status time')
+    .populate({ path: 'session', select: 'slug name' })
     .populate({
       path: 'donations',
       populate: {
         path: 'collective',
-        select: 'slug imageUrl',
+        select: 'slug imageUrl name description',
       },
     })
-    .sort('field -time')
-    .limit(20);
+    .sort('field -time');
 }
 
 export async function getDonationsByUser(userId:string) {
@@ -238,6 +247,8 @@ export default class Payments {
     static getByUser = getPaymentsByUser
 
     static getLastByUser = getLastPaymentByUser
+
+    static getPaymentsByUser = getPaymentsByUser
 
     static getDonationsByUser = getDonationsByUser
 

@@ -11,8 +11,9 @@ import NominationModel from './NominationModel';
 export async function findBySlug(slug:string):Promise<any> {
   await dbConnect();
   const collective = await Collective.findOne({ slug });
-  const totals = await CollectiveSessionTotals.find({ collective: collective._id });
-  collective.sessionTotals = totals;
+  if (collective) {
+    collective.sessionTotals = await CollectiveSessionTotals.find({ collective: collective._id });
+  }
   return collective;
 }
 
@@ -22,9 +23,9 @@ export async function getIdBySlug(slug:string):Promise<any> {
   return collective?._id;
 }
 
-export async function updateCollective(id, collective ):Promise<any> {
+export async function updateCollective(id, collective):Promise<any> {
   await dbConnect();
-  return Collective.updateOne({ _id:id }, collective);
+  return Collective.updateOne({ _id: id }, collective);
 }
 
 export async function nominateCollective(
