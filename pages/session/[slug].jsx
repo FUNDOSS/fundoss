@@ -15,7 +15,7 @@ const IndexPage = ({
         state={state}
         session={session} 
         featured={featured} 
-        predicted={state.current.predicted}
+        predicted={state.current?.predicted}
         user={state.user}
         nominations={nominations}
       />
