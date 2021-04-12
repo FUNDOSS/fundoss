@@ -1,0 +1,43 @@
+.card.invert{
+    background-color: rgba($darkpurple, 0.9);
+    border:1px solid rgba($white, 0.2);
+    .card-footer{
+        border-top:1px solid rgba($black, 0.7)
+    }
+    .card-header{
+        border-bottom:1px solid rgba($white, 0.2)
+    }
+    box-shadow: 0px 4px 24px rgba($black, 0.5);
+}
+
+.card.invert.glass{
+    background: rgba($darkpurple, 0.5);
+    .card-header, .card-footer, .card-body{
+        background: transparent;
+    }
+}
+
+.card.glass{
+    background: rgba($white, 0.5);
+    .card-header, .card-footer, .card-body{
+        background: transparent;
+    }
+}
+
+
+.collective-card{
+    .card-title{
+        font-size: 1rem;
+        a{color: $black;}
+        a:hover{text-decoration: none;color: $primary;}
+    }
+}
+
+
+@include media-breakpoint-up(lg) {
+    .card-body{padding:1rem 2rem}
+    .card-header{padding:1.5rem 2rem 1rem}
+    .card-footer{padding:0rem 2rem 2rem}
+}
+
+.card-header{border-bottom: 1px solid $gray-200;}

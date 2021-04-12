@@ -41,6 +41,7 @@
 
 @import "robot";
 @import "backgrounds";
+@import "cards";
 
 
 
@@ -67,19 +68,6 @@ div#main{
 
 .collective-card{
     color: $black;
-}
-
-
-.card.invert{
-    background-color: rgba($darkpurple, 0.9);
-    border:1px solid rgba($white, 0.2);
-    .card-footer{
-        border-top:1px solid rgba($black, 0.7)
-    }
-    .card-header{
-        border-bottom:1px solid rgba($white, 0.2)
-    }
-    box-shadow: 0px 4px 24px rgba($black, 0.5);
 }
 
 footer{
@@ -123,8 +111,14 @@ footer{
 
 .card, .navbar, .dropdown-menu{box-shadow: 0px 4px 24px rgba($black, 0.15)}
 
-.collective-card, .cart-item{margin-bottom: $grid-gutter-width;}
+.collective-card, .cart-item, .card.payment{margin-bottom: $grid-gutter-width;}
 
+.card.payment{
+    .donation{
+        border-bottom: 1px solid $gray-200;
+        padding:3px 2px
+    }
+}
 
 .text-fat{
     font-family: $headings-font-family;
@@ -140,13 +134,6 @@ footer{
     img {@extend .img-fluid}
 }
 
-.collective-card{
-    .card-title{
-        font-size: 1rem;
-        a{color: $black;}
-        a:hover{text-decoration: none;color: $primary;}
-    }
-}
 
 a.black{
     color: $black;
@@ -159,12 +146,20 @@ a.black:hover{
 .session-description{
     margin:20px 0;
 }
-@include media-breakpoint-down(sm) {
-    .authDropdownLabel span{display:none}
-}
 
 @include media-breakpoint-down(sm) {
     .authDropdownLabel span{display:none}
+    header a.navbar-brand svg{max-width:110px}
+}
+
+.navbar-brand svg {
+    max-width: 110px;
+}
+
+@include media-breakpoint-up(sm) {
+    .navbar-brand svg {
+        max-width: 164px;
+    }
 }
 
 .navbar-nav .dropdown-menu {
@@ -243,13 +238,7 @@ h1{margin:2rem 0}
 .no-margin{margin:0}
 
 
-@include media-breakpoint-up(lg) {
-    .card-body{padding:1rem 2rem}
-    .card-header{padding:1.5rem 2rem 1rem}
-    .card-footer{padding:0rem 2rem 2rem}
-}
 
-.card-header{border-bottom: 1px solid $gray-200;}
 
 .modal-header .close {
     padding: 4px 9px;
