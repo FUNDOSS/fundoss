@@ -18,36 +18,35 @@ import ShareButton from '../../../components/social/ShareButton';
 import NominateBtn from '../../../components/collective/NominateBtn';
 import FundingSessionInfo from '../../../components/fundingSession/FundingSessionInfo';
 import Sponsors from '../../../components/fundingSession/Sponsors';
+import Link from 'next/link';
 
 const collectivePage = ({
-  collective, user, cart, 
-  similar, session, sessions, 
-  predicted, hasNominated, upComingSession,
+  collective, state, 
+  similar, sessions, 
+  predicted, hasNominated,
   hostingUrl,
 }) => {
   if (!collective) {
     return <Error statusCode={404} />;
   }
 
-  const isInCurrentSession = session ? sessions?.reduce(
-    (is, sess) => (sess._id === session._id ? true : is),
+  const isInCurrentSession = state.current ? sessions?.reduce(
+    (is, sess) => (sess._id === state.current._id ? true : is),
     false,
   ) : false;
 
   const {
     name, longDescription, imageUrl, slug, description,
-    members, website, githubHandle, twitterHandle, shareImage
+    members, website, githubHandle, twitterHandle, shareImage,
   } = collective;
+
   return (
     <div className="bg1">
       <Layout
         title={`FundOSS | ${name}`}
-        user={user} 
-        cart={cart}
-        session={session}
-        predicted={predicted}
+        state={state} 
         meta={{ 
-          img: shareImage ? hostingUrl+shareImage : `${hostingUrl}/api/image/collective/${slug}`,
+          img: shareImage ? hostingUrl + shareImage : `${hostingUrl}/api/image/collective/${slug}`,
           url: `${hostingUrl}/collective/${slug}`,
           description,
         }}
@@ -97,7 +96,7 @@ const collectivePage = ({
               {isInCurrentSession ? (
                 <CollectiveDonationCard 
                   collective={collective}
-                  session={session}
+                  session={state.current}
                   predicted={predicted}
                 />
               ) : null}
@@ -106,20 +105,22 @@ const collectivePage = ({
                   <Card.Header className="text-center content"><h3>Nominate {name}</h3></Card.Header>
                   <Card.Body className="text-center content">
                     <FundingSessionInfo session={sessions[0]} />
-                    <Button size="lg" block variant="outline-primary" href={`/session/${upComingSession.slug}`}>{upComingSession.name}</Button>
+                    <Link href={`/session/${state.upcoming.slug}`}>
+                      <Button size="lg" block variant="outline-primary">{state.upcoming.name}</Button>
+                    </Link>
                     <NominateBtn 
                       size="lg"
                       block
                       variant="outline-light"
                       nominated={hasNominated}
                       collective={collective}
-                      session={upComingSession}
-                      user={user}
+                      session={state.upcoming}
+                      user={state.user}
                     />
                   </Card.Body>
                   <Card.Footer className="text-center content">
 
-                    <Sponsors sponsors={upComingSession.sponsors} /> 
+                    <Sponsors sponsors={state.upcoming.sponsors} /> 
                   </Card.Footer>
                 </Card>
               ) : null}
@@ -129,9 +130,9 @@ const collectivePage = ({
                   likelihood of hitting their fundraising needs each year.&nbsp;
                   Please considering lending your voice to suppor these OSS projects!
                 </p>
-                <ShareButton platform="twitter" variant="link" url={`/collective/${slug}`} />
-                <ShareButton platform="facebook" variant="link" url={`/collective/${slug}`} />
-                <ShareButton platform="email" variant="link" url={`/collective/${slug}`} />
+                <ShareButton platform="twitter" variant="link" siteUrl={state.siteUrl} />
+                <ShareButton platform="facebook" variant="link" siteUrl={state.siteUrl} />
+                <ShareButton platform="email" variant="link" siteUrl={state.siteUrl} />
               </div>
 
             </Col>
@@ -161,47 +162,27 @@ const collectivePage = ({
 
 export async function getServerSideProps({ query, req, res }) {
   await middleware.run(req, res);
-
-  const session = await ServerProps.getCurrentSession();
+  const state = await ServerProps.getAppState(req.user, req.session.cart);
   const collective = await collectives.findBySlug(query.slug);
-  let user;
-  let predicted = {}; 
-  let cart = false;
+  if (collective) {
+    const sessions = await FundingSessions.getCollectiveSessions(collective._id);
+    const similar = await collectives.similar();
+    const hasNominated = req.user?._id 
+      ? (await collectives.hasNominated(collective._id, state.upcoming._id, req.user?._id)) > 0
+      : false;
   
-  if (session) {
-    user = await ServerProps.getUser(req.user, session._id);
-    predicted = await ServerProps.getPredicted(session);
-    cart = await ServerProps.getCart(req.session.cart);
-    collective.totals = collective.sessionTotals.reduce(
-      (totals, sess) => (sess.session == session._id ? sess : totals),
-      { amount: 0, donations: [] },
-    );
-  } else {
-    user = await ServerProps.getUser(req.user);
+    return {
+      props: {
+        state,
+        hasNominated,
+        collective: serializable(collective),
+        similar: serializable(similar),
+        sessions: serializable(sessions),
+        hostingUrl: process.env.HOSTING_URL,
+      },
+    };
   }
-
-  const sessions = await FundingSessions.getCollectiveSessions(collective._id);
-  const upComingSession = await ServerProps.getUpcoming();
-  const similar = await collectives.similar();
-
-  const hasNominated = user._id 
-    ? (await collectives.hasNominated(collective._id, upComingSession._id, req.user._id)) > 0
-    : false;
-
-  return {
-    props: {
-      hasNominated,
-      predicted,
-      user,
-      upComingSession,
-      cart, 
-      collective: serializable(collective),
-      similar: serializable(similar),
-      sessions: serializable(sessions),
-      session,
-      hostingUrl: process.env.HOSTING_URL,
-    },
-  };
+  return {props: {collective}}
 }
 
 export default collectivePage;

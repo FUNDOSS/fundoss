@@ -6,6 +6,7 @@ import Col from 'react-bootstrap/Col';
 import Badge from 'react-bootstrap/Badge';
 import Button from 'react-bootstrap/Button';
 import Image from 'react-bootstrap/Image';
+import ServerProps from '../../../lib/serverProps';
 import Error from '../../../components/Error';
 import DashboardNav from '../../../components/dashboard/DashboardNav';
 import UserCard from '../../../components/dashboard/UserCard';
@@ -16,16 +17,16 @@ import serializable from '../../../lib/serializable';
 import { formatAmountForDisplay } from '../../../utils/currency';
 import Dump from '../../../components/dashboard/Dump';
 
-const PaymentsPage = ({ user, payment }) => {
-  if (!user._id) {
+const PaymentsPage = ({ state, payment }) => {
+  if (!state.user._id) {
     return <Error statusCode={401} />;
   }
-  if (user?.role !== 'admin') {
+  if (state.user?.role !== 'admin') {
     return <Error statusCode={403} />;
   }
 
   return (
-    <Layout title="FundOSS | Dashboard" user={user} hidefooter={1}>
+    <Layout title="FundOSS | Dashboard" state={state} hidefooter={1}>
       <Container style={{ paddingTop: '40px' }}>
         <DashboardNav />
         <h1>Payments</h1>
@@ -39,20 +40,27 @@ const PaymentsPage = ({ user, payment }) => {
             </h3>
             
             <h4>{moment(payment.time).format('lll')}</h4>
-            session : <Button href={`/session/${payment.session.slug}`}>{payment.session.name}</Button>
-
+            <Button href={`/session/${payment.session.slug}`}>{payment.session.name}</Button>
           </Col>
           <Col><UserCard user={payment.user} /></Col>
         </Row>
         
-        <h3>
-          { payment.donations.map((don) => (
-            <Badge key={don.collective.slug} variant="light" style={{ marginRight: '3px' }}>
-              ${don.amount} <Image src={don.collective.imageUrl} roundedCircle width={20} />
-              {don.collective.name}
-            </Badge>
-          ))}
-        </h3>
+        {payment.donations.map((don) => (
+              <Row key={don.collective.slug} style={{borderBottom:'1px solid #ccc', margin: '10px 0'}} >
+                <Col xs={1} className="text-fat">
+                  {formatAmountForDisplay(don.amount)}
+                </Col>
+                <Col xs={3} className="text-fat">
+                  <a href={'/collective' + don.collective.slug}>
+                    <Image src={don.collective.imageUrl} roundedCircle width={20} />&nbsp;
+                    {don.collective.name}
+                  </a>
+                </Col>
+                <Col>
+                {formatAmountForDisplay(don.fee)} 
+                </Col>
+              </Row>
+            ))}
         <Dump data={payment.confirmation} />
       </Container>
     </Layout>
@@ -62,7 +70,9 @@ const PaymentsPage = ({ user, payment }) => {
 export async function getServerSideProps({ query, req, res }) {
   await middleware.run(req, res);
   const payment = await Payments.findById(query.id);
-  return { props: { user: serializable(req.user), payment: serializable(payment) } };
+  const state = await ServerProps.getAppState(req.user, req.session.cart);
+
+  return { props: { state, payment: serializable(payment) } };
 }
 
 export default PaymentsPage;

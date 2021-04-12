@@ -7,15 +7,16 @@ import serializable from '../../lib/serializable';
 import ServerProps from '../../lib/serverProps';
 
 const IndexPage = ({
-  session, user, cart, featured, predicted, nominations, current,
+  session, featured, nominations, state,
 }) => (
-  <Layout title={`FundOSS | ${session.name}`} user={user} cart={cart} current={current} session={session} predicted={predicted}>
+  <Layout title={`FundOSS | ${session.name}`} state={state}>
     {session._id ? (
       <FundingSession 
+        state={state}
         session={session} 
         featured={featured} 
-        predicted={predicted}
-        user={user}
+        predicted={state.current.predicted}
+        user={state.user}
         nominations={nominations}
       />
     ) : null }
@@ -24,29 +25,15 @@ const IndexPage = ({
 
 export async function getServerSideProps({ query, req, res }) {
   await middleware.run(req, res);
-
-  const current = await ServerProps.getCurrentSessionInfo();
-  const user = await ServerProps.getUser(req.user, current?._id);
-  let predicted = {}; 
-  let cart = false;
-  
-  if (current) {
-    predicted = await ServerProps.getPredicted(current);
-    cart = await ServerProps.getCart(req.session.cart);
-  }
-  
+  const state = await ServerProps.getAppState(req.user, req.session.cart);
   const session = await FundingSessions.getBySlug(query.slug);
   const featured = serializable(session.collectives[Math.floor(Math.random() * session.collectives.length)]);
-  const nominations = await ServerProps.getNominations(session._id, user._id);
-
+  const nominations = await ServerProps.getNominations(session._id, req.user._id);
   return {
     props: {
-      current,
       nominations,
-      user,
-      predicted,
       session: serializable(session),
-      cart,
+      state,
       featured,
     },
   };

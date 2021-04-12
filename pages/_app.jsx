@@ -10,6 +10,7 @@ export default function MyApp({ Component, pageProps }) {
         startPosition={0.3}
         stopDelayMs={200}
         height="1"
+        options={{ easing: 'ease', speed: 500, showSpinner: false }}
       />
       <Component {...pageProps} />
     </div>

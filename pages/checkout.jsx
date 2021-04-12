@@ -12,29 +12,28 @@ import Cart, { cartEvents, getCartTotals } from '../components/cart/Cart';
 import ServerProps from '../lib/serverProps';
 import { formatAmountForDisplay } from '../utils/currency';
 import Icons from '../components/icons';
-import CartController from '../lib/cart/CartController';
-import serializable from '../lib/serializable';
+import Sponsors from '../components/fundingSession/Sponsors';
 
 const CheckoutPage = ({
-  user, cart, stripekey, session, predicted,
+  state, stripekey,
 }) => {
   const stripePromise = loadStripe(stripekey);
-  const [total, setTotal] = useState(cart.reduce((total, item) => total + item.amount, 0));
+  const [total, setTotal] = useState(state.cart.reduce((total, item) => total + item.amount, 0));
   const [totalMatch, setTotalMatch] = useState();
   useEffect(() => {
     const onCartChange = () => {
-      const totals = getCartTotals(Cart.data || cart); 
+      const totals = getCartTotals(Cart.data || state.cart); 
       setTotal(totals.amount);
       setTotalMatch(totals.match);
     };
     cartEvents.on('cartChange', onCartChange);
-    onCartChange(cart);
+    onCartChange(state.cart);
   }, []);
 
   return (
-    <Layout title="FundOSS | Checkout" hidefooter={1} session={session} user={user} predicted={predicted}>
+    <Layout title="FundOSS | Checkout" hidefooter={1} state={state}>
       
-      {user._id ? (
+      {state.user._id ? (
         <>
           {total ? (
             <Container style={{ paddingTop: '40px' }} className="content">
@@ -43,7 +42,7 @@ const CheckoutPage = ({
                   <h3 className="text-secondary"> <Icons.Cart size={30} /> Checkout</h3>
                 </Col>
                 <Col md={{ span: 6 }}>
-                  <Cart display="inline" cart={cart} user={user} />
+                  <Cart display="inline" cart={state.cart} user={state.user} />
                 </Col>
               </Row>
               <Row>
@@ -61,44 +60,48 @@ const CheckoutPage = ({
                 </Col>
               </Row>
               <Elements stripe={stripePromise}>
-                <CheckoutForm user={user} />
+                <CheckoutForm user={state.user} />
               </Elements>
             </Container>
           ) : (
-            <Container style={{ paddingTop: '40px', margin: '-60px 0' }} fluid>
-              <Row className="no-gutter align-items-center">
-                <Col md={6} className="illu-hand d-none d-md-block" style={{ minHeight: '550px' }} />
-                <Col md={{ span: 4, offset: 1 }} className="text-center">
-                  <div style={{ maxWidth: '550px', margin: '100px auto' }}>
-                    <h3>Oops.. Your cart is empty</h3>
-                    <p>
-                      Go back and find your favorite OSS projects 
-                      to support projects and boost their democratic match!
-                    </p>
-                    <Button href="/">Go back to the collectives page</Button>
-                  </div>
-                </Col>
-              </Row>
-            </Container>
+            <div className="seamless-hand" style={{ marginBottom: '-60px' }}>
+              <Container>
+                <Row className="no-gutter align-items-center">
+                  <Col md={6}><Sponsors align="center" sponsors={state.current.sponsors} /></Col>
+                  <Col md={{ span: 4, offset: 1 }} className="text-center content">
+                    <div style={{ maxWidth: '550px', margin: '250px auto' }}>
+                      <h3>Oops.. Your cart is empty</h3>
+                      <p>
+                        Go back and find your favorite OSS projects 
+                        to support projects and boost their democratic match!
+                      </p>
+                      <Button variant="outline-light" size="lg" href="/">Go back to the collectives page</Button>
+                    </div>
+                  </Col>
+                </Row>
+              </Container>
+            </div>
           )}
         </>
       ) : (
-        <Container style={{ paddingTop: '40px', margin: '-60px 0' }} fluid>
-          <Row className="no-gutter align-items-center">
-            <Col md={6} className="illu-hand d-none d-md-block" style={{ minHeight: '550px' }} />
-            <Col md={{ span: 4, offset: 1 }} className="text-center">
-              <div style={{ maxWidth: '550px', margin: '100px auto' }}>
-                <h3>Register / Login To Finish Donating</h3>
-                <p>
-                  FundOSS is only allowing sign-ups through Github at this time.
-                  We apologize for the inconvenience this might cause!
-                </p>
-                <GithubLoginButton size="lg" block redirect="/checkout" />
-                <p>We’ll save your shopping cart for when you return!</p>
-              </div>
-            </Col>
-          </Row>
-        </Container>
+        <div className="seamless-hand" style={{ marginBottom: '-60px' }}>
+          <Container>
+            <Row className="no-gutter align-items-center">
+              <Col md={6}><Sponsors sponsors={state.current.sponsors} /></Col>
+              <Col md={{ span: 4, offset: 1 }} className="text-center content">
+                <div style={{ maxWidth: '550px', margin: '230px auto' }}>
+                  <h3>Register / Login To Finish Donating</h3>
+                  <p>
+                    FundOSS is only allowing sign-ups through Github at this time.
+                    We apologize for the inconvenience this might cause!
+                  </p>
+                  <GithubLoginButton variant="outline-light" size="lg" block redirect="/checkout" />
+                  <p>We’ll save your shopping cart for when you return!</p>
+                </div>
+              </Col>
+            </Row>
+          </Container>
+        </div>
       )}
     </Layout>
   );
@@ -107,16 +110,10 @@ const CheckoutPage = ({
 export async function getServerSideProps({ req, res }) {
   await middleware.run(req, res);
   const stripekey = process.env.STRIPE_PUBLISHABLE_KEY;
-  const session = await ServerProps.getCurrentSessionInfo();
-  const user = await ServerProps.getUser(req.user, session._id);
-  const predicted = await ServerProps.getPredicted(session);
-  const cart = await ServerProps.getCart(req.session.cart);
+  const state = await ServerProps.getAppState(req.user, req.session.cart);
   return {
     props: {
-      predicted,
-      user, 
-      cart, 
-      session, 
+      state,
       stripekey,
     },
   };

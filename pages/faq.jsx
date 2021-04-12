@@ -2,10 +2,10 @@ import React from 'react';
 import Container from 'react-bootstrap/Container';
 import Layout from '../components/layout';
 import middleware from '../middleware/all';
-import serializable from '../lib/serializable';
+import ServerProps from '../lib/serverProps';
 
-const FaqPage = ({ user }) => (
-  <Layout title="FundOSS | Frequently asked questions" user={user}>
+const FaqPage = ({ state }) => (
+  <Layout title="FundOSS | Frequently asked questions" state={state}>
     <Container className="content">
       <h1 className="display-2">FAQ</h1>
     </Container>
@@ -15,7 +15,8 @@ const FaqPage = ({ user }) => (
 
 export async function getServerSideProps({ req, res }) {
   await middleware.run(req, res);
-  return { props: { user: serializable(req.user) } };
+  const state = await ServerProps.getAppState(req.user, req.session.cart);
+  return { props: { state } };
 }
 
 export default FaqPage;

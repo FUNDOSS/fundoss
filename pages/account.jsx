@@ -8,16 +8,17 @@ import Payments from '../lib/payment/paymentController';
 import middleware from '../middleware/all';
 import serializable from '../lib/serializable';
 import Icons from '../components/icons';
-import DonationsList from '../components/payment/DonationsList';
-import Cart from '../lib/cart/CartController';
+import PaymentsList from '../components/payment/PaymentsList';
+import ServerProps from '../lib/serverProps';
 
-const AccountPage = ({ user, donations, cart }) => {
+const AccountPage = ({ payments, state }) => {
+  const { user } = state;
   if (!user._id) {
     return <Error statusCode={401} />;
   }
 
   return (
-    <Layout title="FundOSS | My Account" user={user} cart={cart}>
+    <Layout title="FundOSS | My Account" state={state}>
       <div className="bg1">
         <Container style={{ paddingTop: '40px' }} className="content">
           {user._id ? (
@@ -37,7 +38,7 @@ const AccountPage = ({ user, donations, cart }) => {
               </Col>
               <Col>
                 <h2>Donations History</h2>
-                <DonationsList donations={donations} />
+                <PaymentsList payments={payments} />
               </Col>
             </Row>
 
@@ -50,20 +51,19 @@ const AccountPage = ({ user, donations, cart }) => {
 
 export async function getServerSideProps({ req, res }) {
   await middleware.run(req, res);
+  const state = await ServerProps.getAppState(req.user, req.session.cart);
   if (req.user) {
-    const donations = await Payments.getDonationsByUser(req.user?._id);
-    const cart = await Cart.get(req.session.cart);
+    const payments = await Payments.getPaymentsByUser(req.user?._id);
     return {
       props: {
-        user: serializable(req.user),
-        donations: serializable(donations),
-        cart: serializable(cart),
+        state,
+        payments: serializable(payments),
       },
     };
   }
   return {
     props: {
-      user: {},
+      state,
     },
   };
 }

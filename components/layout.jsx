@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
+import Link from 'next/link';
 import AuthLinks from './auth/AuthLinks';
 import CartButton from './cart/CartButton';
 import Cart from './cart/Cart';
@@ -12,19 +13,23 @@ import Icons from './icons';
 import Qf from '../utils/qf';
 
 const Layout = ({
-  children, meta, title = 'FundOSS | Democratic funding for open-source collectives', user, hidefooter, cart, predicted, current,
+  children, meta, title = 'FundOSS | Democratic funding for open-source collectives', hidefooter, 
+  state = {
+    current: false, upcoming: false, user: {}, cart: [], 
+  },
 }) => {
   const router = useRouter();
-  if (predicted) {
+  const { user, cart, current } = state;
+  if (state && state.current) {
     Qf.init(
-      predicted.average, 
-      predicted.match,
-      predicted.fudge,
-      predicted.symetric,
-      predicted.exp,
+      current.predicted.average, 
+      current.predicted.match,
+      current.predicted.fudge,
+      current.matchingCurve.symetric,
+      current.matchingCurve.exp,
     ); 
-  }
-  if (user) Cart.previousDonations = user.donations;
+    Cart.previousDonations = user.donations;
+  } 
 
   return (
     <div id="main" style={{ display: 'none' }}>
@@ -39,7 +44,7 @@ const Layout = ({
         <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png" />
         <link rel="manifest" href="/static/site.webmanifest" />
         <link rel="mask-icon" href="/static/safari-pinned-tab.svg" color="#5bbad5" />
-        <link rel="shortcut icon" href="/static/favicon.ico"></link>
+        <link rel="shortcut icon" href="/static/favicon.ico" />
         {meta?.img ? <meta property="og:image" content={meta?.img} /> : null }
         {meta?.img ? <meta property="twitter:image" content={meta?.img} /> : null }
         {meta?.url ? <meta property="og:url" content={meta?.url} /> : null }
@@ -50,12 +55,25 @@ const Layout = ({
       <header>
         <Navbar bg="light" expand="lg" fixed="top">
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Brand href="/"><Logo /></Navbar.Brand>
+          <Link href="/"><Navbar.Brand href="/"><Logo className="logo"/></Navbar.Brand></Link>
           <Navbar.Collapse id="primary-nav">
             <Nav activeKey={router.pathname} className="mr-auto">
-              <Nav.Link href="https://blog.opencollective.com/fundoss-faqv1/"><Icons.Question size={20} /> FAQ</Nav.Link>
-              <Nav.Link href="/democratic-funding"><Icons.Buoy size={20} /> How democratic funding works</Nav.Link>
-              { current ? <Nav.Link href="/upcoming"><Icons.Award size={20} />Upcoming</Nav.Link> : null }
+              <Nav.Link href="https://blog.opencollective.com/fundoss-faqv1/">
+                <Icons.Question size={20} /> FAQ
+              </Nav.Link>
+              <Link href="/democratic-funding">
+                <Nav.Link href="/democratic-funding">
+                  <Icons.Buoy size={20} /> How democratic funding works
+                </Nav.Link>
+              </Link>
+  
+              { current ? (
+                <Link href="/upcoming">
+                  <Nav.Link href="/upcoming">
+                    <Icons.Award size={20} />Upcoming
+                  </Nav.Link>
+                </Link>
+              ) : null }
             </Nav>
           </Navbar.Collapse>
           { cart ? <CartButton className="btn-cart" itemCount={cart?.length} /> : null }

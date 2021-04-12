@@ -48,6 +48,30 @@ const ServerProps = {
     };
     return serializable(info ? getPredictedAverages(info) : defaultPrediction);
   },
+  getAppState: async (reqUser, sessionCart) => {
+    const currentInfo = await FundingSession.getCurrentSessionInfo();
+    let user = serializable(reqUser) || {};
+    if (user._id && currentInfo) {
+      const donations = await Payments.getGroupedDonationsByUser(
+        reqUser._id,
+        currentInfo._id,
+      );
+      user = { ...serializable(user), ...{ donations } };
+    }
+    const current = {
+      ...serializable(currentInfo),
+      ...{ predicted: getPredictedAverages(currentInfo) },
+    };
+    const cart = await Cart.get(sessionCart);
+    const upcoming = await FundingSession.getUpcomingSession();
+    return {
+      cart: serializable(cart),
+      user: serializable(user),
+      current,
+      upcoming: serializable(upcoming),
+      siteUrl: process.env.HOSTING_URL,
+    };
+  },
   cart: null,
   currentSessionId: null,
   currentSession: null,
