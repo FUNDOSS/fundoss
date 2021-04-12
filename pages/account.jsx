@@ -38,7 +38,7 @@ const AccountPage = ({ payments, state }) => {
               </Col>
               <Col>
                 <h2>Donations History</h2>
-                <PaymentsList payments={payments} />
+                <PaymentsList payments={payments} state={state} />
               </Col>
             </Row>
 
