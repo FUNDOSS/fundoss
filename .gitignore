@@ -67,3 +67,6 @@ yarn.lock
 
 # vscode workspace
 *.code-workspace
+
+#static generated images
+public/static/collective
