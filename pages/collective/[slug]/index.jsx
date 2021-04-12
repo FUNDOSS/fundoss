@@ -43,7 +43,7 @@ const collectivePage = ({
   return (
     <div className="bg1">
       <Layout
-        title={`FundOSS | ${name}`}
+        title={`FundOSS | ${isInCurrentSession ? 'vote for' : 'multiply your donations for'} ${name}`}
         state={state} 
         meta={{ 
           img: shareImage ? hostingUrl + shareImage : `${hostingUrl}/api/image/collective/${slug}`,

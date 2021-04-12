@@ -7,7 +7,11 @@ import ServerProps from '../lib/serverProps';
 const IndexPage = ({
   session, featured, nominations, state,
 }) => (
-  <Layout title="FundOSS | Democratic funding for open source projects" state={state}>
+  <Layout 
+    title="FundOSS | Democratic funding for open source projects"
+    meta={{ description: 'Open Source Collective is partnering with GitCoin to launch FundOSS, a pilot matching campaign based on a democratic funding model.' }}
+    state={state}
+  >
     {session?._id ? (
       <FundingSession 
         session={session} 
