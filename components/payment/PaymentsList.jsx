@@ -7,7 +7,7 @@ import {
 import { formatAmountForDisplay } from '../../utils/currency';
 import ShareButton from '../social/ShareButton';
 
-const PaymentsList = ({ payments }) => (
+const PaymentsList = ({ payments, state }) => (
   <div>
     {payments?.length ? (
       <div className="payments">
@@ -27,8 +27,8 @@ const PaymentsList = ({ payments }) => (
                 </Col>
                 <Col className="text-right">
                   Share on :&nbsp;
-                  <ShareButton mini size="sm" variant="link" url={`/share/${payment.sid}`} platform="twitter" />
-                  <ShareButton mini size="sm" variant="link" url={`/share/${payment.sid}`} platform="facebook" />
+                  <ShareButton mini size="sm" variant="link" siteUrl={state.siteUrl} url={`/share/${payment.sid}`} platform="twitter" />
+                  <ShareButton mini size="sm" variant="link" siteUrl={state.siteUrl} url={`/share/${payment.sid}`} platform="facebook" />
                 </Col>
               </Row>
             </Card.Header>
