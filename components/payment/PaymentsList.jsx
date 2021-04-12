@@ -19,7 +19,7 @@ const PaymentsList = ({ payments, state }) => (
                   
                   <span className="lead text-fat">{formatAmountForDisplay(payment.amount)}</span>&nbsp;
                 </Col>
-                <Col>
+                <Col xs={12} lg={6}>
                   <Badge variant="info">{moment(payment.timeslug).format('MMMM Do YYYY')}</Badge>&nbsp;
                   <Link href={`/session/${payment.session.slug}`}>
                     <a className="text-fat" >{payment.session.name}</a>
@@ -34,8 +34,8 @@ const PaymentsList = ({ payments, state }) => (
             </Card.Header>
             <Card.Body>
               {payment.donations.map((don) => (
-                <Row key={don.collective.slug} className="donation">
-                  <Col xs={2} className="text-fat">
+                <Row key={don.collective.slug} className="donation no-gutters">
+                  <Col xs={3} lg={2} className="text-fat">
                     {formatAmountForDisplay(don.amount)}
                   </Col>
                   <Col className="text-fat">

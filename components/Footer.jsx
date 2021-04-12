@@ -14,7 +14,7 @@ const Footer = ({ minimal }) => (
       <Container>&copy; Fundoss 2021</Container>
     ) : (
       <Container>
-        <Logo width={340} height={80} />
+        <Logo className="logo" width={340} height={80} />
         <Row>
           <Col>
             <h5>Platform</h5>
