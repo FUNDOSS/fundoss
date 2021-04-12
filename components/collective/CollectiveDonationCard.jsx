@@ -34,7 +34,7 @@ const CollectiveDonationCard = ({ collective }) => {
   return (
     <Card className="donation-card">
       <Card.Body>
-        {totals?.donations.length ? (
+        {totals?.donations && totals?.donations.length ? (
           <div style={{ margin: '10px 0 20px' }} className="text-center">
             <b>{totals.donations.length}</b> {Pluralize('donor', totals.donations.length)} raised
             <Row className="no-gutters text-center align-items-center">
