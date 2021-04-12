@@ -27,8 +27,10 @@ export async function getServerSideProps({ query, req, res }) {
   await middleware.run(req, res);
   const state = await ServerProps.getAppState(req.user, req.session.cart);
   const session = await FundingSessions.getBySlug(query.slug);
-  const featured = serializable(session.collectives[Math.floor(Math.random() * session.collectives.length)]);
-  const nominations = await ServerProps.getNominations(session._id, req.user._id);
+  const featured = serializable(
+    session.collectives[Math.floor(Math.random() * session.collectives.length)],
+  );
+  const nominations = await ServerProps.getNominations(session._id, req.user?._id);
   return {
     props: {
       nominations,
