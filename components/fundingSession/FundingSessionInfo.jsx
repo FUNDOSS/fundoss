@@ -13,8 +13,7 @@ const FundingSessionInfo = ({ session, predicted, size = 'md' }) => {
 
   const started = moment() > moment(start);
   const ended = moment() > moment(end);
-
-  const totalMatches = (totals?.donations || [0]).reduce(
+  const totalMatches = (totals?.donations || []).reduce(
     (total, d) => total + Qf.calculate(
       d, 
       p.average, 
@@ -22,10 +21,9 @@ const FundingSessionInfo = ({ session, predicted, size = 'md' }) => {
       session.matchingCurve.exp,
       p.fudge,
       session.matchingCurve.symetric,
-    ),
+    ), 
+    0,
   );
-
-
 
   return (
     <div className={`session-info info-${size}`}>

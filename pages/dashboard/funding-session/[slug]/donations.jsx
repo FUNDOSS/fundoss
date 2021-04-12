@@ -4,7 +4,7 @@ import moment from 'moment';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { Table } from 'react-bootstrap';
+import { Badge, Table } from 'react-bootstrap';
 import ServerProps from '../../../../lib/serverProps';
 import Error from '../../../../components/Error';
 import DashboardNav from '../../../../components/dashboard/DashboardNav';
@@ -22,7 +22,7 @@ import Dump from '../../../../components/dashboard/Dump';
 import { formatAmountForDisplay } from '../../../../utils/currency';
 
 const DonationsBySessionPage = ({
-  state, session, payments,
+  state, session, payments, totals,
 }) => {
   if (!state.user._id) {
     return <Error statusCode={401} />;
@@ -40,35 +40,15 @@ const DonationsBySessionPage = ({
     session.matchingCurve.symetric,
   );
 
-  console.log('predictcurve',
-    state.current.predicted.average, 
-    state.current.predicted.match,
-    session.matchingCurve.exp,
-    state.current.predicted.fudge,
-    session.matchingCurve.symetric)
-
-
   const userTotals = payments.reduce((totals, p) => p.donations.reduce(
-    (totals, d) => ({
-      ...totals,
-      ...{
-        [p.user.username]: {
-          total: Number(totals[p.user.username] ? totals[p.user.username].total : 0) + d.amount,
-          donations: {
-            ...(totals[p.user.username] ? totals[p.user.username].donations : {}),
-            ...{
-              [d.collective.slug]: ((
-                totals[p.user.username] 
-                  ? totals[p.user.username][d.collective.slug] 
-                  : 0) || 0) + d.amount, 
-            },
-          },
-        }, 
-      }, 
-    }),
+    (totals, d) => {
+      const user = totals[p.user.username] || { donations: {}, total: 0 };
+      user.donations[d.collective.slug] = (user.donations[d.collective.slug] || 0) + d.amount;
+      user.total += d.amount;
+      return { ...totals, ...{ [p.user.username]: user } };
+    },
     totals,
-  ),
-  {});
+  ), {});
 
   const collectiveTotals = Object.keys(userTotals)
     .reduce((totals, username) => Object.keys(userTotals[username].donations).reduce(
@@ -88,6 +68,7 @@ const DonationsBySessionPage = ({
     ),
     {});
 
+
   const collectiveTable = Object.keys(collectiveTotals).map(
     (slug) => ({ ...collectiveTotals[slug], ...{ slug } }),
   ).sort((a, b) => b.total - a.total);
@@ -95,8 +76,6 @@ const DonationsBySessionPage = ({
   const userTable = Object.keys(userTotals).map(
     (username) => ({ ...userTotals[username], ...{ username } }),
   ).sort((a, b) => b.total - a.total);
-
-  console.log(userTable);
 
   return (
     <Layout title="FundOSS | Dashboard" state={state}>
@@ -117,7 +96,6 @@ const DonationsBySessionPage = ({
         <br />
         <AdminLinks session={session} all />
         <hr />
-
         <Row>
           <Col md={6}>
             <h3>Donations by user</h3>
@@ -136,13 +114,13 @@ const DonationsBySessionPage = ({
                 </tr>
               ))}
             </Table>
-            {userTable.reduce(
+            {formatAmountForDisplay(userTable.reduce(
               (total, u) => total + Object.keys(u.donations).reduce( 
                 (total, slug) => total + cmatch(u.donations[slug]),
                 0,
               ),
               0,
-            )}
+            ))}
           </Col>
           <Col md={6}>
             <h3>Donations by collective</h3>
@@ -161,13 +139,13 @@ const DonationsBySessionPage = ({
                 </tr>
               ))}
             </Table>
-            {collectiveTable.reduce(
+            {formatAmountForDisplay(collectiveTable.reduce(
               (total, c) => total + c.donations.reduce( 
                 (total, d) => total + cmatch(d),
                 0,
               ),
               0,
-            )}
+            ))}
 
           </Col>
         </Row>
@@ -183,11 +161,13 @@ export async function getServerSideProps({ req, res, query }) {
   await middleware.run(req, res);
   const session = await FundingSessions.getBySlug(query.slug);
   const state = await ServerProps.getAppState(req.user, req.session.cart);
+  const totals = await Payments.getSessionTotals(session._id);
   const payments = await Payments.get({ session: session._id, status: 'succeeded' });
   return {
     props: { 
       state, 
-      session: { ...serializable(session), ...{ predicted: getPredictedAverages(session) } }, 
+      totals,
+      session: { ...serializable(session), ...{ predicted: state.current.predicted } }, 
       payments: serializable(payments), 
     }, 
   };

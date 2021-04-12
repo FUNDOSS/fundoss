@@ -4,6 +4,7 @@ import Pluralize from 'pluralize';
 import {
   Button, Image, Col, Row, Container, Card, 
 } from 'react-bootstrap';
+import Link from 'next/link';
 import Error from '../../../components/Error';
 import ServerProps from '../../../lib/serverProps';
 import Layout from '../../../components/layout';
@@ -18,7 +19,6 @@ import ShareButton from '../../../components/social/ShareButton';
 import NominateBtn from '../../../components/collective/NominateBtn';
 import FundingSessionInfo from '../../../components/fundingSession/FundingSessionInfo';
 import Sponsors from '../../../components/fundingSession/Sponsors';
-import Link from 'next/link';
 
 const collectivePage = ({
   collective, state, 
@@ -162,11 +162,14 @@ const collectivePage = ({
 
 export async function getServerSideProps({ query, req, res }) {
   await middleware.run(req, res);
-  const state = await ServerProps.getAppState(req.user, req.session.cart);
   const collective = await collectives.findBySlug(query.slug);
   if (collective) {
+    const state = await ServerProps.getAppState(req.user, req.session.cart);
     const sessions = await FundingSessions.getCollectiveSessions(collective._id);
     const similar = await collectives.similar();
+    if (state.current){
+      collective.totals = collective.sessionTotals.filter(t => t.session == state.current._id)[0]
+    }
     const hasNominated = req.user?._id 
       ? (await collectives.hasNominated(collective._id, state.upcoming._id, req.user?._id)) > 0
       : false;
@@ -182,7 +185,7 @@ export async function getServerSideProps({ query, req, res }) {
       },
     };
   }
-  return {props: {collective}}
+  return { props: { collective } };
 }
 
 export default collectivePage;

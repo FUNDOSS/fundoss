@@ -57,6 +57,19 @@ export async function updatePayment(payment) {
   return Payment.updateOne({ _id: payment._id }, { ...payment, ...paymentUpdates });
 }
 
+export async function getSessionTotals(session) {
+  const sessionTotals = (await Donation
+    .aggregate([
+      { $match: { session: mongoose.Types.ObjectId(session) } },
+      { $group: { _id: { user: '$user', collective: '$collective' }, amount: { $sum: '$amount' } } },
+    ]));
+  const totals = sessionTotals.reduce((acc, don) => ({
+    donations: [...acc.donations, don.amount],
+    amount: acc.amount + don.amount,
+  }), { donations: [], amount: 0 });
+  return totals;
+}
+
 export async function findById(id:string) {
   await dbConnect();
   return Payment.findOne({ _id: id }).select('user session amount donations fee status time confirmation')
@@ -90,13 +103,13 @@ export async function getDonationsBySession(sessionId) {
   const donations = Donation
     .aggregate([
       { $match: { session: mongoose.Types.ObjectId(sessionId) } },
-      { $unwind: {path: '$user'}},
+      { $unwind: { path: '$user' } },
       {
         $group: {
           _id: { user: '$user', collective: '$collective' },
           amount: { $sum: '$amount' },
           fee: { $sum: '$fee' },
-          avatar: {$first: '$avatar'}
+          avatar: { $first: '$avatar' },
         },
       },
 
@@ -259,4 +272,6 @@ export default class Payments {
     static getGroupedDonationsByUser = getGroupedDonationsByUser
 
     static getDonationsBySession = getDonationsBySession
+
+    static getSessionTotals = getSessionTotals
 }

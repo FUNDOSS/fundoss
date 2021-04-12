@@ -152,7 +152,6 @@ export async function getById(id:string):Promise<IFundingSession> {
 export async function getBySlug(slug:string):Promise<IFundingSession> {
   await dbConnect();
   const session = await FundingSession.findOne({ slug }).populate('collectives');
-  console.log('session._id', session._id);
   if (session._id) {
     const sessionData = await setCollectiveTotals(session);
     return sessionData;
