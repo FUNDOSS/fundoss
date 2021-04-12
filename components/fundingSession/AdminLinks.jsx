@@ -1,9 +1,10 @@
 import React from 'react';
 import moment from 'moment';
 import { Button } from 'react-bootstrap';
+import Link from 'next/link';
 
 const AdminLinks = ({
-  session, view, edit, disbursments, 
+  session, view, edit, disbursments, all,
 }) => {
   const {
     start, slug,
@@ -11,10 +12,30 @@ const AdminLinks = ({
 
   return (
     <>
-      {edit ? <Button variant="outline-primary" href={`/dashboard/funding-session/${slug}/edit`}>edit</Button> : null }
-      {view ? <Button variant="outline-secondary" href={`/session/${slug}`}>view</Button> : null }
-      {disbursments && moment(start) < moment() ? (
-        <Button variant="outline-secondary" href={`/dashboard/funding-session/${slug}/table`}>disbursments</Button>
+      {edit || all ? (
+        <Link href={`/dashboard/funding-session/${slug}/edit`}>
+          <Button 
+            variant="outline-primary" 
+          >
+            edit
+          </Button>
+        </Link>
+      ) : null }
+      {view || all 
+        ? (
+          <Link href={`/session/${slug}`}>
+            <Button variant="outline-secondary">view</Button>
+          </Link>
+        ) : null }
+      {(disbursments || all) && moment(start) < moment() ? (
+        <>
+          <Link href={`/dashboard/funding-session/${slug}/donations`}>
+            <Button variant="outline-secondary">donations</Button>
+          </Link>
+          <Link href={`/dashboard/funding-session/${slug}/table`}>
+            <Button variant="outline-secondary">disbursments</Button>
+          </Link>
+        </>
       ) : null}
     </>
   );

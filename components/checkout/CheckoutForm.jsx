@@ -63,13 +63,13 @@ const CheckoutForm = ({ user }) => {
 
   const statusSubmitButton = (status, isSubmitting, total) => {
     if (status === 'completed') {
-      return (<Button block variant="success"><Icons.Check size={16} /> Payment Completed</Button>);
+      return (<Button disabled block variant="outline-success"><Icons.Check size={16} /> Payment Completed</Button>);
     } if (status === 'succeeded') {
-      return (<Button block variant="light"><Spinner animation="border" size="sm" /> Confirming Payment...</Button>);
+      return (<Button disabled block variant="outline-info"><Spinner animation="border" size="sm" /> Confirming Payment...</Button>);
     } if (status === 'verify') {
-      return (<Button block variant="light"><Spinner animation="border" size="sm" /> Verifying Payment Data...</Button>);
+      return (<Button disabled block variant="outline-info"><Spinner animation="border" size="sm" /> Verifying Payment Data...</Button>);
     } 
-    return (<Button block variant="primary" type="submit">  Pay {formatAmountForDisplay(total, 'USD')}</Button>);
+    return (<Button block variant="outline-primary" type="submit">  Pay {formatAmountForDisplay(total, 'USD')}</Button>);
   };
 
   return (

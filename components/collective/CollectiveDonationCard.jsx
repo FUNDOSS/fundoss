@@ -7,6 +7,7 @@ import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Button from 'react-bootstrap/Button';
+import Link from 'next/link';
 import Cart, {
   cartEvents, calculateMatch, getPreviousDonation, getPreviousMatch, 
 } from '../cart/Cart';
@@ -135,7 +136,7 @@ const CollectiveDonationCard = ({ collective }) => {
               )}
             </Col>
             <Col>
-              {inCart ? <Button block variant="link" href="/checkout/">Checkout</Button> : null}
+              {inCart ? <Link href="/checkout/"><Button block variant="link">Checkout</Button></Link> : null}
             </Col>
           </Row>
         )}

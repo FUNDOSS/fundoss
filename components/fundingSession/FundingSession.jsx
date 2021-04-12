@@ -1,5 +1,5 @@
 /* eslint-disable react/no-danger */
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Link from 'next/link';
 import Row from 'react-bootstrap/Row';
@@ -15,9 +15,10 @@ import Qf from '../../utils/qf';
 import FundingSessionInfo from './FundingSessionInfo';
 import Nominate from '../collective/NominateForm';
 import AdminLinks from './AdminLinks';
+import ShareButton from '../social/ShareButton';
 
 const FundingSession = ({
-  session, user, predicted, nominations = { user: [] }, featured,
+  session, user, predicted, state, nominations = { user: [] }, featured,
 }) => {
   const {
     name, description, collectives, start, end, sponsors, 
@@ -119,7 +120,7 @@ const FundingSession = ({
               </Col>
             ) : null}
 
-            <Col xs={{ order: 1, span: 12 }} lg={{ order: 2, span: 7, offset:1 }} className="content text-center text-lg-left">
+            <Col xs={{ order: 1, span: 12 }} lg={{ order: 2, span: 7, offset: 1 }} className="content text-center">
               <h1 className="no-margin" style={{ textShadow: '0 0 10px #000000' }}>{name}</h1>
 
               <FundingSessionInfo session={session} predicted={predicted} />
@@ -142,25 +143,33 @@ const FundingSession = ({
                 ) : (
                   <>
                     <div className="session-description" dangerouslySetInnerHTML={{ __html: description }} />
-                    <p><Link href="/democratic-funding">Learn More about Democratic Funding</Link></p>
+                    <p>
+                      <Link href="/democratic-funding">Learn More about Democratic Funding</Link> or share on   
+                      <span>
+                        <ShareButton platform="twitter" variant="link" siteUrl={state.siteUrl} />
+                        <ShareButton platform="facebook" variant="link" siteUrl={state.siteUrl} />
+                      </span>
+                    </p>
                   </>
                 )}
 
-              <Sponsors sponsors={sponsors} align="left" />
+              <Sponsors sponsors={sponsors} />
             </Col>
           </Row>
-          { started ? (
-            <p style={{ padding: '30px 0' }} className="text-center content">
-              👇 Scroll to see the 
-              other {collectives.length - 1} amazing 
-              collectives we’re sustaining! 👇
-            </p>
-          ) : null }
-          { !started ? (
-            <p style={{ padding: '30px 0' }} className="text-center content">
-              👇 Nominate your favorite collectives 👇
-            </p>
-          ) : null }
+          <div style={{ padding: '30px 0' }} className="text-center content">
+            { started ? (
+              <span>👇 Scroll to see the 
+                other {collectives.length - 1} amazing 
+                collectives we’re sustaining! 👇
+              </span>
+            ) : null }
+            { !started ? (
+              <span>
+                👇 Nominate your favorite collectives 👇
+              </span>
+            ) : null }
+
+          </div>
         </Container>
       </div>
       <Container>

@@ -43,7 +43,7 @@ export const NominateForm = ({ sessionId }) => {
       errors, touched, isSubmitting, values, handleChange, handleSubmit,
     }) => (
       <Form noValidate onSubmit={handleSubmit}>
-        <Card className="invert">
+        <Card className="invert glass">
           <Card.Header className="content">
             <h3 className="text-center">Nominate a OSC collective to be included in this session</h3>
           </Card.Header>

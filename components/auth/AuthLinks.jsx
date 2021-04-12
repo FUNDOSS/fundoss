@@ -2,6 +2,7 @@ import React from 'react';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Image from 'react-bootstrap/Image';
+import Link from 'next/link';
 import GithubLoginButton from './GithubLoginButton';
 
 const AuthLinks = ({ user }) => (
@@ -22,16 +23,22 @@ const AuthLinks = ({ user }) => (
             </span>
       )}
         >
-          <Dropdown.Item href="/account">
-            Account
-          </Dropdown.Item>
-          <Dropdown.Item href="/api/auth/logout">
-            Sign out
-          </Dropdown.Item>
-          {user.role === 'admin' ? (
-            <Dropdown.Item href="/dashboard">
-              Dashboard
+          <Link href="/account">
+            <Dropdown.Item  href="/account">
+              Account
             </Dropdown.Item>
+          </Link>
+          <Link href="/api/auth/logout">
+            <Dropdown.Item href="/api/auth/logout">
+              Sign out
+            </Dropdown.Item>
+          </Link>
+          {user.role === 'admin' ? (
+            <Link href="/dashboard">
+              <Dropdown.Item  href="/dashboard">
+                Dashboard
+              </Dropdown.Item>
+            </Link>
           ) : null }
         </DropdownButton>
       )}

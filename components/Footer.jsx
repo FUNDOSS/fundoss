@@ -4,6 +4,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Nav from 'react-bootstrap/Nav';
 import { Button } from 'react-bootstrap';
+import Link from 'next/link';
 import Logo from './Logo';
 import ShareButton from './social/ShareButton';
 
@@ -18,9 +19,9 @@ const Footer = ({ minimal }) => (
           <Col>
             <h5>Platform</h5>
             <Nav className="flex-column">
-              <Nav.Link href="/about">About</Nav.Link>
+              <Nav.Link><Link href="/about">About</Link></Nav.Link>
               <Nav.Link href="https://blog.opencollective.com/fundoss-faqv1/">FAQ</Nav.Link>
-              <Nav.Link href="/democratic-funding">How democratic funding works</Nav.Link>
+              <Nav.Link><Link href="/democratic-funding">How democratic funding works</Link></Nav.Link>
             </Nav>
             <h5>Social</h5>
             <Nav className="flex-column">

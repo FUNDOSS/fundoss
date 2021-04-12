@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import Link from 'next/link';
+import Qf from '../../utils/qf';
 import CartItemList from './CartItemList';
 import { formatAmountForDisplay } from '../../utils/currency';
-import Qf from '../../utils/qf';
 
 export const cartEvents = {
   on(event, callback) {
@@ -163,7 +164,7 @@ const Cart = ({ cart, display, user }) => {
           : null}
       </Modal.Body>
       <Modal.Footer>
-        {cartData.length ? <Button block variant="primary" href="/checkout">Total {formatAmountForDisplay(totals.amount, 'USD')} | Checkout</Button> : null}
+        {cartData.length ? <Link href="/checkout"><Button block variant="primary">Total {formatAmountForDisplay(totals.amount, 'USD')} | Checkout</Button></Link> : null}
       </Modal.Footer>
     </Modal>
   );
