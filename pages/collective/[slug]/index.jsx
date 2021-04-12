@@ -106,7 +106,7 @@ const collectivePage = ({
                   <Card.Body className="text-center content">
                     <FundingSessionInfo session={sessions[0]} />
                     <Link href={`/session/${state.upcoming.slug}`}>
-                      <Button size="lg" block variant="outline-primary">{state.upcoming.name}</Button>
+                      <Button size="lg" block variant="outline-light">{state.upcoming.name}</Button>
                     </Link>
                     <NominateBtn 
                       size="lg"
