@@ -11,10 +11,9 @@ handler.use(all);
 
 handler.get(async (req: any, res: any) => {
   const payment = await Payments.getShared(req.query.sid);
-  console.log(payment)
   const file = path.resolve('./public/static/share', `${payment.sid}.jpg`);
   const imgUrl = `/static/share/${payment.sid}.jpg`;
-  if (fs.existsSync(file)) {
+  if (!fs.existsSync(file) || (req.user.role === 'admin' && req.query.generate) ) {
     await Images.create('payment', payment);
     Payments.update({ _id: payment._id, shareImage: imgUrl });
   }

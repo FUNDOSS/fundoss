@@ -12,7 +12,7 @@ handler.get(async (req: any, res: any) => {
   const collective = await Collectives.findBySlug(req.query.slug);
   const file = path.resolve('./public/static/collective', `${collective.slug}.jpg`);
   const imgUrl = `/static/collective/${collective.slug}.jpg`;
-  if (!fs.existsSync(file)) {
+  if (!fs.existsSync(file) || (req.user.role === 'admin' && req.query.generate)) {
     await Images.create('collective', collective);
     Collectives.update(collective._id, { shareImage: imgUrl });
   }

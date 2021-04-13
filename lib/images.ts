@@ -25,16 +25,19 @@ const Images = {
       const payment = params;
       const file = path.resolve('./public/static/share', `${payment.sid}.jpg`);
       const illu = path.resolve('./public/static', 'twitter-collective.png');
-      const circle = Buffer.from(
+      const circle = sharp(Buffer.from(
         '<svg><rect x="0" y="0" width="300" height="300" rx="150" ry="150"/></svg>',
-      );
+      ));
       const image = sharp(illu);
-      const user = await got(payment.user.avatar).buffer();
-      const circleUser = await sharp(user).resize({ width: 300 })
-        .composite([{ input: circle, blend: 'dest' }])
-        .toBuffer()
-        .catch((err) => console.log(err));
-      const composites = [{ input: circleUser }];
+
+      const user = await sharp(
+        await got(payment.user.avatar).buffer(),
+      ).resize({ width: 300 }).toBuffer();
+
+      const circleUser = await circle.composite([{input: user, blend: 'in' }])
+        .ensureAlpha(0)
+        .toBuffer();
+      const composites = [{ input: circleUser}];
       return image.composite(composites)
         .jpeg({ quality: 100 })
         .toFile(file).catch((err) => console.log(err));
