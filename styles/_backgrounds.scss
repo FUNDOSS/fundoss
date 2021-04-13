@@ -6,7 +6,13 @@
 
 .confetti{
     @extend .invert;
-    background: $darkpurple url('/static/bgconfetti.png') top repeat-x;
+    background:
+        url("data:image/svg+xml,%3Csvg width='427' height='118' viewBox='0 0 427 118' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath opacity='.8' fill='%239551F0' d='M295 12l5-2-3-10-6 2zM153 10l4 2 3-6-3-2z'/%3E%3Cpath opacity='.7' fill='%23FF4337' d='M112 18h-5l1 10h5z'/%3E%3Cpath opacity='.9' fill='%23FFD337' d='M333 29l-4 4 7 8 4-4z'/%3E%3Cpath fill='%233744FF' d='M178 25l1-3-6-1v3z'/%3E%3Cpath opacity='.8' fill='%23FFD337' d='M13 18l-2 4 7 4 2-4z'/%3E%3Cpath opacity='.9' fill='%239551F0' d='M426 42h-3v7h3z'/%3E%3Cpath opacity='.9' fill='%23FFD337' d='M378 34l3 4 6-4-2-4z'/%3E%3Cpath opacity='.9' fill='%2309E2AF' d='M134 46l2 5 8-3-1-5z'/%3E%3Cpath opacity='.8' fill='%239551F0' d='M4 44l-4 3 6 8 4-4z'/%3E%3Cpath opacity='.8' fill='%2309E2AF' d='M395 52h-5l-1 10h5z'/%3E%3Cpath opacity='.9' fill='%23FF4337' d='M340 92l2 5 9-4-3-5z'/%3E%3Cpath opacity='.7' fill='%23FFD337' d='M253 63h-4v9h5z'/%3E%3Cpath opacity='.8' fill='%239551F0' d='M92 62l3-1-2-6-3 1z'/%3E%3Cpath opacity='.9' fill='%239551F0' d='M302 75h-3l-2 6 3 1z'/%3E%3Cpath opacity='.9' fill='%2309E2AF' d='M184 79l-4-2-4 7 4 2z'/%3E%3Cpath opacity='.9' fill='%239551F0' d='M132 78v3h6v-4z'/%3E%3Cpath opacity='.9' fill='%23FFD337' d='M391 91v-4l-7-1v4z'/%3E%3Cpath opacity='.8' fill='%23FF4337' d='M192 91l5 1 2-8-5-1z'/%3E%3Cpath opacity='.7' fill='%239551F0' d='M79 91l4 3 4-9-4-2z'/%3E%3Cpath opacity='.8' fill='%2309E2AF' d='M292 99l-6 1 2 9h5z'/%3E%3Cpath opacity='.8' fill='%233744FF' d='M216 110l-2 4 6 3 2-4z'/%3E%3Cpath opacity='.9' fill='%23FF4337' d='M13 109l-3 3 5 6 3-3z'/%3E%3C/svg%3E") 
+        repeat-x top,
+        radial-gradient(ellipse at bottom, rgba($darkpurple,.2), rgba($orange,.1)), 
+        linear-gradient(rgba($darkpurple,.3), rgba($blue,.4)),
+        $darkpurple
+        ;
     padding: 40px 0;
 }
 

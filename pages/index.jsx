@@ -17,7 +17,7 @@ const IndexPage = ({
         session={session} 
         featured={featured} 
         user={state.user}
-        predicted={state.current.predicted}
+        predicted={state.current?.predicted}
         nominations={nominations}
         state={state}
       />
@@ -34,9 +34,9 @@ export async function getServerSideProps({ req, res }) {
     session = await ServerProps.getUpcoming();
     nominations = await ServerProps.getNominations(session?._id, state.user._id);
   } 
-  const featured = session 
+  const featured = session && session.collectives.length
     ? session.collectives[Math.floor(Math.random() * session.collectives.length)] 
-    : null;
+    : false;
     
   return {
     props: {
