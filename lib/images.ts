@@ -3,9 +3,9 @@ import got from 'got';
 import path from 'path';
 
 const Images = {
-  create: async (type:string , params:any) => {
-    if(type == 'collective'){
-      const collective = params
+  create: async (type:string, params:any) => {
+    if (type === 'collective') {
+      const collective = params;
       const illu = path.resolve('./public/static', 'twitter-collective.png');
       const file = path.resolve('./public/static/collective', `${collective.slug}.jpg`);
       const image = sharp(illu);
@@ -14,12 +14,30 @@ const Images = {
       );
       const logo = await got(collective.imageUrl).buffer();
       const circleLogo = await sharp(logo)
-        //.composite([{ input: circle, blend: 'dest-in' }])
-        .toBuffer().catch(err => console.log(err));
+        // .composite([{ input: circle, blend: 'dest-in' }])
+        .toBuffer().catch((err) => console.log(err));
       const composites = [{ input: circleLogo }];
       return image.composite(composites)
-        .jpeg({quality: 100})
-        .toFile(file).catch(err => console.log(err));
+        .jpeg({ quality: 100 })
+        .toFile(file).catch((err) => console.log(err));
+    }
+    if (type === 'payment') {
+      const payment = params;
+      const file = path.resolve('./public/static/share', `${payment.sid}.jpg`);
+      const illu = path.resolve('./public/static', 'twitter-collective.png');
+      const circle = Buffer.from(
+        '<svg><rect x="0" y="0" width="300" height="300" rx="150" ry="150"/></svg>',
+      );
+      const image = sharp(illu);
+      const user = await got(payment.user.avatar).buffer();
+      const circleUser = await sharp(user).resize({ width: 300 })
+        .composite([{ input: circle, blend: 'dest' }])
+        .toBuffer()
+        .catch((err) => console.log(err));
+      const composites = [{ input: circleUser }];
+      return image.composite(composites)
+        .jpeg({ quality: 100 })
+        .toFile(file).catch((err) => console.log(err));
     }
   },
 };

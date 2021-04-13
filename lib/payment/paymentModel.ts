@@ -1,5 +1,7 @@
 import mongoose, { Document, Schema } from 'mongoose';
+import { IFundingSession } from '../fundingSession/fundingSessionModel';
 import nanoid from '../nanoid';
+import { IUser } from '../user/userModel';
 
 export interface IPaymentInput {
   _id?: string;
@@ -15,7 +17,7 @@ export interface IPaymentInput {
 
 export interface IPayment extends Document {
   _id: string;
-  user: string;
+  user: IUser;
   amount: number;
   fee: number;
   status: string;
@@ -23,6 +25,8 @@ export interface IPayment extends Document {
   intentId: string;
   confirmation: any;
   error: any;
+  shareImage:string;
+  session:IFundingSession;
 }
 
 const PaymentSchema = new Schema({
@@ -63,6 +67,9 @@ const PaymentSchema = new Schema({
   session: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'FundingSession',
+  },
+  shareImage: {
+    type: String,
   },
 });
 
