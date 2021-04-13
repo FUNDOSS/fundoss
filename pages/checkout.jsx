@@ -45,6 +45,7 @@ const CheckoutPage = ({
                   <Cart display="inline" cart={state.cart} user={state.user} />
                 </Col>
               </Row>
+              <hr />
               <Row>
                 <Col md={{ offset: 3, span: 6 }}>
                   <Row className="align-items-center text-center">

@@ -1,0 +1,28 @@
+#cart.modal-dialog{
+    max-width: 600px;
+}
+
+.input-group.cart-amount{
+    @extend .text-fat;
+    box-shadow: none;
+    border:none;
+    .input-group-prepend,.input-group-text{background: transparent;}
+    input{border: 1px solid $gray-400;font-size: 1.5rem;}
+}
+
+.cart-item{
+    border-bottom: 1px solid $gray-200; 
+    cursor: pointer;
+    .form{
+        background:$gray-100;
+        padding:10px
+    }
+    .header{
+        padding:10px 10px 10px 15px
+    }
+}
+
+.cart-item:last-child{
+    border:none
+}
+

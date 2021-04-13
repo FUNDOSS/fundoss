@@ -17,14 +17,13 @@ const CartItem = ({
   const [selected, setSelected] = useState(selectedId);
   
   return (
-    <div>
-      <div 
+    <div className="cart-item">
+      <div className="header"
         onClick={() => {
           const selection = collective._id === selected ? null : collective._id;
           onSelect(selection);
           setSelected(selection);
         }}
-        style={{ borderBottom: '1px solid #ccc', padding: '0.9rem', cursor: 'pointer' }}
       >
         <Row className="no-gutters">
           <Col xs={1}>
@@ -38,7 +37,7 @@ const CartItem = ({
             <Col xs={4} className="text-right text-nowrap">
               <Badge className="round" style={{ fontSize: '0.8rem' }} variant="primary">
                 {formatAmountForDisplay(amount, 'USD')}
-              </Badge> +&nbsp;
+              </Badge> +&nbsp;<small>est.</small>
               <span className="match">
                 {formatAmountForDisplay(calculateMatch(amount, collective._id), 'USD')}
               </span>
@@ -68,7 +67,7 @@ const CartItem = ({
       </div>
         
       {selected === collective._id ? (
-        <Card.Body style={{ background: '#f8f9fa' }}>
+        <div className="form">
           <Row className="align-items-center">
             <Col xs={5}>
               <InputGroup className="cart-amount">
@@ -126,7 +125,7 @@ const CartItem = ({
               )}
             </Col>
           </Row>
-        </Card.Body>
+        </div>
       ) : null }
       
     </div>
