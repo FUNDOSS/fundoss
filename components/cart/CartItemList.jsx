@@ -37,7 +37,7 @@ const CartItem = ({
             <Col xs={4} className="text-right text-nowrap">
               <Badge className="round" style={{ fontSize: '0.8rem' }} variant="primary">
                 {formatAmountForDisplay(amount, 'USD')}
-              </Badge> +&nbsp;<small>est.</small>
+              </Badge> +&nbsp;<small>est</small>
               <span className="match">
                 {formatAmountForDisplay(calculateMatch(amount, collective._id), 'USD')}
               </span>
