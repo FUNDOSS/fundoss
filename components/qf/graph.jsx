@@ -46,9 +46,6 @@ function Graph({
       <text x="20" y="40" style={{ fontSize: '12px' }}>
         match $
       </text>
-      <text x="100" y="40" style={{ fontSize: '12px' }}>
-        fudge: {fudge || 1} exp:{exp || 2}
-      </text>
       <text x={width - 200} y={height - 20} style={{ fontSize: '12px' }}>
         donation $
       </text>

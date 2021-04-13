@@ -3,11 +3,11 @@ import { Form, Row, Col } from 'react-bootstrap';
 import Graph from './graph';
 import Qf from '../../utils/qf';
 
-const Calculator = ({ exp, fudge, symetric }) => {
+const Calculator = ({ exp, fudge, symetric, avg = null, number = null, funds = null }) => {
   const [form, setForm] = useState({
-    matchedFunds: 75000,
-    averageDonationEst: 20,
-    numberDonationEst: 2000,
+    matchedFunds: funds || 10000,
+    averageDonationEst: avg || 20,
+    numberDonationEst: number || 500,
   });
 
   return (
@@ -29,7 +29,7 @@ const Calculator = ({ exp, fudge, symetric }) => {
         </Col>
         <Col>
           <Form.Group>
-            <Form.Label>Average donation estimate</Form.Label>
+            <Form.Label>Average donation</Form.Label>
             <Form.Control
               required
               type="number"
@@ -44,7 +44,7 @@ const Calculator = ({ exp, fudge, symetric }) => {
         </Col>
         <Col>
           <Form.Group>
-            <Form.Label># donations estimate</Form.Label>
+            <Form.Label>number donations</Form.Label>
             <Form.Control
               required
               step={100}
@@ -65,14 +65,15 @@ const Calculator = ({ exp, fudge, symetric }) => {
           form.averageDonationEst, 
           form.matchedFunds / form.numberDonationEst,
           exp, 
-          fudge, 
+          1, 
           symetric,
         )} 
         fudge={fudge} 
         exp={exp}
         averageDonation={Math.round(form.averageDonationEst)} 
         averageMatch={Math.round(form.matchedFunds / form.numberDonationEst)} 
-        width={550}
+        fudge={1}
+        width={450}
         height={200}
       />
     </Form>
