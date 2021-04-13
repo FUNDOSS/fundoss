@@ -72,7 +72,7 @@ const collectivePage = ({
                 <Icons.Github size={15} />
               </Button>
             &nbsp;
-              <span className="lead">Fiscal Host: Open Source Collective 501(c)(6)</span>
+              <span style={{padding: '5px 0 0 10px'}} className="lead">Fiscal Host: Open Source Collective 501(c)(6)</span>
               <div className="collective-content" dangerouslySetInnerHTML={{ __html: longDescription }} style={{ padding: '20px 0' }} />
               <h3>Community</h3>
               <div style={{ borderLeft: ' 5px solid #02E2AC', padding: '10px 0 10px 20px' }}>
@@ -139,7 +139,7 @@ const collectivePage = ({
           </Row>
           <Row />
         </Container>
-        <div style={{ background: '#E5E5E5', marginBottom: '-70px', padding: '40px 0' }}>
+        <div className="similar">
           <Container>
             <h3>Similar Collectives</h3>
             <p>People who’ve backed {name} have also backed these projects...</p>
