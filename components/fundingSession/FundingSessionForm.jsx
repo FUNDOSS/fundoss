@@ -13,7 +13,7 @@ import Graph from '../qf/graph';
 import Qf from '../../utils/qf';
 
 const FundingSessionForm = ({ sessionData }) => {
-  const userValidationSchema = Yup.object({
+  const sessionSchema = Yup.object({
     name: Yup.string()
       .required('Please provide a name'),
     description: Yup.string()
@@ -22,9 +22,7 @@ const FundingSessionForm = ({ sessionData }) => {
   const router = useRouter();
   const availableTags = () => {
     const tagsMap = sessionData?.collectives.reduce((tags, col) => {
-      col.tags?.map((tag) => {
-        tags[tag] ? tags[tag] += 1 : tags[tag] = 1;
-      });
+      col.tags?.map((tag) => (tags[tag] ? tags[tag] + 1 : 1));
       return tags;
     }, {}) || {};
     return Object.keys(tagsMap)
@@ -45,14 +43,15 @@ const FundingSessionForm = ({ sessionData }) => {
     matchedFunds: session?.matchedFunds || 100000,
     averageDonationEst: session?.averageDonationEst || 20,
     numberDonationEst: session?.numberDonationEst || 2000,
-    start: moment(session?.start || new Date()).format('YYYY-MM-DD'),
-    end: moment(session?.end || new Date()).format('YYYY-MM-DD'),
+    start: (session?.start ? moment(session.start) : moment().add(14, 'days')).format('YYYY-MM-DD'),
+    end: (session?.end ? moment(session.end) : moment().add(30, 'days')).format('YYYY-MM-DD'),
     collectives: (session?.collectives || []).map((collective) => `https://opencollective.com/${collective.slug}`).join('\n'),
     tags: session?.tags || [],
     matchingCurve: session?.matchingCurve || { exp: 2, symetric: false },
   });
 
   const initialValues = toFormValues(sessionData);
+  console.log(initialValues);
 
   const handleSubmit = async (values, { setStatus }) => {
     const body = JSON.stringify(values);
@@ -71,7 +70,7 @@ const FundingSessionForm = ({ sessionData }) => {
 
   return (
     <Formik
-      validationSchema={userValidationSchema}
+      validationSchema={sessionSchema}
       initialValues={initialValues}
       onSubmit={handleSubmit}
     >

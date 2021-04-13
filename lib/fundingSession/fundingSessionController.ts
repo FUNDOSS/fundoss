@@ -80,9 +80,13 @@ export const getPredictedAverages = (session) => {
 
 export async function insertSession(session):Promise<IFundingSession> {
   await dbConnect();
-  return FundingSession.create(
-    session.collectives ? { ...session, ...await getCollectivesFromInput(session) } : session,
-  );
+  if (session.collectives) {
+    session.collectives = (await getCollectivesFromInput(session)).collectives;
+  } else {
+    session.collectives = [];
+  }
+  console.log(session)
+  return FundingSession.create(session);
 }
 
 export async function editSession(session:IFundingSessionInput):Promise<IFundingSession> {
