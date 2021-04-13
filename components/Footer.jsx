@@ -8,7 +8,7 @@ import Link from 'next/link';
 import Logo from './Logo';
 import ShareButton from './social/ShareButton';
 
-const Footer = ({ minimal }) => (
+const Footer = ({ minimal, state }) => (
   <footer>
     {minimal ? (
       <Container>&copy; Fundoss 2021</Container>
@@ -41,18 +41,18 @@ const Footer = ({ minimal }) => (
             </Nav>
             <h5>Partnership</h5>
             <p>
-              Fund OSS is a partnership between <b>Gitcoin</b>&nbsp;
-              and <b>Open Source Collective</b>
+              FundOSS is a partnership between <a href="https://gitcoin.co" target="_blank">Gitcoin</a>&nbsp;
+              and <a href="https://opencollective.com" target="_blank">Open Source Collective</a>
             </p>
           </Col>
           <Col md={6}>
             <Button href="https://github.com/humanific/fundoss/issues" block size="lg" variant="outline-light">🐞Submit Bugs or Issues</Button>
             <h5>Share FundOSS.org</h5>
-            <ShareButton platform="twitter" variant="link" url="/" />
-            <ShareButton platform="facebook" variant="link" url="/" />
-            <ShareButton platform="email" variant="link" url="/" />
-            <p>Another way you can suppor the amazing OSS&nbsp;
-              projects hosted here is by getting the word out!
+            <ShareButton platform="twitter" variant="link" siteUrl={state.siteUrl} url="/" />
+            <ShareButton platform="facebook" variant="link" siteUrl={state.siteUrl} url="/" />
+            <ShareButton platform="email" variant="link" siteUrl={state.siteUrl} url="/" />
+            <p>Another way you can support the amazing OSC collectives&nbsp;
+               hosted here is by getting the word out!
             </p>
             <p>Please consider sharing with your friends and family.</p>
           </Col>

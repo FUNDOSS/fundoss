@@ -19,7 +19,9 @@ const Layout = ({
   },
 }) => {
   const router = useRouter();
-  const { user, cart, current, upcoming } = state;
+  const {
+    user, cart, current, upcoming, 
+  } = state;
   if (state && state.current) {
     Qf.init(
       current.predicted.average, 
@@ -45,8 +47,8 @@ const Layout = ({
         <link rel="manifest" href="/static/site.webmanifest" />
         <link rel="mask-icon" href="/static/safari-pinned-tab.svg" color="#5bbad5" />
         <link rel="shortcut icon" href="/static/favicon.ico" />
-        <meta property="og:image" content={meta?.img || '/static/twitter-default.png'} /> 
-        <meta property="twitter:image" content={meta?.img || '/static/twitter-default.png'} /> 
+        <meta property="og:image" content={meta?.img || `${state.siteUrl}/static/twitter-default.png`} /> 
+        <meta property="twitter:image" content={meta?.img || `${state.siteUrl}/static/twitter-default.png`} /> 
         {meta?.url ? <meta property="og:url" /> : null }
         {meta?.description ? <meta property="og:description" content={meta?.description} /> : null }
         {meta?.description ? <meta property="twitter:description" content={meta?.description} /> : null }
@@ -55,7 +57,7 @@ const Layout = ({
       <header>
         <Navbar bg="light" expand="lg" fixed="top">
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Link href="/"><Navbar.Brand href="/"><Logo className="logo"/></Navbar.Brand></Link>
+          <Link href="/"><Navbar.Brand href="/"><Logo className="logo" /></Navbar.Brand></Link>
           <Navbar.Collapse id="primary-nav">
             <Nav activeKey={router.pathname} className="mr-auto">
               <Nav.Link href="https://blog.opencollective.com/fundoss-faqv1/">
@@ -83,7 +85,7 @@ const Layout = ({
         </Navbar>
       </header>
       {children}
-      <Footer minimal={hidefooter} />
+      <Footer minimal={hidefooter} state={state}/>
       { cart ? <Cart cart={cart} user={user} /> : null }
     </div>
   ); 
