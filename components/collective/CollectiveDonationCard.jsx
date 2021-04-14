@@ -15,14 +15,15 @@ import Icons from '../icons';
 import { formatAmountForDisplay } from '../../utils/currency';
 import Qf from '../../utils/qf';
 
-const CollectiveDonationCard = ({ collective }) => {
+const CollectiveDonationCard = ({ collective, session }) => {
+  const {min, max, def, choice } = session.donateConfig;
   const [tab, setTab] = useState('set');
-  const [amount, setAmount] = useState(30);
+  const [amount, setAmount] = useState(def);
   const [inCart, setInCart] = useState(false);
   const { totals } = collective;
   const previousDonation = getPreviousDonation(collective._id);
   const onCartChange = () => {
-    setAmount(Cart.collectives[collective._id] || 10);
+    setAmount(Cart.collectives[collective._id] || def);
     setInCart(Cart.collectives[collective._id]);
   };
 
@@ -64,7 +65,7 @@ const CollectiveDonationCard = ({ collective }) => {
         { tab === 'set'
           ? (
             <div style={{ padding: '20px 0' }}>
-              {[10, 20, 30, 50, 100].map(
+              {choice.map(
                 (amt) => (
                   <Button 
                     block
@@ -91,16 +92,17 @@ const CollectiveDonationCard = ({ collective }) => {
                   size="lg"
                   value={amount}
                   type="number"
-                  max={5000}
-                  min={1}
+                  max={max}
+                  min={min}
                   onChange={(e) => {
-                    const amt = e.currentTarget.value > 5000 ? 5000 : e.currentTarget.value;
+                    const amt = e.currentTarget.value > max ? max : e.currentTarget.value;
                     setAmount(amt);
                   }}
                 />
               </InputGroup>
               
-              + <span style={{ fontSize: '2.3rem' }} className="match">
+              + 
+              <span className="match big">
                 {formatAmountForDisplay(calculateMatch(Number(amount), collective._id), 'USD')}
               </span>
               <div className="small">estimated match</div>
@@ -131,7 +133,8 @@ const CollectiveDonationCard = ({ collective }) => {
                 </Button>
               ) : (
                 <Button block variant="outline-primary" onClick={() => Cart.show(collective._id)}>
-                  <Icons.Check size={18} /> In cart <Badge variant="danger">{formatAmountForDisplay(inCart, 'USD')}</Badge>
+                  <Badge className="round" variant="danger">{formatAmountForDisplay(inCart, 'USD')}</Badge>&nbsp;
+                  <span className="d-none d-sm-inline">Open</span> <Icons.Cart size={18} /> 
                 </Button>
               )}
             </Col>

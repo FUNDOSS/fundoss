@@ -17,12 +17,15 @@ export async function updatePayment(payment) {
   await dbConnect();
   const paymentUpdates: any = {};
   if (payment.donations) {
+
     const fee = payment.confirmation.charges.data
       .reduce((acc, charge) => acc + (charge.balance_transaction.fee / 100), 0);
+
     const donations = await Promise.all(
       Object.keys(payment.donations)
         .map(async (collectiveId) => {
           const amt = payment.donations[collectiveId];
+          console.log(fee, amt)
           const donation = await Donation.create(
             {
               payment: payment._id,
@@ -72,7 +75,7 @@ export async function getSessionTotals(session) {
 
 export async function findById(id:string) {
   await dbConnect();
-  return Payment.findOne({ _id: id }).select('user session amount donations fee status time confirmation')
+  return Payment.findOne({ _id: id }).select('user intentId session amount donations fee status time confirmation')
     .populate({ path: 'user' })
     .populate({ path: 'session', select: 'name slug' })
     .populate({

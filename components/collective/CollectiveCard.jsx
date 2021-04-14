@@ -14,7 +14,7 @@ import { formatAmountForDisplay } from '../../utils/currency';
 import Qf from '../../utils/qf';
 
 const CollectiveCard = ({
-  collective, active, nominate, session, nominations, nominated, user,
+  collective, active, nominate, session, nominations, nominated, user, donateConfig,
 }) => {
   const {
     name, description, imageUrl, slug, website, githubHandle, totals,
@@ -97,12 +97,13 @@ const CollectiveCard = ({
             {active ? (
               <>
                 { !inCart ? (
-                  <Button block variant="outline-primary" onClick={() => Cart.addItem(collective, 10, true)}>
+                  <Button block variant="outline-primary" onClick={() => Cart.addItem(collective, donateConfig.def, true)}>
                     <Icons.Cart size={18} /> Add to cart
                   </Button>
                 ) : (
                   <Button block variant="primary" onClick={() => Cart.show(collective._id)}>
-                    <Icons.Check size={18} /> In cart <Badge variant="danger">{formatAmountForDisplay(inCart, 'USD')}</Badge>
+                    <Badge className="round" variant="danger">{formatAmountForDisplay(inCart, 'USD')}</Badge>&nbsp;
+                    <span className="d-none d-sm-inline">Open</span> <Icons.Cart size={18} /> 
                   </Button>
                 )}
               </>

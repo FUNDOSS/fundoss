@@ -41,7 +41,9 @@ export const calculateMatch = (amount, collective) => {
   return Qf.calculate(Number(amount) + prev) - Qf.calculate(prev);
 };
 
-const Cart = ({ cart, display, user }) => {
+const Cart = ({
+  cart, display, user, donateConfig, 
+}) => {
   const data = cart.map((item) => {
     const previous = getPreviousDonation(item.collective._id);
     return ({ ...item, ...{ previous: previous || 0, previousMatch: Qf.calculate(previous) } });
@@ -114,6 +116,7 @@ const Cart = ({ cart, display, user }) => {
     <CartItemList
       cart={cartData}
       calculateMatch={calculateMatch}
+      config={donateConfig}
       deleteItem={
         async (id) => {
           fetch('/api/cart', {
@@ -157,8 +160,9 @@ const Cart = ({ cart, display, user }) => {
       <Modal.Body>
         {items}
         {!cartData.length ? (
-          <p>Your cart is empty! Click “Add to Cart” on your
+          <p className="lead text-center" style={{margin: '40px'}}>Your cart is empty! Click “Add to Cart” on your
             favorite OSS projects to support projects and boost their democratic match!
+            <Button block style={{marginTop: '40px'}} onClick={() => handleClose()} variant="outline-dark">Ok</Button>
           </p>
         )
           : null}
