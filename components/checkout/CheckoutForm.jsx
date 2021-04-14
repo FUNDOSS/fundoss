@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import * as Yup from 'yup';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import {
-  Col, Row, Form, Button, Spinner, 
+  Col, Row, Form, Button, Spinner, Badge, 
 } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import { Formik } from 'formik';
@@ -10,7 +10,7 @@ import CountryCodes from 'countrycodes/countryCodes';
 import StripeTestCards from './StripeTestCards';
 import { fetchPostJSON } from '../../utils/api-helpers';
 import { formatAmountForDisplay } from '../../utils/currency';
-import Cart, { cartEvents, getCartTotals } from '../cart/Cart';
+import { cartEvents, getCartTotals } from '../cart/Cart';
 import Icons from '../icons';
 
 const CheckoutForm = ({ user }) => {
@@ -38,10 +38,10 @@ const CheckoutForm = ({ user }) => {
   const handleSubmit = async (values, { setStatus }) => {
     setStatus({ paymentStatus: 'verify' });
     const response = await fetchPostJSON('/api/checkout', { billing_details: values.billing_details });
-    const { payment, intent } = response;
+    const { paymentId, clientSecret } = response;
     const cardElement = elements.getElement(CardElement);
     const { error, paymentIntent } = await stripe.confirmCardPayment(
-      intent.client_secret,
+      clientSecret,
       {
         payment_method: {
           card: cardElement,
@@ -52,24 +52,36 @@ const CheckoutForm = ({ user }) => {
 
     if (error) {
       setStatus({ cardError: error.message });
+      setStatus({ error: 'Please verify your credit/debit card' });
     } else if (paymentIntent) {
       setStatus({ paymentStatus: paymentIntent.status });
-      payment.status = paymentIntent.status;
-      await fetchPostJSON('/api/checkout', { payment });
-      setStatus({ paymentStatus: 'completed' });
-      router.push('/thanks');
+      if (paymentIntent.status === 'succeeded') {
+        const confirmation = await fetchPostJSON('/api/checkout', { payment: { status: 'succeeded', id: paymentId } });
+        if (confirmation.status === 'succeeded') {
+          setStatus({ paymentStatus: 'completed' });
+          router.push('/thanks');
+        } else {
+          setStatus({ paymentStatus: 'failed' });
+          setStatus({ error: confirmation.message });
+        }
+      }
     }
   };
 
   const statusSubmitButton = (status, isSubmitting, total) => {
     if (status === 'completed') {
-      return (<Button disabled block variant="outline-success"><Icons.Check size={16} /> Payment Completed</Button>);
-    } if (status === 'succeeded') {
-      return (<Button disabled block variant="outline-info"><Spinner animation="border" size="sm" /> Confirming Payment...</Button>);
-    } if (status === 'verify') {
-      return (<Button disabled block variant="outline-info"><Spinner animation="border" size="sm" /> Verifying Payment Data...</Button>);
+      return (<Button size="lg" disabled block variant="outline-success"><Icons.Check size={16} /> Payment Completed</Button>);
     } 
-    return (<Button block variant="outline-primary" type="submit">  Pay {formatAmountForDisplay(total, 'USD')}</Button>);
+    if (status === 'succeeded') {
+      return (<Button disabled size="lg" block variant="outline-info"><Spinner animation="border" size="sm" /> Confirming Payment...</Button>);
+    } 
+    if (status === 'verify') {
+      return (<Button disabled size="lg" block variant="outline-info"><Spinner animation="border" size="sm" /> Verifying Payment Data...</Button>);
+    } 
+    if (isSubmitting) {
+      return (<Button disabled size="lg" block variant="outline-info"><Spinner animation="border" size="sm" /> Verifying card...</Button>);
+    } 
+    return (<Button block size="lg" variant="outline-primary" type="submit"> <small>Complete Checkout :</small> Pay <Badge variant="danger">{formatAmountForDisplay(total, 'USD')}</Badge></Button>);
   };
 
   return (
@@ -98,8 +110,8 @@ const CheckoutForm = ({ user }) => {
 
         return (
           <Form noValidate onSubmit={handleSubmit}>
-            <Row>
-              <Col md={3} className="text-fat lead">Credit/Debit Card Info</Col>
+            <Row style={{marginTop:'40px'}}>
+              <Col md={3} className="text-fat lead text-center text-md-left">Credit/Debit Card Info</Col>
               <Col><hr /></Col>
             </Row>
             <Row>
@@ -128,8 +140,8 @@ const CheckoutForm = ({ user }) => {
                 </Form.Group>
               </Col>
             </Row>
-            <Row>
-              <Col md={3} className="text-fat lead">Billing Info</Col>
+            <Row style={{marginTop:'40px'}}>
+              <Col md={3} className="text-fat lead text-center text-md-left">Billing Info</Col>
               <Col><hr /></Col>
             </Row>
             <Row>
@@ -220,7 +232,7 @@ const CheckoutForm = ({ user }) => {
                     </Form.Group>
                   </Col>
                 </Row>
-                {status?.cardError ? <p className="text-danger">Please check your credit card</p> : null}
+                {status?.error ? <p className="text-danger text-center">{status.error}</p> : null}
                 {statusSubmitButton(status?.paymentStatus, isSubmitting, totals.amount)}
               </Col>
             </Row>

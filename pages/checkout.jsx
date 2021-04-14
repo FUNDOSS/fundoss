@@ -38,21 +38,21 @@ const CheckoutPage = ({
           {total ? (
             <Container style={{ paddingTop: '40px' }} className="content">
               <Row>
-                <Col md={{ span: 3 }}>
-                  <h3 className="text-secondary"> <Icons.Cart size={30} /> Checkout</h3>
+                <Col md={{ span: 3 }} style={{marginBottom:'40px'}}>
+                  <h3 className="text-secondary text-center text-md-left"> <Icons.Cart size={30} /> Checkout</h3>
                 </Col>
                 <Col md={{ span: 6 }}>
-                  <Cart display="inline" cart={state.cart} user={state.user} />
+                  <Cart display="inline" cart={state.cart} user={state.user} donateConfig={state.current.donateConfig} />
                 </Col>
               </Row>
               <hr />
               <Row>
                 <Col md={{ offset: 3, span: 6 }}>
                   <Row className="align-items-center text-center">
-                    <Col className="lead text-fat">Total: {formatAmountForDisplay(total, 'USD')}</Col>
+                    <Col>Total: <span className="lead text-fat">{formatAmountForDisplay(total, 'USD')}</span></Col>
                     <Col className="lead">+</Col>
                     <Col>
-                      <div className="match display-4">
+                      <div className="match big">
                         {totalMatch ? formatAmountForDisplay(totalMatch, 'USD') : ''}
                       </div>
                       <small>estimated match</small>

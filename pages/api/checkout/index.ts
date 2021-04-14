@@ -1,4 +1,5 @@
 import nextConnect from 'next-connect';
+import moment from 'moment';
 import { NextApiResponse } from 'next';
 import Stripe from 'stripe';
 import { all } from '../../../middleware/index';
@@ -6,6 +7,7 @@ import Payment from '../../../lib/payment/paymentController';
 import { formatAmountForStripe } from '../../../utils/currency';
 import Users from '../../../lib/user/usersController';
 import Cart from '../../../lib/cart/CartController';
+import FundingSessionController from '../../../lib/fundingSession/fundingSessionController';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2020-08-27',
@@ -19,15 +21,24 @@ handler.post(async (req: any, res: NextApiResponse) => {
   if (!req.user) {
     return res.status(401).send('Unauthorized');
   }
-  if (!req.body.payment) {
-    try {
-      if (req.body.billing_details) {
-        Users.update({ _id: req.user._id, billing: req.body.billing_details });
-      }
-      const amount = Object.keys(req.session.cart)
-        .map((_id) => req.session.cart[_id])
-        .reduce((acc, amt) => acc + Number(amt), 0);
 
+  const current = FundingSessionController.getCurrentSessionInfo();
+  const config = FundingSessionController.getDonationsConfig();
+
+  if (!current) return res.status(500).json({ statusCode: 500, message: 'no active session' });
+
+  if (!req.body.payment) {
+    if (req.body.billing_details) {
+      Users.update({ _id: req.user._id, billing: req.body.billing_details });
+    }
+    const amount = Object.keys(req.session.cart)
+      .map((_id) => req.session.cart[_id])
+      .reduce((acc, amt) => acc + Number(amt), 0);
+
+    if (amount < config.min) return res.status(500).json({ statusCode: 500, message: 'amount too low' });
+    if (amount > config.max) return res.status(500).json({ statusCode: 500, message: 'amount too high' });
+
+    try {
       const cartData = (await Cart.get(req.session.cart)).reduce((data, item) => ({
         amount: data.amount + Number(item.amount),
         meta: { ...data.meta, [item.collective.slug]: item.amount },
@@ -47,26 +58,45 @@ handler.post(async (req: any, res: NextApiResponse) => {
         intentId: paymentIntent.id,
         amount,
       });
-      return res.status(200).json({ payment, intent: paymentIntent });
+      return res.status(200).json({
+        paymentId: payment._id,
+        clientSecret: paymentIntent.client_secret,
+      });
     } catch (err) {
       return res.status(500).json({ statusCode: 500, message: err.message });
     }
   } else {
     const { payment } = req.body;
     if (payment.status === 'succeeded') {
-      const intent: Stripe.PaymentIntent = await stripe.paymentIntents.retrieve(
-        payment.intentId, { expand: ['charges.data.balance_transaction'] },
-      );
-      payment.status = intent.status;
-      payment.confirmation = intent;
-      payment.donations = (await Cart.get(req.session.cart)).reduce((data, item) => (
-        { ...data, [item.collective._id]: item.amount }
-      ), {});
-      await Payment.update(payment);
-      req.session.cart = {};
-      return res.status(200).json({ payment, intent });
+      const savedPayment = await Payment.findById(payment.id);
+      if (!savedPayment) return res.status(500).json({ statusCode: 500, message: 'invalid payment' });
+      try {
+        const intent: Stripe.PaymentIntent = await stripe.paymentIntents.retrieve(
+          savedPayment.intentId, { expand: ['charges.data.balance_transaction'] },
+        );
+        if (intent.status === 'succeeded') {
+          const update = {
+            amount: savedPayment.amount,
+            _id: savedPayment._id,
+            session: savedPayment.session._id,
+            user: savedPayment.user._id,
+            status: intent.status,
+            confirmation: intent,
+            donations: (await Cart.get(req.session.cart)).reduce((data, item) => (
+              { ...data, [item.collective._id]: item.amount }
+            ), {}),
+          };
+          await Payment.update(update);
+          req.session.cart = {};
+          return res.status(200).json({ status: 'succeeded' });
+        }
+      } catch (err) {
+        return res.status(500).json({ statusCode: 500, message: err.message });
+      }
+
+      return res.status(500).json({ statusCode: 500, message: 'invalid request' });
     }
-    return res.status(200).json({ payment });
+    return res.status(500).json({ statusCode: 500, message: 'invalid request' });
   }
 });
 
