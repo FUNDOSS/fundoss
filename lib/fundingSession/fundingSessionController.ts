@@ -111,7 +111,7 @@ export async function getCurrentSession():Promise<any> {
     end: { $gte: new Date() },
   }).populate('collectives');
   if (session) {
-    const sessionData = setCollectiveTotals(session);
+    const sessionData = await setCollectiveTotals(session);
     sessionData.donateConfig = getDonationsConfig();
     return session;
   }
