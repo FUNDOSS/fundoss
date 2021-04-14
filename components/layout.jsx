@@ -15,7 +15,7 @@ import Qf from '../utils/qf';
 const Layout = ({
   children, meta, title = 'FundOSS | Democratic funding for open-source collectives', hidefooter, 
   state = {
-    current: false, upcoming: false, user: {}, cart: [], 
+    current: false, upcoming: false, user: false, cart: false, 
   },
 }) => {
   const router = useRouter();
@@ -32,7 +32,6 @@ const Layout = ({
     ); 
     Cart.previousDonations = user.donations;
   } 
-
   return (
     <div id="main">
       <Head>
@@ -40,7 +39,7 @@ const Layout = ({
         <meta charSet="utf-8" />
         <meta property="og:type" content="website" />
         <meta property="og:title" content={title} />
-        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:card" content={meta?.card || 'summary'} />
         <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png" />
@@ -78,15 +77,17 @@ const Layout = ({
               ) : null }
             </Nav>
           </Navbar.Collapse>
-          { cart ? <CartButton className="btn-cart" itemCount={cart?.length} /> : null }
-          <Nav className="auth">
-            <AuthLinks user={user} />
-          </Nav>
+          { cart && current ? <CartButton className="btn-cart" itemCount={cart?.length} /> : null }
+          { user ? (
+            <Nav className="auth">
+              <AuthLinks user={user} />
+            </Nav>
+          ) : null }
         </Navbar>
       </header>
       {children}
-      <Footer minimal={hidefooter} state={state}/>
-      { cart ? <Cart cart={cart} user={user} /> : null }
+      <Footer minimal={hidefooter} state={state} />
+      { cart && current ? <Cart cart={cart} user={user} donateConfig={current?.donateConfig} /> : null }
     </div>
   ); 
 };

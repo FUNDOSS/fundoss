@@ -15,7 +15,9 @@ const Error = ({ statusCode }) => {
   }[`error${statusCode}`];
   return (
     <Layout
-      title={`FundOSS | ${message}`}
+      title={`FundOSS | ${message}`} 
+      cart={false} 
+      user={false}
     >
       <div className="seamless-hand" style={{ marginBottom: '-60px' }}>
         <Container className="content">
