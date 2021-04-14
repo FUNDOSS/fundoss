@@ -37,6 +37,13 @@ const setCollectiveTotals = async (session) => {
   return session;
 };
 
+export const getDonationsConfig = () => ({
+  min: Number(process.env.DONATION_MIN),
+  max: Number(process.env.DONATION_MAX),
+  def: Number(process.env.DONATION_DEFAULT),
+  choice: process.env.DONATION_CHOICE.split(',').map((n) => Number(n)),
+});
+
 export const getPredictedAverages = (session) => {
   const timeElapsed = moment().diff(moment(session.start));
   const {
@@ -85,7 +92,6 @@ export async function insertSession(session):Promise<IFundingSession> {
   } else {
     session.collectives = [];
   }
-  console.log(session)
   return FundingSession.create(session);
 }
 
@@ -104,7 +110,12 @@ export async function getCurrentSession():Promise<any> {
     start: { $lte: new Date() },
     end: { $gte: new Date() },
   }).populate('collectives');
-  return session ? setCollectiveTotals(session) : session;
+  if (session) {
+    const sessionData = setCollectiveTotals(session);
+    sessionData.donateConfig = getDonationsConfig();
+    return session;
+  }
+  return false;
 }
 
 export async function getUpcomingSessionInfo():Promise<any> {
@@ -158,6 +169,7 @@ export async function getBySlug(slug:string):Promise<IFundingSession> {
   const session = await FundingSession.findOne({ slug }).populate('collectives');
   if (session._id) {
     const sessionData = await setCollectiveTotals(session);
+    sessionData.donateConfig = getDonationsConfig();
     return sessionData;
   }
   return session;
@@ -250,4 +262,6 @@ export default class FundingSessionController {
     static getNominations = getNominations
 
     static getUserNominations = getUserNominations
+
+    static getDonationsConfig = getDonationsConfig
 }

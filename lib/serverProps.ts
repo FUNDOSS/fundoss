@@ -61,7 +61,10 @@ const ServerProps = {
     const current = currentInfo ? {
       ...serializable(currentInfo),
       ...{ predicted: getPredictedAverages(currentInfo) },
+      ...{ donateConfig: FundingSession.getDonationsConfig()}
     } : null;
+
+
     const cart = await Cart.get(sessionCart);
     const upcoming = await FundingSession.getUpcomingSession();
     return {
@@ -69,6 +72,7 @@ const ServerProps = {
       user: serializable(user),
       current,
       upcoming: serializable(upcoming),
+      siteUrl: process.env.HOSTING_URL,
       siteUrl: process.env.HOSTING_URL,
     };
   },

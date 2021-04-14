@@ -9,7 +9,9 @@ const IndexPage = ({
 }) => (
   <Layout 
     title="FundOSS | Democratic funding for open source projects"
-    meta={{ description: 'Open Source Collective is partnering with GitCoin to launch FundOSS, a pilot matching campaign based on a democratic funding model.' }}
+    meta={{ 
+      card: 'summary_large_image',
+      description: 'Open Source Collective is partnering with GitCoin to launch FundOSS, a pilot matching campaign based on a democratic funding model.' }}
     state={state}
   >
     {session?._id ? (

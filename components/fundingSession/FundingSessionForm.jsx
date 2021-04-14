@@ -51,7 +51,6 @@ const FundingSessionForm = ({ sessionData }) => {
   });
 
   const initialValues = toFormValues(sessionData);
-  console.log(initialValues);
 
   const handleSubmit = async (values, { setStatus }) => {
     const body = JSON.stringify(values);

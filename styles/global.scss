@@ -118,6 +118,7 @@ footer{
         border-bottom: 1px solid $gray-200;
         padding:3px 2px
     }
+    a {color: black;}
 }
 
 .text-fat{
@@ -147,9 +148,10 @@ a.black:hover{
     margin:20px 0;
 }
 
-@include media-breakpoint-down(sm) {
-    .authDropdownLabel span{display:none}
-    header a.navbar-brand svg{max-width:110px}
+
+
+svg.logo{
+    max-width:100%
 }
 
 .navbar-brand svg {
@@ -230,9 +232,9 @@ header .navbar-toggler{
 .collective-card .card-title{margin-bottom: 0.2rem;}
 
 h4, h5 {font-family: $font-family-sans-serif; margin:20px 0 10px; text-transform: uppercase;}
-h5{font-size: 1rem;}
-h4{font-size: 1.1rem;}
-h3{font-size: 1.2rem;}
+h5{font-size: 1rem;line-height: 1.3rem;}
+h4{font-size: 1.1rem;line-height: 1.3rem;}
+h3{font-size: 1.2rem;line-height: 1.4rem;}
 h1{margin:2rem 0}
 .no-margin{margin:0}
 
@@ -255,6 +257,10 @@ h1{margin:2rem 0}
 .match{
     @extend .text-fat;
     @extend .text-success;
+}
+
+.match.big{
+    font-size: 2rem;
 }
 
 .alert.small{padding: 4px;}
@@ -287,4 +293,14 @@ h1{margin:2rem 0}
     background: linear-gradient(rgba($gray-300,.3), rgba($gray-100,.4));
     margin-bottom: -60px;
     padding: 40px 0;
+}
+
+
+@include media-breakpoint-down(sm) {
+    .authDropdownLabel span{display:none}
+    header a.navbar-brand svg.logo{max-width:110px}
+    header .btn{padding: 0.1rem 0.2rem;}
+    .match.big{
+        font-size: 1.2rem;
+    }
 }

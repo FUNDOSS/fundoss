@@ -107,6 +107,7 @@ const FundingSession = ({
                   <FeaturedCollectiveCard 
                     collective={featuredCollective} 
                     active={started && !ended}
+                    session={state.current}
                   />
                 </div>
               </Col>
@@ -234,6 +235,7 @@ const FundingSession = ({
                   nominations={nominations[collective._id]}
                   nominated={nominations.user.indexOf(collective._id) > -1}
                   session={session}
+                  donateConfig={state.current?.donateConfig}
                   user={user}
                 />
               </Col>

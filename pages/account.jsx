@@ -23,7 +23,7 @@ const AccountPage = ({ payments, state }) => {
         <Container style={{ paddingTop: '40px' }} className="content">
           {user._id ? (
             <Row>
-              <Col md={3}>
+              <Col md={3} className="text-center text-md-left"> 
                 <h2>Profile</h2>
                 <Image src={user.avatar} roundedCircle width={100} />
                 <h5>Name</h5>
@@ -37,7 +37,7 @@ const AccountPage = ({ payments, state }) => {
 
               </Col>
               <Col>
-                <h2>Donations History</h2>
+                <h2 style={{margin:'30px 0'}} className="text-center text-md-left">Donations History</h2>
                 <PaymentsList payments={payments} state={state} />
               </Col>
             </Row>

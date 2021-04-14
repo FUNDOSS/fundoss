@@ -46,12 +46,12 @@ const collectivePage = ({
         title={`FundOSS | ${!isInCurrentSession ? 'vote for' : 'multiply your donations for'} ${name}`}
         state={state} 
         meta={{ 
+          card: 'summary_large_image',
           img: shareImage ? hostingUrl + shareImage : `${hostingUrl}/api/image/collective/${slug}`,
           url: `${hostingUrl}/collective/${slug}`,
           description,
         }}
       >
-      
         <Container>
           <Row style={{ padding: '40px 0' }}>
             <Col md={{ span: 7 }} className="text-center text-md-left">

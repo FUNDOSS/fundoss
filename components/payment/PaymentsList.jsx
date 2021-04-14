@@ -15,7 +15,7 @@ const PaymentsList = ({ payments, state }) => (
           <Card key={payment._id} className="payment glass">
             <Card.Header>
               <Row>
-                <Col xs={3} lg={2}>
+                <Col xs={3} md={2} xl={1}>
                   
                   <span className="lead text-fat">{formatAmountForDisplay(payment.amount)}</span>&nbsp;
                 </Col>
@@ -35,7 +35,7 @@ const PaymentsList = ({ payments, state }) => (
             <Card.Body>
               {payment.donations.map((don) => (
                 <Row key={don.collective.slug} className="donation no-gutters">
-                  <Col xs={3} lg={2} className="text-fat">
+                  <Col xs={3} md={2} xl={1} className="text-fat">
                     {formatAmountForDisplay(don.amount)}
                   </Col>
                   <Col className="text-fat">
