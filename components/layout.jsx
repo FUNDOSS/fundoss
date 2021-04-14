@@ -34,7 +34,7 @@ const Layout = ({
   } 
 
   return (
-    <div id="main" style={{ display: 'none' }}>
+    <div id="main">
       <Head>
         <title>{title}</title>
         <meta charSet="utf-8" />

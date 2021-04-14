@@ -203,7 +203,7 @@ const CheckoutForm = ({ user }) => {
                       <Form.Control.Feedback type="invalid">{errors.billing_details?.address?.state}</Form.Control.Feedback>
                     </Form.Group>
                   </Col>
-
+                  
                   <Col>
                     <Form.Group controlId="billing_details.address.country">
                       <Form.Label>Country</Form.Label>
@@ -220,6 +220,7 @@ const CheckoutForm = ({ user }) => {
                     </Form.Group>
                   </Col>
                 </Row>
+                {status?.cardError ? <p className="text-danger">Please check your credit card</p> : null}
                 {statusSubmitButton(status?.paymentStatus, isSubmitting, totals.amount)}
               </Col>
             </Row>

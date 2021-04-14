@@ -26,8 +26,8 @@ const Error = ({ statusCode }) => {
               <p style={{ fontSize: '10rem' }} className="text-fat text-success">{statusCode}</p>
               {statusCode === 404 ? (
                 <p className="lead">
-                  We could not find what you are looking for
-                  <Link href="/"><Button block size="lg" variant="outline-light">Back to home</Button></Link>
+                  We could not find what you are looking for<br />
+                  <Link href="/"><Button variant="outline-light">Back to home</Button></Link>
                 </p>
               ) : null }
               {statusCode === 401 ? (
@@ -43,14 +43,14 @@ const Error = ({ statusCode }) => {
                   <p className="lead">
                     Oops you are not supposed to be here
                   </p> 
-                  <Link href="/"><Button block size="lg" variant="outline-light">Back to home</Button></Link>
+                  <Link href="/"><Button variant="outline-light">Back to home</Button></Link>
                 </div>
               ) : null }
               {statusCode === 500 ? (
                 <div>
                   <p className="lead">
                     Oops we are having some server issues
-                    <Button href="https://github.com/humanific/fundoss/issues" block size="lg" variant="outline-light">🐞Submit Bugs or Issues</Button>
+                    <Button href="https://github.com/humanific/fundoss/issues" variant="outline-light">🐞Submit Bugs or Issues</Button>
                   </p>
                   <GithubLoginButton />
                 </div>
