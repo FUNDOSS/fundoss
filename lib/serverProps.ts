@@ -73,7 +73,6 @@ const ServerProps = {
       current,
       upcoming: serializable(upcoming),
       siteUrl: process.env.HOSTING_URL,
-      siteUrl: process.env.HOSTING_URL,
     };
   },
   cart: null,
