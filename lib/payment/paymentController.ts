@@ -17,7 +17,6 @@ export async function updatePayment(payment) {
   await dbConnect();
   const paymentUpdates: any = {};
   if (payment.donations) {
-
     const fee = payment.confirmation.charges.data
       .reduce((acc, charge) => acc + (charge.balance_transaction.fee / 100), 0);
 
@@ -25,7 +24,6 @@ export async function updatePayment(payment) {
       Object.keys(payment.donations)
         .map(async (collectiveId) => {
           const amt = payment.donations[collectiveId];
-          console.log(fee, amt)
           const donation = await Donation.create(
             {
               payment: payment._id,

@@ -1,10 +1,13 @@
 import React from 'react';
 import Container from 'react-bootstrap/Container';
 import { Card, Row, Col } from 'react-bootstrap';
+import Link from 'next/link';
 import Layout from '../components/layout';
 import middleware from '../middleware/all';
 import ServerProps from '../lib/serverProps';
 import Calculator from '../components/qf/calculator';
+import FundingSessionInfo from '../components/fundingSession/FundingSessionInfo';
+import Sponsors from '../components/fundingSession/Sponsors';
 
 const QFPage = ({ state }) => (
   <Layout title="FundOSS | What is democratic Funding ?" state={state}>
@@ -23,32 +26,37 @@ const QFPage = ({ state }) => (
     </div>
     <Container className="content">
       <Row>
-        <Col md={{ span: 8, offset: 2 }} md={{ span: 6, offset: 3 }}>
-          <Card>
-            <Card.Body className="text-center">
-              <h4>A matching pool is raised, and then a crowdfund campaign is matched according to the QF algorithm:</h4>
-              <br />
-              <br />
-              <Calculator avg={10} number={500} /><br /><br />
-              <h3>Number of contributors matters more than amount funded.</h3><br />
-              <h3>This pushes power to the edges, away from whales & other central power brokers.</h3><br />
-              <h3>This creates more democracy in public goods funding decisions! 🦄</h3><br />
+        <Col md={{ span: 8, offset: 2 }} lg={{ span: 6, offset: 3 }}>
+          <h4>A matching pool is raised, and then a crowdfund campaign is matched according to the QF algorithm:</h4>
+          <img
+            src="/static/df-formula.svg" 
+            style={{ display: 'block', maxWidth: '230px', margin: '10px auto' }}
+          />
 
-            </Card.Body>
-            
-          </Card>
-          <h4>Let’s start with what public goods actually are. </h4>
+          <br />
 
-<p>In economics, a public good is a good that is both non-excludable and non-rivalrous, so individuals cannot be excluded from use, and use by one individual does not reduce availability to others. A public good can also be used simultaneously by more than one person.</p> 
+          <h3>Number of contributors matters more than amount funded.</h3><br />
+          <h3>This pushes power to the edges, away from whales & other central power brokers.</h3><br />
+          <h3>This creates more democracy in public goods funding decisions! 🦄</h3><br />
 
-<p>To illustrate the difference between public goods and other goods such as common, private or club goods, let’s have a look at a few examples. </p>
-
-<p>All goods can be classified by their excludability and by their rivalry.</p>
-          <img src="/static/public_good_grid.png" alt="public goods grid" className="img-fluid" />
+          <br />
+          <Calculator avg={10} number={500} /><br /><br />
 
         </Col>
       </Row>
     </Container>
+    <div className="seamless" style={{ marginBottom: '-60px' }}>
+      <Container className="content text-center">
+        {state.current ? (
+          <><h2><Link href="/"><a>{state.current.name}</a></Link></h2>
+            <div className="session-description" dangerouslySetInnerHTML={{ __html: state.current.description }} />
+            <FundingSessionInfo session={state.current} />
+            <Sponsors sponsors={state.current.sponsors}/>
+          </>
+        ) : null }
+    
+      </Container>
+    </div>
   </Layout>
 );
 
