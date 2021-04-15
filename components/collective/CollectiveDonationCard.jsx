@@ -109,7 +109,7 @@ const CollectiveDonationCard = ({ collective, session }) => {
 
               <Graph
                 width={450}
-                height={250}
+                height={150}
                 minimal
                 plot={(x) => calculateMatch(x, collective._id)} 
               ></Graph>
