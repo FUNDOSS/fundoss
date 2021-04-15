@@ -68,6 +68,7 @@ const Calculator = ({ exp, fudge, symetric, avg = null, number = null, funds = n
           1, 
           symetric,
         )} 
+        minimal
         fudge={fudge} 
         exp={exp}
         averageDonation={Math.round(form.averageDonationEst)} 

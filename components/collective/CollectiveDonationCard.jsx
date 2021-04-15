@@ -14,6 +14,7 @@ import Cart, {
 import Icons from '../icons';
 import { formatAmountForDisplay } from '../../utils/currency';
 import Qf from '../../utils/qf';
+import Graph from '../qf/graph';
 
 const CollectiveDonationCard = ({ collective, session }) => {
   const {min, max, def, choice } = session.donateConfig;
@@ -26,7 +27,6 @@ const CollectiveDonationCard = ({ collective, session }) => {
     setAmount(Cart.collectives[collective._id] || def);
     setInCart(Cart.collectives[collective._id]);
   };
-
   useEffect(() => {
     onCartChange();
     cartEvents.on('cartChange', onCartChange);
@@ -106,6 +106,14 @@ const CollectiveDonationCard = ({ collective, session }) => {
                 {formatAmountForDisplay(calculateMatch(Number(amount), collective._id), 'USD')}
               </span>
               <div className="small">estimated match</div>
+
+              <Graph
+                width={450}
+                height={250}
+                minimal
+                plot={(x) => calculateMatch(x, collective._id)} 
+              ></Graph>
+
             </div>
           )}
 

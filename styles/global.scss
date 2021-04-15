@@ -44,7 +44,18 @@
 @import "cards";
 @import "cart";
 
+svg{
+    .primary{fill: $primary}
+    .success{fill: $success}
+    .light{fill: $light}
+    .secondary{fill: $secondary}
+    .stroke-primary{stroke: $primary}
+    .stroke-success{stroke: $success}
+    .stroke-light{stroke: $light}
+    .stroke-secondary{stroke: $secondary}
+    .stroke-primary-faded{stroke: rgba($primary, 0.5)}
 
+}
 
 body{
     padding-top: $navbar-brand-height + ( $navbar-brand-padding-y * 4);
