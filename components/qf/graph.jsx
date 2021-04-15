@@ -4,12 +4,15 @@ import { formatAmountForDisplay } from '../../utils/currency';
 function Graph({
   plot, averageDonation, averageMatch, width = 800, height = 600, minimal = false,
 }) {
+
+  const [coord, setCoord] = useState({ x: 20, y: 20 });
+  const ySqueeze = (height - 20) / plot(width - 10);
+
   const plotGraph = () => {
     const data = [];
-    for (let i = 0; i < width; i += 5) data.push({ x: i, y: Math.round(plot(i)) });
-    return data.reduce((path, { x, y }) => `${path} L${x + 10} ${height - y - 10}`, `M 10 ${height - 10}`);
+    for (let i = 0; i < width; i += 3) data.push({ x: i, y: plot(i) });
+    return data.reduce((path, { x, y }) => `${path} L${x + 10} ${height - (y * ySqueeze) - 10}`, `M 10 ${height - 10}`);
   };
-  const [coord, setCoord] = useState({ x: 20, y: 20 });
   //
   return (
     <svg
@@ -52,7 +55,7 @@ function Graph({
         <>
           <path d={`M 10 10 V ${height - 10} H ${width - 10}`} stroke="#6c757d" fill="transparent" markerEnd="url(#arrowhead)" markerStart="url(#startarrow)" /> 
           <path d={`M ${10 + averageDonation} 10 V ${height - 10}`} stroke="#20c997" />
-          <path d={`M 10 ${(height - 10) - averageMatch} H ${width - 10}`} stroke="#E76127" />
+          <path d={`M 10 ${(height - 10) - (averageMatch * ySqueeze)} H ${width - 10}`} stroke="#E76127" />
           <text x="20" y="40" style={{ fontSize: '12px' }}>
             match $
           </text>
@@ -62,7 +65,7 @@ function Graph({
           <text x={(20 + averageDonation)} y="70" style={{ fill: '#20c997', fontSize: '12px' }}>
             average donation ${averageDonation}
           </text>
-          <text x={width - 200} y={height - averageMatch - 20} style={{ fill: '#E76127', fontSize: '12px' }}>
+          <text x={width - 200} y={height - (averageMatch * ySqueeze) - 20} style={{ fill: '#E76127', fontSize: '12px' }}>
             average match ${Math.round(averageMatch * 100) / 100}
           </text>
         </>
