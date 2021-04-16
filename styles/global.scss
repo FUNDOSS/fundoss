@@ -45,6 +45,7 @@
 @import "cart";
 
 svg{
+    .white{fill:$white}
     .primary{fill: $primary}
     .success{fill: $success}
     .light{fill: $light}
@@ -54,7 +55,6 @@ svg{
     .stroke-light{stroke: $light}
     .stroke-secondary{stroke: $secondary}
     .stroke-primary-faded{stroke: rgba($primary, 0.5)}
-
 }
 
 body{

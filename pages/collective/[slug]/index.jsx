@@ -54,7 +54,7 @@ const collectivePage = ({
       >
         <Container>
           <Row style={{ padding: '40px 0' }}>
-            <Col md={{ span: 7 }} className="text-center text-md-left">
+            <Col lg={{ span: 7 }} className="text-center text-lg-left">
               <Image width={80} src={imageUrl} fluid roundedCircle />
               <h1 className="display-4">{name}</h1>
             
@@ -147,7 +147,7 @@ const collectivePage = ({
               {
                 similar.map(
                   (collective) => (
-                    <Col md={12} lg={4} key={collective.slug}>
+                    <Col md={6} lg={4} key={collective.slug}>
                       <CollectiveCard collective={collective} />
                     </Col>
                   ),

@@ -81,7 +81,7 @@ const CheckoutForm = ({ user }) => {
     if (isSubmitting) {
       return (<Button disabled size="lg" block variant="outline-info"><Spinner animation="border" size="sm" /> Verifying card...</Button>);
     } 
-    return (<Button block size="lg" variant="outline-primary" type="submit"> <small>Complete Checkout :</small> Pay <Badge variant="danger">{formatAmountForDisplay(total, 'USD')}</Badge></Button>);
+    return (<Button block size="lg" variant="outline-primary" type="submit"> <small>Complete Checkout :</small> Pay <Badge variant="danger round">{formatAmountForDisplay(total, 'USD')}</Badge></Button>);
   };
 
   return (

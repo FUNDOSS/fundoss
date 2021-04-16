@@ -32,9 +32,20 @@
     padding: 40px 0;
     background:
         url('/static/hero.svg') no-repeat bottom left/contain, 
-        radial-gradient(ellipse at bottom, rgba($darkpurple,.8), rgba($orange,.1)), 
+        radial-gradient(ellipse at bottom left, rgba($darkpurple,.9), rgba($orange,.2)), 
         linear-gradient(rgba($darkpurple,.3), rgba($blue,.4)), 
         url('/static/bg-seamless.svg') ;
+}
+
+
+.seamless-hand-light{
+    background:url('/static/bg-seamless.svg') ;
+    padding: 40px 0;
+    background:
+        url('/static/hero.svg') no-repeat bottom center/contain, 
+        radial-gradient(ellipse at bottom, rgba($white,.8), rgba($white,.1)), 
+        linear-gradient(rgba($white,.1), rgba($white,.8)), 
+        url('/static/bg-seamless.svg') top center/contain ;
 }
 
 .trapezoid{

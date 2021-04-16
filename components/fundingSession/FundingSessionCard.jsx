@@ -1,8 +1,5 @@
 import React from 'react';
-import moment from 'moment';
-import { Badge, Button, Card } from 'react-bootstrap';
-import Graph from '../qf/graph';
-import Qf from '../../utils/qf';
+import { Card } from 'react-bootstrap';
 import FundingSessionInfo from './FundingSessionInfo';
 import AdminLinks from './AdminLinks';
 

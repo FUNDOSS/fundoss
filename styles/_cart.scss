@@ -3,7 +3,6 @@
 }
 
 .input-group.cart-amount{
-    @extend .text-fat;
     box-shadow: none;
     border:none;
     .input-group-prepend,.input-group-text{background: transparent;}
