@@ -3,7 +3,9 @@ import { Form, Row, Col } from 'react-bootstrap';
 import Graph from './graph';
 import Qf from '../../utils/qf';
 
-const Calculator = ({ exp, fudge, symetric, avg = null, number = null, funds = null }) => {
+const Calculator = ({
+  exp, symetric, avg = null, number = null, funds = null, 
+}) => {
   const [form, setForm] = useState({
     matchedFunds: funds || 10000,
     averageDonationEst: avg || 20,
@@ -68,12 +70,10 @@ const Calculator = ({ exp, fudge, symetric, avg = null, number = null, funds = n
           1, 
           symetric,
         )} 
-        minimal
-        fudge={fudge} 
+        fudge={1} 
         exp={exp}
         averageDonation={Math.round(form.averageDonationEst)} 
         averageMatch={Math.round(form.matchedFunds / form.numberDonationEst)} 
-        fudge={1}
         width={450}
         height={200}
       />

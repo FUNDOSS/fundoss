@@ -2,16 +2,22 @@ import React, { useState } from 'react';
 import { formatAmountForDisplay } from '../../utils/currency';
 
 function Graph({
-  plot, averageDonation, averageMatch, width = 800, height = 600, minimal = false,
+  plot, averageDonation, averageMatch, width = 800, height = 600, minimal = false, amount = 10,
 }) {
-
-  const [coord, setCoord] = useState({ x: 20, y: 20 });
+  const [coord, setCoord] = useState({ x: amount || 20, y: 20 });
+  const [focus, setFocus] = useState(false);
   const ySqueeze = (height - 20) / plot(width - 10);
 
   const plotGraph = () => {
     const data = [];
-    for (let i = 0; i < width; i += 3) data.push({ x: i, y: plot(i) });
-    return data.reduce((path, { x, y }) => `${path} L${x + 10} ${height - (y * ySqueeze) - 10}`, `M 10 ${height - 10}`);
+    for (let i = 2; i < width; i += 3) data.push({ x: i, y: plot(i) });
+    return data.reduce((path, { x, y }) => `${path} L${x + 10} ${height - (y * ySqueeze) - 10}`, `M 12 ${(height - (plot(2) * ySqueeze)) - 10}`);
+  };
+  const getX = () => {
+    if (!focus) return Number(amount);
+    if (coord.x < 2) return 2;
+    if (coord.x > width - 10) return width - 10;
+    return coord.x;
   };
   //
   return (
@@ -25,8 +31,12 @@ function Graph({
         pt.y = e.clientY;
         let c = pt.matrixTransform(svg.getScreenCTM().inverse());
         c = { x: c.x < 2 ? 2 : c.x, y: c.y < 2 ? 2 : c.y };
-        setCoord({ x: c.x > width - 100 ? width - 100 : c.x, y: c.y });
+        setFocus(true);
+        setCoord({ x: c.x, y: c.y });
       }}
+      onMouseLeave={
+        () => setFocus(false)
+      }
     >
       <defs>
         <marker
@@ -71,20 +81,23 @@ function Graph({
         </>
       ) : null}
       <path d={plotGraph()} strokeWidth="2" strokeLinecap="round" className="stroke-primary-faded" fill="transparent" />
-      <text x={20 + coord.x} y={(height / 2) - 13} style={{ fontSize: '10px' }}>
-        donation
-      </text>
-      <text className="text-fat" x={20 + coord.x} y={(height / 2)} style={{ fontSize: '14px' }}>
-        {formatAmountForDisplay(Math.round(coord.x))} 
-      </text>
-      <text x={20 + coord.x} y={(height / 2) + 15} style={{ fontSize: '9px' }}>
-        = match
-      </text>
-      <text className="match success" x={20 + coord.x} y={(height / 2) + 30} style={{ fontSize: '16px' }}>
-        {formatAmountForDisplay(plot(Math.round(coord.x)))}
-      </text>
-      <path d={`M ${10 + coord.x} 10 V ${height - 10}`} className="stroke-secondary" />
       
+ 
+          <text x={20 + getX()} y={(height / 2) - 13} style={{ fontSize: '10px' }}>
+            donation
+          </text>
+          <text className="text-fat" x={20 + getX()} y={(height / 2)} style={{ fontSize: '14px' }}>
+            {formatAmountForDisplay(Math.round(getX()))} 
+          </text>
+          <text x={20 + getX()} y={(height / 2) + 15} style={{ fontSize: '9px' }}>
+            = match
+          </text>
+          <text className="match success" x={20 + getX()} y={(height / 2) + 30} style={{ fontSize: '16px' }}>
+            {formatAmountForDisplay(plot(Math.round(getX())))}
+          </text>
+
+      <path d={`M ${10 + getX()} 10 V ${height - 10}`} className="stroke-light" />
+      <circle cx={getX() + 10} cy={(height - 10) - (plot(getX()) * ySqueeze)} r="5" className="stroke-primary white" strokeWidth="3" />
     </svg>
   );
 }

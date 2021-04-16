@@ -17,7 +17,9 @@ import Qf from '../../utils/qf';
 import Graph from '../qf/graph';
 
 const CollectiveDonationCard = ({ collective, session }) => {
-  const {min, max, def, choice } = session.donateConfig;
+  const {
+    min, max, def, choice, 
+  } = session.donateConfig;
   const [tab, setTab] = useState('set');
   const [amount, setAmount] = useState(def);
   const [inCart, setInCart] = useState(false);
@@ -86,34 +88,39 @@ const CollectiveDonationCard = ({ collective, session }) => {
           )
           : (
             <div style={{ padding: '20px 0' }} className="text-center">
-              <InputGroup className="cart-amount" style={{ maxWidth: '150px', margin: '5px auto' }}>
-                <InputGroup.Prepend><InputGroup.Text>$</InputGroup.Text></InputGroup.Prepend>
-                <Form.Control
-                  size="lg"
-                  value={amount}
-                  type="number"
-                  max={max}
-                  min={min}
-                  onChange={(e) => {
-                    const amt = e.currentTarget.value > max ? max : e.currentTarget.value;
-                    setAmount(amt);
-                  }}
-                />
-              </InputGroup>
+              <Row className="no-gutters">
+                <Col>
               
-              + 
-              <span className="match big">
-                {formatAmountForDisplay(calculateMatch(Number(amount), collective._id), 'USD')}
-              </span>
-              <div className="small">estimated match</div>
-
+                  <InputGroup className="cart-amount" style={{ maxWidth: '150px', margin: '5px auto' }}>
+                    <InputGroup.Prepend><InputGroup.Text>$</InputGroup.Text></InputGroup.Prepend>
+                    <Form.Control
+                      size="lg"
+                      value={amount}
+                      type="number"
+                      max={max}
+                      min={min}
+                      onChange={(e) => {
+                        const amt = e.currentTarget.value > max ? max : e.currentTarget.value;
+                        setAmount(amt);
+                      }}
+                    />
+                  </InputGroup>
+                </Col>
+                <Col>
+                  + 
+                  <span className="match big">
+                    {formatAmountForDisplay(calculateMatch(Number(amount), collective._id), 'USD')}
+                  </span>
+                  <div className="small">estimated match</div>
+                </Col>
+              </Row>
               <Graph
-                width={450}
+                amount={amount}
+                width={350}
                 height={150}
                 minimal
-                plot={(x) => calculateMatch(x, collective._id)} 
-              ></Graph>
-
+                plot={(x) => calculateMatch(x, collective._id)}
+              />
             </div>
           )}
 
