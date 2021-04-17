@@ -4,7 +4,7 @@ import GithubLoginButton from '../auth/GithubLoginButton';
 import Icons from '../icons';
 
 const NominateBtn = ({
-  nominated, session, collective, user, block, variant = 'outline-primary', size = 'md',
+  nominated, session, collective, user, block, variant = 'outline-primary', size = 'md', mini = false,
 }) => {
   const [hasNominated, setHasNominated] = useState(nominated);
 
@@ -33,13 +33,15 @@ const NominateBtn = ({
           }}
           block={block}
         >
-          <Icons.Award size={22} /> Nominate
+          <Icons.Award size={22} /> {mini ? 'Nominate ❤️️' : `Nominate ${collective.name} ❤️️`}
         </Button>
       ) 
         : (
           <GithubLoginButton 
+            size={size}
             block={block}
-            text="Log in to nominate"
+            variant={variant}
+            text={mini ? 'Nominate ❤️️' : 'Log in to nominate ❤️️'}
             redirect={`/api/funding-session/nominate?collective=${collective.slug}&session=${session._id}`}  
           />
         )}

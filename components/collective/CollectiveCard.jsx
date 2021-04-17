@@ -34,7 +34,9 @@ const CollectiveCard = ({
             { imageUrl ? <Image src={imageUrl} roundedCircle fluid /> : null }
           </Col>
           <Col>
-            <Card.Title><Link href={`/collective/${slug}`}>{name}</Link></Card.Title>
+            <Card.Title>
+              <Link href={`/collective/${slug}`}>{name}</Link>
+            </Card.Title>
             { website ? (
               <a variant="link" target="_blank" rel="noreferrer" href={website} style={{ marginRight: '10px' }}>
                 <Icons.Globe size={15} /> website 
@@ -52,20 +54,22 @@ const CollectiveCard = ({
               est. <span className="match">{formatAmountForDisplay(totals.donations.reduce((total, amount) => total + Qf.calculate(amount), 0))}</span> match 
               from <span className="text-fat">{totals.donations.length}</span> {Pluralize('donor', totals.donations.length)}
             </>
-          ) : null }        
+          ) : null }   
+          {nominate ? (
+            <span>
+              {nominations 
+                ? (<b>{nominations} {Pluralize('nominations', nominations)} ❤️️</b>)
+                : 'Be the first to nominate ❤️'}
+            </span>
+          ) : null}     
         </div>
+
       </Card.Header>
       <Card.Body style={{ minHeight: '160px' }}>
         <Card.Text className="text-center" style={{ maxHeight: '80px', overflow: 'hidden' }}>
           {description}
         </Card.Text>
-        {nominate ? (
-          <div className="text-center">
-            {nominations 
-              ? (<Badge variant="primary">{nominations} {Pluralize('nominations', nominations)}</Badge>)
-              : 'Be the first to nominate'}
-          </div>
-        ) : null}
+
       </Card.Body>
       <Card.Footer>
         { active && getPreviousDonation(collective._id) ? (
@@ -85,6 +89,7 @@ const CollectiveCard = ({
           <Col xs={7}>
             {nominate ? (
               <NominateBtn
+                mini
                 block
                 nominations={nominations} 
                 user={user}
@@ -110,7 +115,7 @@ const CollectiveCard = ({
             ) : null}
           </Col>
           <Col>
-            <Button block variant="link" ><Link href={`/collective/${slug}`}>Read more</Link></Button>
+            <Button block variant="link"><Link href={`/collective/${slug}`}>Read more</Link></Button>
           </Col>
         </Row>
 
