@@ -15,11 +15,9 @@ const PaymentsList = ({ payments, state }) => (
           <Card key={payment._id} className="payment glass">
             <Card.Header>
               <Row>
-                <Col xs={3} md={2} xl={1}>
+                <Col xs={6} md={8} >
                   
                   <span className="lead text-fat">{formatAmountForDisplay(payment.amount)}</span>&nbsp;
-                </Col>
-                <Col xs={12} lg={6}>
                   <Badge variant="info">{moment(payment.timeslug).format('MMMM Do YYYY')}</Badge>&nbsp;
                   <Link href={`/session/${payment.session.slug}`}>
                     <a className="text-fat" >{payment.session.name}</a>

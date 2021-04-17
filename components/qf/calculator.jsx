@@ -72,8 +72,8 @@ const Calculator = ({
         )} 
         fudge={1} 
         exp={exp}
-        averageDonation={Math.round(form.averageDonationEst)} 
-        averageMatch={Math.round(form.matchedFunds / form.numberDonationEst)} 
+        averageDonation={form.averageDonationEst} 
+        averageMatch={form.matchedFunds / form.numberDonationEst} 
         width={450}
         height={200}
       />

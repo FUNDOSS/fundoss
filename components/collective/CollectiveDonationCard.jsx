@@ -119,6 +119,7 @@ const CollectiveDonationCard = ({ collective, session }) => {
                 width={350}
                 height={150}
                 minimal
+                click={(amount) => setAmount(amount)}
                 plot={(x) => calculateMatch(x, collective._id)}
               />
             </div>
