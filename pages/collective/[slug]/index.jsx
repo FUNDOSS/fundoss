@@ -72,7 +72,7 @@ const collectivePage = ({
                 <Icons.Github size={15} />
               </Button>
             &nbsp;<div className="d-block d-lg-none" />
-              <span style={{padding: '5px 0 0 10px'}} className="lead">Fiscal Host: Open Source Collective 501(c)(6)</span>
+              <span style={{ padding: '5px 0 0 10px' }} className="lead">Fiscal Host: Open Source Collective 501(c)(6)</span>
               <div className="collective-content" dangerouslySetInnerHTML={{ __html: longDescription }} style={{ padding: '20px 0' }} />
               <h3>Community</h3>
               <div style={{ borderLeft: ' 5px solid #02E2AC', padding: '10px 0 10px 20px', marginBottom: '20px' }}>
@@ -100,7 +100,7 @@ const collectivePage = ({
                   predicted={predicted}
                 />
               ) : null}
-              {!isInCurrentSession ? (
+              {!isInCurrentSession && sessions.length ? (
                 <Card className="invert">
                   <Card.Header className="text-center content"><h3>Nominate {name}</h3></Card.Header>
                   <Card.Body className="text-center content">
@@ -139,23 +139,25 @@ const collectivePage = ({
           </Row>
           <Row />
         </Container>
-        <div className="similar">
-          <Container>
-            <h3>Similar Collectives</h3>
-            <p>People who’ve backed {name} have also backed these projects...</p>
-            <Row>
-              {
-                similar.map(
-                  (collective) => (
-                    <Col md={6} lg={4} key={collective.slug}>
-                      <CollectiveCard collective={collective} />
-                    </Col>
-                  ),
-                )
-              }
-            </Row>
-          </Container>
-        </div>
+        { similar ? (
+          <div className="similar">
+            <Container>
+              <h3>Similar Collectives</h3>
+              <p>People who’ve backed {name} have also backed these projects...</p>
+              <Row>
+                { 
+                  similar.map(
+                    (collective) => (
+                      <Col md={6} lg={4} key={collective.slug}>
+                        <CollectiveCard collective={collective} />
+                      </Col>
+                    ),
+                  )
+}
+              </Row>
+            </Container>
+          </div>
+        ) : null}
       </Layout>
     </div>
   );
@@ -167,9 +169,9 @@ export async function getServerSideProps({ query, req, res }) {
   if (collective) {
     const state = await ServerProps.getAppState(req.user, req.session.cart);
     const sessions = await FundingSessions.getCollectiveSessions(collective._id);
-    const similar = await collectives.similar();
-    if (state.current){
-      collective.totals = collective.sessionTotals.filter(t => t.session == state.current._id)[0]
+
+    if (state.current) {
+      collective.totals = collective.sessionTotals.filter((t) => t.session == state.current._id)[0];
     }
     const hasNominated = req.user?._id 
       ? (await collectives.hasNominated(collective._id, state.upcoming._id, req.user?._id)) > 0
@@ -180,7 +182,7 @@ export async function getServerSideProps({ query, req, res }) {
         state,
         hasNominated,
         collective: serializable(collective),
-        similar: serializable(similar),
+        similar: state.current ? serializable(await collectives.similar(state.current._id, collective._id)) : false,
         sessions: serializable(sessions),
         hostingUrl: process.env.HOSTING_URL,
       },

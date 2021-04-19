@@ -3,10 +3,10 @@ import moment from 'moment';
 import mongoose from 'mongoose';
 import Collective from './CollectiveModel';
 import FundingSessions from '../fundingSession/fundingSessionController';
-import Donation from '../payment/donationModel';
 import CollectiveSessionTotals from '../payment/collectiveSessionTotalsModel';
 import dbConnect from '../dbConnect';
 import NominationModel from './NominationModel';
+import Donation from '../payment/donationModel';
 
 export async function findBySlug(slug:string):Promise<any> {
   await dbConnect();
@@ -87,10 +87,57 @@ export async function updateCollectivesTotals(ids:Array<string>, session:string)
   return donations;
 }
 
-export async function similarCollectives() {
+export async function similarCollectives(session, collective) {
   await dbConnect();
-  const current = await FundingSessions.getCurrent();
-  return current ? current.collectives.filter(() => (Math.random() > 0.9)) : [];
+  const userDonnations = await Donation.aggregate(
+    [
+      { $match: { session: mongoose.Types.ObjectId(session), collective } },
+      {
+        $group: {
+          _id: '$session',
+          users: {
+            $addToSet: '$user',
+          },
+          amount: {
+            $sum: '$amount',
+          },
+        },
+      },
+    ],
+  );
+  if (userDonnations?.length && userDonnations[0].users) {
+    const similarAggregate = await Donation.aggregate(
+      [
+        { $limit: 10 },
+        {
+          $match: {
+            collective: {$ne: collective},
+            user: { $in: userDonnations[0].users },
+            session: mongoose.Types.ObjectId(session),
+          },
+        },
+        {
+          $group: {
+            _id: '$collective',
+            amount: {
+              $sum: '$amount',
+            },
+          },
+        },
+        {
+          $lookup: {
+            from: 'collectives',
+            localField: '_id',
+            foreignField: '_id',
+            as: 'collective',
+          },
+        },
+      ],
+    );
+    return similarAggregate.map((s) => s.collective[0]);
+  }
+
+  return [];// current ? current.collectives.filter(() => (Math.random() > 0.9)) : [];
 }
 
 export async function getCollective(slug:string):Promise<any> {
