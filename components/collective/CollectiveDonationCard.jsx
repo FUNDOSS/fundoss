@@ -32,7 +32,7 @@ const CollectiveDonationCard = ({ collective, session }) => {
   useEffect(() => {
     onCartChange();
     cartEvents.on('cartChange', onCartChange);
-  }, []);
+  }, [collective]);
 
   return (
     <Card className="donation-card">
