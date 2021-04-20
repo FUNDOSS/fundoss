@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { formatAmountForDisplay } from '../../utils/currency';
 
 function Graph({
-  plot, averageDonation, averageMatch, width = 800, height = 600, minimal = false, amount = 10, click,
+  plot, averageDonation, averageMatch, 
+  width = 800, height = 600, minimal = false, amount = 10, click,
 }) {
   const [coord, setCoord] = useState({ x: amount || 20, y: 20 });
   const [focus, setFocus] = useState(false);
@@ -102,9 +103,7 @@ function Graph({
       <text className="match success" x={20 + getX()} y={(height / 2) + 30} style={{ fontSize: '16px' }}>
         {formatAmountForDisplay(plot(Math.round(getX())))}
       </text>
-
-      
-      <circle cx={getX() + 10} cy={(height - 10) - (plot(getX()) * ySqueeze)} r="5" className="stroke-primary white" strokeWidth="3" />
+      <circle cx={getX() + 10} cy={(height - 10) - (plot(getX()) * ySqueeze)} r="5" className="stroke-success white" strokeWidth="3" />
     </svg>
   );
 }
