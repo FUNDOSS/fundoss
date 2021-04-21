@@ -7,6 +7,7 @@ import Layout from '../../../components/layout';
 import FundingSessionForm from '../../../components/fundingSession/FundingSessionForm';
 import middleware from '../../../middleware/all';
 import ServerProps from '../../../lib/serverProps';
+import DashboardNav from '../../../components/dashboard/DashboardNav';
 
 const CreateSessionPage = ({ state }) => {
   if (!state.user?._id) {
@@ -19,6 +20,7 @@ const CreateSessionPage = ({ state }) => {
   return (
     <Layout title="FundOSS | Dashboard" state={state}>
       <Container style={{ paddingTop: '40px' }}>
+        <DashboardNav />
         <h1>Create Session</h1>
         <Row>
           <Col md={{ offset: 2, span: 8 }}>
@@ -33,7 +35,7 @@ const CreateSessionPage = ({ state }) => {
 export async function getServerSideProps({ req, res }) {
   await middleware.run(req, res);
   const state = await ServerProps.getAppState(req.user, req.session.cart);
-  return { props: {state } };
+  return { props: { state } };
 }
 
 export default CreateSessionPage;
