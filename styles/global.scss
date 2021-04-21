@@ -43,6 +43,7 @@
 @import "backgrounds";
 @import "cards";
 @import "cart";
+@import "ghost";
 
 svg{
     .white{fill:$white}
@@ -55,6 +56,10 @@ svg{
     .stroke-light{stroke: $light}
     .stroke-secondary{stroke: $secondary}
     .stroke-primary-faded{stroke: rgba($primary, 0.5)}
+}
+
+.page-content{
+    img{max-width: 100%;}
 }
 
 body{
