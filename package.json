@@ -16,6 +16,7 @@
     "@sendgrid/mail": "^7.4.0",
     "@stripe/react-stripe-js": "^1.4.0",
     "@stripe/stripe-js": "^1.13.1",
+    "@tryghost/content-api": "^1.5.3",
     "axios": "^0.21.1",
     "connect-mongo": "^3.2.0",
     "cookie-session": "^1.4.0",
