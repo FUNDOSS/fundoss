@@ -52,6 +52,9 @@ const FundingSessionForm = ({ sessionData }) => {
 
   const initialValues = toFormValues(sessionData);
 
+  const started = moment(sessionData?.start) < moment();
+  const ended = moment(sessionData?.end) > moment();
+
   const handleSubmit = async (values, { setStatus }) => {
     const body = JSON.stringify(values);
     const res = await fetch('/api/funding-session', {
@@ -97,6 +100,21 @@ const FundingSessionForm = ({ sessionData }) => {
             />
             <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
           </Form.Group>
+          {values.slug ? (          
+            <Form.Group controlId="slug">
+              <Form.Label>Slug</Form.Label>
+              <Form.Control
+                required
+                type="text"
+                placeholder="slug"
+                value={values.slug}
+                onChange={handleChange}
+                isValid={touched.slug && !errors.slug}
+                isInvalid={touched.slug && errors.slug}
+              />
+              <Form.Control.Feedback type="invalid">{errors.slug}</Form.Control.Feedback>
+            </Form.Group>
+          ) : null }
           <Row>
             <Col>
               <Form.Group controlId="matchedFunds">
@@ -148,29 +166,32 @@ const FundingSessionForm = ({ sessionData }) => {
                 <Form.Control.Feedback type="invalid">{errors.numberDonationEst}</Form.Control.Feedback>
               </Form.Group>
             </Col>
-            <Col>
-              <Form.Group controlId="matchingCurve.exp">
-                <Form.Label>exp</Form.Label>
-                <Form.Control
-                  required
-                  step={0.1}
-                  type="number"
-                  min={0.5}
-                  max={3}
-                  value={values.matchingCurve.exp}
-                  onChange={handleChange}
-                />
-              </Form.Group>
-
-            </Col>
+            {!started ? (            
+              <Col>
+                <Form.Group controlId="matchingCurve.exp">
+                  <Form.Label>exp</Form.Label>
+                  <Form.Control
+                    required
+                    step={0.1}
+                    type="number"
+                    min={0.5}
+                    max={3}
+                    value={values.matchingCurve.exp}
+                    onChange={handleChange}
+                  />
+                </Form.Group>
+              </Col>
+            ) : null}
           </Row>
-          <Form.Group controlId="matchingCurve.symetric">
-            <Form.Check 
-              label="symetric curve" 
-              checked={values.matchingCurve.symetric}
-              onChange={handleChange}
-            />
-          </Form.Group>
+          {!started ? ( 
+            <Form.Group controlId="matchingCurve.symetric">
+              <Form.Check 
+                label="symetric curve" 
+                checked={values.matchingCurve.symetric}
+                onChange={handleChange}
+              />
+            </Form.Group>
+          ) : null}
           <Graph 
             plot={(x) => Qf.calculate(
               x, 

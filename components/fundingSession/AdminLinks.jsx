@@ -4,10 +4,10 @@ import { Button } from 'react-bootstrap';
 import Link from 'next/link';
 
 const AdminLinks = ({
-  session, view, edit, disbursments, all,
+  session, view, edit, disbursments, all, donations,
 }) => {
   const {
-    start, slug,
+    start, end, slug,
   } = session;
 
   return (
@@ -27,11 +27,15 @@ const AdminLinks = ({
             <Button variant="outline-secondary">view</Button>
           </Link>
         ) : null }
-      {(disbursments || all) && moment(start) < moment() ? (
+      {(donations || all) && moment(start) < moment() && moment(end) > moment() ? (
         <>
           <Link href={`/dashboard/funding-session/${slug}/donations`}>
             <Button variant="outline-secondary">donations</Button>
           </Link>
+        </>
+      ) : null}
+      {(disbursments || all) && moment(start) < moment() ? (
+        <>
           <Link href={`/dashboard/funding-session/${slug}/table`}>
             <Button variant="outline-secondary">disbursments</Button>
           </Link>

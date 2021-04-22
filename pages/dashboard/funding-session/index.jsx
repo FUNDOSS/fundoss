@@ -26,12 +26,12 @@ const CreateSessionPage = ({ state, sessions }) => {
       <Container style={{ paddingTop: '40px' }}>
         <DashboardNav />
         <Button variant="link">
-          <Link href="dashboard/funding-session/create">Create a new sesion</Link>
+          <Link href="/dashboard/funding-session/create">Create a new sesion</Link>
         </Button>
         <Row>
           { sessions.map((session) => (
             <Col md={{ span: 6 }} style={{marginBottom: '20px'}} key={session._id}>
-              <FundingSessionCard session={session} predicted={state.current.predicted} />
+              <FundingSessionCard session={session} predicted={state.current?.predicted} />
             </Col>
           ))}
         </Row>

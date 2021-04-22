@@ -13,6 +13,9 @@ const DashboardNav = () => {
       <Nav.Item>
         <Nav.Link><Link href="/dashboard/payment">Payments</Link></Nav.Link>
       </Nav.Item>
+      <Nav.Item>
+        <Nav.Link><Link href="/dashboard/funding-session">Sessions</Link></Nav.Link>
+      </Nav.Item>
     </Nav>
   ); 
 };
