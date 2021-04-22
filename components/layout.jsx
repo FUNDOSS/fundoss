@@ -87,7 +87,13 @@ const Layout = ({
       </header>
       {children}
       <Footer minimal={hidefooter} state={state} />
-      { cart && current ? <Cart cart={cart} user={user} donateConfig={current?.donateConfig} /> : null }
+      { cart && current ? (
+        <Cart
+          cart={cart}
+          user={user} 
+          donateConfig={current?.donateConfig}
+        />
+      ) : null }
     </div>
   ); 
 };
