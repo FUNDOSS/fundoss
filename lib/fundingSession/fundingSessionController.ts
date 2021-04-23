@@ -44,6 +44,14 @@ export const getDonationsConfig = () => ({
   choice: process.env.DONATION_CHOICE.split(',').map((n) => Number(n)),
 });
 
+const median = (values) => {
+  if (values.length === 0) return 0;
+  values.sort((a, b) => a - b);
+  const half = Math.floor(values.length / 2);
+  if (values.length % 2) return values[half];
+  return (values[half - 1] + values[half]) / 2.0;
+};
+
 export const getPredictedAverages = (session) => {
   const timeElapsed = moment().diff(moment(session.start));
   const {
@@ -54,6 +62,7 @@ export const getPredictedAverages = (session) => {
     const totalTime = timeElapsed + timeLeft;
     const { donations, amount } = totals || { donations: [], amount: 0 };
     const d = donations.length;
+    const medianDonation = median(donations);
     const avg = {
       match: matchedFunds / ((numberDonationEst * timeLeft + d * timeElapsed) / totalTime),
       average: (averageDonationEst * timeLeft + (amount / d) * timeElapsed) / totalTime,
