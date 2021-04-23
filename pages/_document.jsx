@@ -1,17 +1,17 @@
 import React from 'react';
-import Document, { Main, NextScript } from 'next/document';
+import Document, { Html, Main, NextScript } from 'next/document';
 import CriticalCssHead from '../components/criticalCssHead';
 
 class ExtendedNextDocument extends Document {
   render() {
     return (
-      <html>
+      <Html>
         <CriticalCssHead />
         <body>
           <Main />
           <NextScript />
         </body>
-      </html>
+      </Html>
     );
   }
 }
