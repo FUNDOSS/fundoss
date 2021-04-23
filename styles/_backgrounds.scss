@@ -22,7 +22,7 @@
     padding: 40px 0;
     background:
         radial-gradient(ellipse at bottom, rgba($darkpurple,.8), rgba($orange,.1)), 
-        linear-gradient(rgba($darkpurple,.3), rgba($blue,.4)), 
+        linear-gradient(279deg, rgba($blue,.4), rgba($darkpurple,.9) 40%, rgba($purple,.4)), 
         url('/static/bg-seamless.svg') ;
 }
 
@@ -33,7 +33,7 @@
     background:
         url('/static/hero.svg') no-repeat bottom left/contain, 
         radial-gradient(ellipse at bottom left, rgba($darkpurple,.9), rgba($orange,.2)), 
-        linear-gradient(rgba($darkpurple,.3), rgba($blue,.4)), 
+        linear-gradient(279deg, rgba($blue,.4), rgba($darkpurple,.9) 30%, rgba($purple,.4)), 
         url('/static/bg-seamless.svg') ;
 }
 

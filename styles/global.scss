@@ -39,7 +39,6 @@
 @import "~bootstrap/scss/utilities";
 @import "~bootstrap/scss/print";
 
-@import "robot";
 @import "backgrounds";
 @import "cards";
 @import "cart";
@@ -319,4 +318,8 @@ h1{margin:2rem 0}
     .match.big{
         font-size: 1.2rem;
     }
+}
+
+.StripeElement--complete{
+    @extend .is-valid;
 }
