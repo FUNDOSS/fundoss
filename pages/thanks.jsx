@@ -12,7 +12,6 @@ import Qf from '../utils/qf';
 import { formatAmountForDisplay } from '../utils/currency';
 import Icons from '../components/icons';
 import ShareButton from '../components/social/ShareButton';
-import Robot from '../components/illustration/Robot';
 import ServerProps from '../lib/serverProps';
 import FundingSessionInfo from '../components/fundingSession/FundingSessionInfo';
 
@@ -56,7 +55,7 @@ const ThanksPage = ({ state, payment }) => {
                 </span> from the donor pot! 
               </p>
               <Row>
-                <Col style={{ height:'220px' }} className="seamless-hand-light">
+                <Col style={{ height: '220px' }} className="seamless-hand-light">
                  &nbsp;
                 </Col>
                 <Col sm={8} className="text-left">
@@ -76,28 +75,26 @@ const ThanksPage = ({ state, payment }) => {
                 </Col>
               </Row>
 
-
             </Card.Body>
             {state.upcoming?._id ? (
-                <Card.Footer style={{ marginTop: '20px' }}>
-                  <h2>{state.upcoming.name}</h2>
-                  <Row className="text-left">
-                    <Col>
+              <Card.Footer style={{ marginTop: '20px' }}>
+                <h2>{state.upcoming.name}</h2>
+                <Row className="text-left">
+                  <Col>
                 
-                      <FundingSessionInfo session={state.upcoming} size="sm" />
-                    </Col>
-                    <Col>
-                      <div dangerouslySetInnerHTML={{ __html: state.upcoming.description }} />
-                    </Col>
-                  </Row>
-                  <Link href="/upcoming">
-                    <Button size="lg" block variant="outline-primary">
-                      <Icons.Award size={25} /> nominate for {state.upcoming.name}
-                    </Button>
-                  </Link>
-                </Card.Footer>
-
-              ) : null }     
+                    <FundingSessionInfo session={state.upcoming} size="sm" />
+                  </Col>
+                  <Col>
+                    <div dangerouslySetInnerHTML={{ __html: state.upcoming.description }} />
+                  </Col>
+                </Row>
+                <Link href="/upcoming">
+                  <Button size="lg" block variant="outline-primary">
+                    <Icons.Award size={25} /> nominate for {state.upcoming.name}
+                  </Button>
+                </Link>
+              </Card.Footer>
+            ) : null }     
           </Card>
         </Container>
       </div>

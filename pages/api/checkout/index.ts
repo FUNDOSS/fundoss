@@ -8,6 +8,7 @@ import { formatAmountForStripe } from '../../../utils/currency';
 import Users from '../../../lib/user/usersController';
 import Cart from '../../../lib/cart/CartController';
 import FundingSessionController from '../../../lib/fundingSession/fundingSessionController';
+import Mail from '../../../lib/mail';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2020-08-27',
@@ -75,19 +76,25 @@ handler.post(async (req: any, res: NextApiResponse) => {
           savedPayment.intentId, { expand: ['charges.data.balance_transaction'] },
         );
         if (intent.status === 'succeeded') {
+          const donations = await Cart.get(req.session.cart);
           const update = {
+            sid: savedPayment.sid,
             amount: savedPayment.amount,
             _id: savedPayment._id,
             session: savedPayment.session._id,
             user: savedPayment.user._id,
             status: intent.status,
             confirmation: intent,
-            donations: (await Cart.get(req.session.cart)).reduce((data, item) => (
+            donations: donations.reduce((data, item) => (
               { ...data, [item.collective._id]: item.amount }
             ), {}),
           };
           await Payment.update(update);
           req.session.cart = {};
+          await Mail.paymentConfirmation({
+            ...update,
+            ...{ user: req.user, donations },
+          });
           return res.status(200).json({ status: 'succeeded' });
         }
       } catch (err) {

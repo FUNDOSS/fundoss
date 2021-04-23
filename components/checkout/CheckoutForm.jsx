@@ -25,6 +25,7 @@ const CheckoutForm = ({ user }) => {
       email: Yup.string().email('Please enter a valid email')
         .required('Please enter a billing email'),
     }),
+    tc: Yup.boolean().required('Please agree to our terms and conditions'),
   });
   const router = useRouter();
   const initialValues = {
@@ -99,6 +100,7 @@ const CheckoutForm = ({ user }) => {
         values,
         status,
         setStatus,
+        setFieldValue,
       }) => {
         const [totals, setTotals] = useState(getCartTotals());
         
@@ -110,7 +112,7 @@ const CheckoutForm = ({ user }) => {
 
         return (
           <Form noValidate onSubmit={handleSubmit}>
-            <Row style={{marginTop:'40px'}}>
+            <Row style={{ marginTop: '40px' }}>
               <Col md={3} className="text-fat lead text-center text-md-left">Credit/Debit Card Info</Col>
               <Col><hr /></Col>
             </Row>
@@ -131,16 +133,20 @@ const CheckoutForm = ({ user }) => {
                 <Form.Group>
                   <StripeTestCards />
                   <CardElement
-                    onChange={() => {
-                      setStatus({ cardError: null });
+                    onChange={({ error, complete, empty }) => {
+                      setStatus({
+                        cardError: error?.message, 
+                        cardValid: complete, 
+                        cardEmpty: empty, 
+                      });
                     }}
-                    className={`form-control${status?.cardError ? ' is-invalid' : ''}`}
+                    className={`form-control ${status?.cardError && !status?.cardValid && !status?.cardEmpty ? 'is-invalid' : ''} ${status?.cardValid ? 'is-valid' : ''}`}
                   />
                   <div className="invalid-feedback">{status?.cardError}</div>
                 </Form.Group>
               </Col>
             </Row>
-            <Row style={{marginTop:'40px'}}>
+            <Row style={{ marginTop: '40px' }}>
               <Col md={3} className="text-fat lead text-center text-md-left">Billing Info</Col>
               <Col><hr /></Col>
             </Row>
@@ -232,6 +238,22 @@ const CheckoutForm = ({ user }) => {
                     </Form.Group>
                   </Col>
                 </Row>
+                <Form.Group controlId="subscribe">
+                  <Form.Check 
+                    label="I wish to receive updates on future rounds" 
+                    value={values.subscribe}
+                    onChange={(e) => setFieldValue('subscribe', e.target.checked)} 
+                  />
+                </Form.Group>
+                <Form.Group controlId="tc">
+                  <Form.Check 
+                    label="I agree to fundoss terms and conditions" 
+                    value={values.tc}
+                    onChange={(e) => setFieldValue('tc', e.target.checked)}
+                    isInvalid={!!errors.tc}
+                  />
+                  <Form.Control.Feedback type="invalid">{errors.tc}</Form.Control.Feedback>
+                </Form.Group>
                 {status?.error ? <p className="text-danger text-center">{status.error}</p> : null}
                 {statusSubmitButton(status?.paymentStatus, isSubmitting, totals.amount)}
               </Col>

@@ -73,7 +73,7 @@ export async function getSessionTotals(session) {
 
 export async function findById(id:string) {
   await dbConnect();
-  return Payment.findOne({ _id: id }).select('user intentId session amount donations fee status time confirmation')
+  return Payment.findOne({ _id: id }).select('user sid intentId session amount donations fee status time confirmation')
     .populate({ path: 'user' })
     .populate({ path: 'session', select: 'name slug' })
     .populate({
