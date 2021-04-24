@@ -5,6 +5,7 @@ import {
   Col, Row, Form, Button, Spinner, Badge, 
 } from 'react-bootstrap';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { Formik } from 'formik';
 import CountryCodes from 'countrycodes/countryCodes';
 import StripeTestCards from './StripeTestCards';
@@ -25,7 +26,8 @@ const CheckoutForm = ({ user }) => {
       email: Yup.string().email('Please enter a valid email')
         .required('Please enter a billing email'),
     }),
-    tc: Yup.boolean().required('Please agree to our terms and conditions'),
+    tc: Yup.boolean().required('Please agree to our terms and conditions')
+      .oneOf([true], 'Please agree to our terms and conditions'),
   });
   const router = useRouter();
   const initialValues = {
@@ -241,18 +243,19 @@ const CheckoutForm = ({ user }) => {
                 <Form.Group controlId="subscribe">
                   <Form.Check 
                     label="I wish to receive updates on future rounds" 
-                    value={values.subscribe}
-                    onChange={(e) => setFieldValue('subscribe', e.target.checked)} 
+                    checked={values.subscribe}
+                    onChange={handleChange} 
                   />
                 </Form.Group>
                 <Form.Group controlId="tc">
                   <Form.Check 
-                    label="I agree to fundoss terms and conditions" 
-                    value={values.tc}
-                    onChange={(e) => setFieldValue('tc', e.target.checked)}
+                    label={<>I agree to fundoss <Link href="/page/terms-and-conditions"><a>terms and conditions</a></Link></>} 
+                    checked={values.tc}
+                    value
+                    onChange={handleChange}
+                    feedback={errors.tc}
                     isInvalid={!!errors.tc}
                   />
-                  <Form.Control.Feedback type="invalid">{errors.tc}</Form.Control.Feedback>
                 </Form.Group>
                 {status?.error ? <p className="text-danger text-center">{status.error}</p> : null}
                 {statusSubmitButton(status?.paymentStatus, isSubmitting, totals.amount)}
