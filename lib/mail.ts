@@ -29,13 +29,14 @@ const Mail = {
       to: payment.user.email,
       subject: 'Thank you for your donation on FundOSS',
       html: Mail.layout(`
-        <h1>Thank you ${payment.user.name}</h1>
+        <h1>Thank you ${payment.user.name || payment.user.username}</h1>
         <p>This is your receipt for your donations on FundOSS</p>
         <b>Total : ${formatAmountForDisplay(payment.amount)}</b>
         <p>You supported the following collectives :</p>
         ${payment.donations.map((item) => `${formatAmountForDisplay(item.amount)} ${item.collective.name}`).join('<br />')}
         <p>Want to share your cart? Copy/paste the link below</p>
         <p>${process.env.HOSTING_URL}/share/${payment.sid}</p>
+        <p>Find all your donations in your <a href="${process.env.HOSTING_URL}/account" target ="_blank"> account page</a></p>
       `),
     });
   },
@@ -46,9 +47,9 @@ const Mail = {
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
       <title>Your Message Subject or Title</title>
       <style type="text/css">
-        #outlook a {padding:0;} /* Force Outlook to provide a "view in browser" menu link. */
+        #outlook a {padding:0;}
         body{width:100% !important; -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; margin:0; padding:0;}
-        .ExternalClass {width:100%;} /* Force Hotmail to display emails at full width */
+        .ExternalClass {width:100%;}
         .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {line-height: 100%;}
         #backgroundTable {margin:0; padding:0; width:100% !important; line-height: 100% !important;}
         img {outline:none; text-decoration:none; -ms-interpolation-mode: bicubic;}
@@ -94,8 +95,9 @@ const Mail = {
             <td width="600" valign="top">${content}</td>
           </tr>
         </table>
-        <a href="${process.env.HOSTING_URL}" target ="_blank" title="Styling Links" style="color: #6B37FF; text-decoration: none;">FundOss.org</a>
-        <br><img class="image_fix" src="${process.env.HOSTING_URL}/static/logo.png" alt="FundOss" title="FundOss" width="300" height="45" />
+        <a href="${process.env.HOSTING_URL}" target ="_blank">
+        <img class="image_fix" src="${process.env.HOSTING_URL}/static/logo.png" alt="FundOss" title="FundOss" width="300" height="45" />
+        </a>
         </td>
       </tr>
     </table>
