@@ -21,8 +21,8 @@
     background: $darkpurple url('/static/bg-seamless.svg') ;
     padding: 40px 0;
     background:
-        radial-gradient(ellipse at bottom, rgba($darkpurple,.8), rgba($orange,.1)), 
-        linear-gradient(279deg, rgba($blue,.4), rgba($darkpurple,.9) 40%, rgba($purple,.4)), 
+        linear-gradient(279deg, rgba($purple,.3), rgba($darkpurple,0.9) 30%, rgba($purple,.4)), 
+        radial-gradient(ellipse at bottom, rgba($teal,.9), rgba($orange,.3)), 
         url('/static/bg-seamless.svg') ;
 }
 
@@ -32,8 +32,8 @@
     padding: 40px 0;
     background:
         url('/static/hero.svg') no-repeat bottom left/contain, 
-        radial-gradient(ellipse at bottom left, rgba($darkpurple,.9), rgba($orange,.2)), 
-        linear-gradient(279deg, rgba($blue,.4), rgba($darkpurple,.9) 30%, rgba($purple,.4)), 
+        linear-gradient(279deg, rgba($blue,.4), rgba($darkpurple,.9) 30%, rgba($purple,.3)), 
+        radial-gradient(ellipse at bottom left, rgba($purple,.5), rgba($orange,.2)), 
         url('/static/bg-seamless.svg') ;
 }
 
