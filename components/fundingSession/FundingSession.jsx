@@ -16,6 +16,7 @@ import FundingSessionInfo from './FundingSessionInfo';
 import Nominate from '../collective/NominateForm';
 import AdminLinks from './AdminLinks';
 import ShareButton from '../social/ShareButton';
+import SubscriptionForm from '../SubscriptionForm';
 
 const FundingSession = ({
   session, user, predicted, state, nominations = { user: [] }, featured,
@@ -115,9 +116,13 @@ const FundingSession = ({
 
             {!started ? (
               <Col xs={{ order: 2, span: 12 }} lg={{ order: 1, span: 4 }}>
-                <div style={{ maxWidth: '370px', margin: '0 auto' }}>
-                  <Nominate sessionId={session._id} />
-                </div>
+                <Card className="invert glass">
+                  <Card.Body className="content text-center airy">
+                    { session.nominate ? <Nominate sessionId={session._id} /> : null }
+                    <h3>Sign Up to be notified when you can support our collectives</h3>
+                    <SubscriptionForm user={user} />
+                  </Card.Body>
+                </Card>
               </Col>
             ) : null}
 
@@ -164,7 +169,7 @@ const FundingSession = ({
                 collectives we’re sustaining! 👇
               </span>
             ) : null }
-            { !started ? (
+            { !started && session.nominate ? (
               <span>
                 👇 Nominate your favorite collectives 👇
               </span>
@@ -231,7 +236,7 @@ const FundingSession = ({
                 <CollectiveCard 
                   collective={collective}
                   active={started && !ended}
-                  nominate={!started}
+                  nominate={!started && session.nominate}
                   nominations={nominations[collective._id]}
                   nominated={nominations.user.indexOf(collective._id) > -1}
                   session={session}

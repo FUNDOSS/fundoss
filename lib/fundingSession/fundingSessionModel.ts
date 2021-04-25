@@ -13,6 +13,8 @@ export interface IFundingSession extends Document {
   tags: Array<string>;
   collectives: Array<ICollective>;
   predictedAverage:number;
+  allowNominations:boolean;
+  published:boolean;
   predictedDonations:number;
   predicted:any;
   matchingCurve:any;
@@ -26,6 +28,8 @@ export interface IFundingSessionInput {
   description?: string;
   matchedFunds?: number;
   collectives?: any;
+  allowNominations?:boolean;
+  published?:boolean;
   protytype?: any;
   tags: Array<string>;
   matchingCurve:any;
@@ -61,6 +65,12 @@ const FundingSessionSchema = new Schema({
   },
   sponsors: {
     type: String,
+  },
+  allowNominations: {
+    type: Boolean,
+  },
+  published: {
+    type: Boolean,
   },
   tags: [{
     type: String,

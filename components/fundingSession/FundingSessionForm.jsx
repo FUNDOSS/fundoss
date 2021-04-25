@@ -47,6 +47,8 @@ const FundingSessionForm = ({ sessionData }) => {
     end: (session?.end ? moment(session.end) : moment().add(30, 'days')).format('YYYY-MM-DD'),
     collectives: (session?.collectives || []).map((collective) => `https://opencollective.com/${collective.slug}`).join('\n'),
     tags: session?.tags || [],
+    allowNominations: session?.allowNominations,
+    published: session?.published,
     matchingCurve: session?.matchingCurve || { exp: 2, symetric: false },
   });
 
@@ -100,7 +102,27 @@ const FundingSessionForm = ({ sessionData }) => {
             />
             <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
           </Form.Group>
-          {values.slug ? (          
+          <Form.Group controlId="allowNominations">
+            <Form.Check 
+              label="Allow nominations" 
+              checked={values.allowNominations}
+              value
+              onChange={handleChange}
+              feedback={errors.allowNominations}
+              isInvalid={!!errors.allowNominations}
+            />
+          </Form.Group>
+          <Form.Group controlId="published">
+            <Form.Check 
+              label="published" 
+              checked={values.published}
+              value
+              onChange={handleChange}
+              feedback={errors.published}
+              isInvalid={!!errors.published}
+            />
+          </Form.Group>
+          {!started ? (          
             <Form.Group controlId="slug">
               <Form.Label>Slug</Form.Label>
               <Form.Control
@@ -208,6 +230,9 @@ const FundingSessionForm = ({ sessionData }) => {
             width={520}
             height={300}
           />
+
+
+
           <Form.Group controlId="description">
             <Form.Label>Session description</Form.Label>
             <Form.Control

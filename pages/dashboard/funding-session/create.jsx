@@ -23,7 +23,7 @@ const CreateSessionPage = ({ state }) => {
         <DashboardNav />
         <h1>Create Session</h1>
         <Row>
-          <Col md={{ offset: 2, span: 8 }}>
+          <Col md={{ offset: 3, span: 6 }}>
             <FundingSessionForm />
           </Col>
         </Row>

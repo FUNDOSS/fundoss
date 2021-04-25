@@ -118,6 +118,7 @@ export async function getCurrentSession():Promise<any> {
   const session = await FundingSession.findOne({
     start: { $lte: new Date() },
     end: { $gte: new Date() },
+    published: true,
   }).populate('collectives');
   if (session) {
     const sessionData = await setCollectiveTotals(session);
@@ -131,6 +132,7 @@ export async function getUpcomingSessionInfo():Promise<any> {
   await dbConnect();
   const session = await FundingSession.findOne({
     start: { $gte: new Date() },
+    published: true,
   }).select('_id slug name sponsors description start end averageDonationEst numberDonationEst matchedFunds totals matchingCurve description');
   return session;
 }
@@ -139,6 +141,7 @@ export async function getUpcomingSession():Promise<any> {
   await dbConnect();
   const session = await FundingSession.findOne({
     start: { $gte: new Date() },
+    published: true,
   }).populate('collectives');
   return session;
 }
@@ -148,6 +151,7 @@ export async function getCurrentSessionId():Promise<string> {
   const session = await FundingSession.findOne({
     start: { $lte: new Date() },
     end: { $gte: new Date() },
+    published: true,
   }).select('_id');
   return session._id;
 }
@@ -157,6 +161,7 @@ export async function getCurrentSessionInfo():Promise<any> {
   const session = await FundingSession.findOne({
     start: { $lte: new Date() },
     end: { $gte: new Date() },
+    published: true,
   }).select('_id name slug description sponsors start end averageDonationEst numberDonationEst matchedFunds totals matchingCurve');
   return session;
 }
