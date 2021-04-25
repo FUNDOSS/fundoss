@@ -52,7 +52,7 @@ const PaymentsList = ({ payments, state }) => (
         ))}
       </div>
     ) : (
-      <h2>You have no payments yet</h2>
+      <p className="lead">You have no payments yet...</p>
     ) }
 
   </div>

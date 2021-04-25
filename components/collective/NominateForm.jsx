@@ -43,34 +43,25 @@ export const NominateForm = ({ sessionId }) => {
       errors, touched, isSubmitting, values, handleChange, handleSubmit,
     }) => (
       <Form noValidate onSubmit={handleSubmit}>
-        <Card className="invert glass">
-          <Card.Header className="content">
-            <h3 className="text-center">Nominate a OSC collective to be included in this session</h3>
-          </Card.Header>
-          <Card.Body className="content">
-            <Form.Group controlId="url">
-              <p className="text-center">
-                Nominate your favorite collective from <a href="https://opencollective.com/" target="_blank" rel="noreferrer">opencollective.com</a> to be included in this session
-              </p>
-              <Form.Control
-                required
-                placeholder="https://opencollective.com/slug"
-                value={values.url}
-                onChange={handleChange}
-                isValid={touched.url && !errors.url}
-                isInvalid={touched.url && errors.url}
-              />
-              <Form.Control.Feedback type="invalid">{errors.url}</Form.Control.Feedback>
-            </Form.Group>
-            <Button block variant="primary" disabled={isSubmitting} type="submit">
-              <Icons.Award size={22} /> Nominate a collective
-            </Button>
-          </Card.Body>
-          <Card.Footer className="content">
-            <p className="text-center">Or</p> 
-            <Button block variant="outline-primary" href="https://opencollective.com/create" target="_blank">Create your collective</Button>
-          </Card.Footer>
-        </Card>
+        Nominate your favorite collective from <a href="https://opencollective.com/" target="_blank" rel="noreferrer">opencollective.com</a> to be included in this session
+        <Form.Group controlId="url">
+          <Form.Control
+            required
+            placeholder="https://opencollective.com/slug"
+            value={values.url}
+            onChange={handleChange}
+            isValid={touched.url && !errors.url}
+            isInvalid={touched.url && errors.url}
+          />
+          <Form.Control.Feedback type="invalid">{errors.url}</Form.Control.Feedback>
+        </Form.Group>
+        <Button block variant="primary" disabled={isSubmitting} type="submit">
+          <Icons.Award size={22} /> Nominate a collective
+        </Button>
+        <p className="text-center">
+          Or&nbsp;
+          <Button variant="link" href="https://opencollective.com/create" target="_blank">Create your collective</Button>
+        </p>
       </Form>
     )}
     </Formik>

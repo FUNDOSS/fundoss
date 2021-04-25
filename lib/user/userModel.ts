@@ -11,6 +11,7 @@ export interface IUserInput {
   githubaccestoken?:string;
   githubrefreshtoken?:string;
   billing?: any;
+  subscribed?:boolean;
   prototype?: any;
 }
 
@@ -23,6 +24,7 @@ export interface IUser extends Document {
   role:string;
   githubaccestoken?:string;
   githubrefreshtoken?:string;
+  subscribed?:boolean;
   billing?: any;
 }
 
@@ -35,6 +37,9 @@ const UserSchema = new Schema({
   },
   avatar: {
     type: String,
+  },
+  subscribed: {
+    type: Boolean,
   },
   username: {
     type: String,

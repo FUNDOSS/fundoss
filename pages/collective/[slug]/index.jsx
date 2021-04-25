@@ -19,6 +19,7 @@ import ShareButton from '../../../components/social/ShareButton';
 import NominateBtn from '../../../components/collective/NominateBtn';
 import FundingSessionInfo from '../../../components/fundingSession/FundingSessionInfo';
 import Sponsors from '../../../components/fundingSession/Sponsors';
+import SubscriptionForm from '../../../components/SubscriptionForm';
 
 const collectivePage = ({
   collective, state, 
@@ -102,21 +103,28 @@ const collectivePage = ({
               ) : null}
               {!isInCurrentSession && sessions.length ? (
                 <Card className="invert">
-                  <Card.Header className="text-center content"><h3>Nominate {name}</h3></Card.Header>
+                  <Card.Header className="text-center content"><h3>{state.upcoming.name}</h3></Card.Header>
                   <Card.Body className="text-center content">
                     <FundingSessionInfo session={sessions[0]} />
                     <Link href={`/session/${state.upcoming.slug}`}>
-                      <Button size="lg" block variant="outline-light">{state.upcoming.name}</Button>
+                      <Button size="lg" variant="outline-light">Find out more</Button>
                     </Link>
-                    <NominateBtn 
-                      size="lg"
-                      block
-                      variant="outline-light"
-                      nominated={hasNominated}
-                      collective={collective}
-                      session={state.upcoming}
-                      user={state.user}
-                    />
+                    <hr />
+
+                    {state.upcoming.allowNomination 
+                      ? (
+                        <NominateBtn 
+                          size="lg"
+                          block
+                          variant="outline-light"
+                          nominated={hasNominated}
+                          collective={collective}
+                          session={state.upcoming}
+                          user={state.user}
+                        />
+                      ) : null}
+                    <p>Sign Up to be when you can support {name}</p>
+                    <SubscriptionForm user={state.user} />
                   </Card.Body>
                   <Card.Footer className="text-center content">
 
