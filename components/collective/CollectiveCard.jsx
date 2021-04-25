@@ -31,7 +31,7 @@ const CollectiveCard = ({
       <Card.Header style={{ minHeight: '110px' }}>
         <Row>
           <Col xs={2} md={3}>
-            { imageUrl ? <Image src={imageUrl} roundedCircle fluid /> : null }
+            { imageUrl ? <Image width="50" height="50" src={imageUrl} roundedCircle fluid /> : null }
           </Col>
           <Col>
             <Card.Title>

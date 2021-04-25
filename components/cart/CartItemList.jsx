@@ -7,6 +7,7 @@ import Badge from 'react-bootstrap/Badge';
 import { Form, InputGroup } from 'react-bootstrap';
 import { formatAmountForDisplay } from '../../utils/currency';
 import Icons from '../icons';
+import DonationInput from './DonationInput';
 
 const CartItem = ({
   item, onDelete, onSelect, selectedId, cartAmount, onChange, 
@@ -16,15 +17,20 @@ const CartItem = ({
   const [amount, setAmount] = useState(cartAmount);
   const [selected, setSelected] = useState(selectedId);
   
+  const select = () => {
+    const selection = collective._id === selected ? null : collective._id;
+    onSelect(selection);
+    setSelected(selection);
+  };
+
   return (
     <div className="cart-item">
       <div
         className="header"
-        onClick={() => {
-          const selection = collective._id === selected ? null : collective._id;
-          onSelect(selection);
-          setSelected(selection);
-        }}
+        onClick={select}
+        onKeyUp={select}
+        role="button"
+        tabIndex={0}
       >
         <Row className="no-gutters">
           <Col xs={1}>
@@ -75,21 +81,15 @@ const CartItem = ({
         <div className="form">
           <Row className="align-items-center">
             <Col xs={5}>
-              <InputGroup className="cart-amount">
-                <InputGroup.Prepend><InputGroup.Text>$</InputGroup.Text></InputGroup.Prepend>
-                <Form.Control
-                  size="lg"
-                  value={amount}
-                  type="number"
-                  max={config.max}
-                  min={config.min}
-                  onChange={(e) => {
-                    const amt = e.currentTarget.value > config.max ? config.max : e.currentTarget.value;
-                    onChange(amt, collective);
-                    setAmount(amt);
-                  }}
-                />
-              </InputGroup>
+              <DonationInput
+                amount={amount}
+                max={config.max}
+                min={config.min}
+                onChange={(amt) => {
+                  onChange(amt, collective);
+                  setAmount(amt);
+                }}
+              />
             </Col>
             <Col className="text-center">
               <span className="lead">+</span>

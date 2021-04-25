@@ -15,6 +15,7 @@ import Icons from '../icons';
 import { formatAmountForDisplay } from '../../utils/currency';
 import Qf from '../../utils/qf';
 import Graph from '../qf/graph';
+import DonationInput from '../cart/DonationInput';
 
 const CollectiveDonationCard = ({ collective, session }) => {
   const {
@@ -90,21 +91,12 @@ const CollectiveDonationCard = ({ collective, session }) => {
             <div style={{ padding: '20px 0' }} className="text-center">
               <Row className="no-gutters">
                 <Col>
-              
-                  <InputGroup className="cart-amount" style={{ maxWidth: '150px', margin: '5px auto' }}>
-                    <InputGroup.Prepend><InputGroup.Text>$</InputGroup.Text></InputGroup.Prepend>
-                    <Form.Control
-                      size="lg"
-                      value={amount}
-                      type="number"
-                      max={max}
-                      min={min}
-                      onChange={(e) => {
-                        const amt = e.currentTarget.value > max ? max : e.currentTarget.value;
-                        setAmount(amt);
-                      }}
-                    />
-                  </InputGroup>
+                  <DonationInput 
+                    amount={amount}
+                    max={max}
+                    min={min}
+                    onChange={(amt) => setAmount(amt)}
+                  />
                 </Col>
                 <Col>
                   + 

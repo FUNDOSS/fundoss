@@ -15,6 +15,7 @@ import Cart, {
 import Icons from '../icons';
 import { formatAmountForDisplay } from '../../utils/currency';
 import Qf from '../../utils/qf';
+import DonationInput from '../cart/DonationInput';
 
 const FeaturedCollectiveCard = ({ collective, active, session }) => {
   const {
@@ -39,7 +40,7 @@ const FeaturedCollectiveCard = ({ collective, active, session }) => {
         <Card.Header>
           <Row>
             <Col xs={2} md={3}>
-              { imageUrl ? <Image src={imageUrl} roundedCircle fluid /> : null }
+              { imageUrl ? <Image width="50" height="50" src={imageUrl} roundedCircle fluid /> : null }
             </Col>
             <Col>
               <Card.Title style={{ maxHeight: '60px' }}><Link href={`/collective/${slug}`}>{name}</Link></Card.Title>
@@ -72,20 +73,12 @@ const FeaturedCollectiveCard = ({ collective, active, session }) => {
           <p className="text-center">Every dollar you donate today is matched by a donation from our large-donor pool.</p>
           <Row className="align-items-center no-gutters">
             <Col xs={5}>
-              <InputGroup className="cart-amount round match">
-                <InputGroup.Prepend><InputGroup.Text>$</InputGroup.Text></InputGroup.Prepend>
-                <Form.Control
-                  size="lg"
-                  value={amount}
-                  type="number"
-                  max={max}
-                  min={min}
-                  onChange={(e) => {
-                    const amt = e.currentTarget.value > max ? max : e.currentTarget.value;
-                    setAmount(amt);
-                  }}
-                />
-              </InputGroup>
+              <DonationInput 
+                amount={amount}
+                max={max}
+                min={min}
+                onChange={(amt) => setAmount(amt)}
+              />
             </Col>
             <Col className="text-center">
               <span className="lead">+</span>
