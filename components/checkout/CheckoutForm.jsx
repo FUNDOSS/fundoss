@@ -72,19 +72,24 @@ const CheckoutForm = ({ user }) => {
   };
 
   const statusSubmitButton = (status, isSubmitting, total) => {
-    if (status === 'completed') {
+    if (status?.paymentStatus === 'completed') {
       return (<Button size="lg" disabled block variant="outline-success"><Icons.Check size={16} /> Payment Completed</Button>);
     } 
-    if (status === 'succeeded') {
+    if (status?.paymentStatus === 'succeeded') {
       return (<Button disabled size="lg" block variant="outline-info"><Spinner animation="border" size="sm" /> Confirming Payment...</Button>);
     } 
-    if (status === 'verify') {
+    if (status?.paymentStatus === 'verify') {
       return (<Button disabled size="lg" block variant="outline-info"><Spinner animation="border" size="sm" /> Verifying Payment Data...</Button>);
     } 
     if (isSubmitting) {
       return (<Button disabled size="lg" block variant="outline-info"><Spinner animation="border" size="sm" /> Verifying card...</Button>);
     } 
-    return (<Button block size="lg" variant="outline-primary" type="submit"> <small>Complete Checkout :</small> Pay <Badge variant="danger round">{formatAmountForDisplay(total, 'USD')}</Badge></Button>);
+    return (
+      <Button block size="lg" variant="outline-primary" disabled={!status?.cardValid} type="submit"> 
+        <small>{status?.cardValid ? 'Complete Checkout' : 'Fill in your card details' } :</small> Pay&nbsp;
+        <Badge variant="danger round">{formatAmountForDisplay(total, 'USD')}</Badge>
+      </Button>
+    );
   };
 
   return (
@@ -102,7 +107,6 @@ const CheckoutForm = ({ user }) => {
         values,
         status,
         setStatus,
-        setFieldValue,
       }) => {
         const [totals, setTotals] = useState(getCartTotals());
         
@@ -249,7 +253,7 @@ const CheckoutForm = ({ user }) => {
                 </Form.Group>
                 <Form.Group controlId="tc">
                   <Form.Check 
-                    label={<>I agree to fundoss <Link href="/page/terms-and-conditions"><a>terms and conditions</a></Link></>} 
+                    label={<>I agree to <Link href="/page/terms-and-conditions"><a>the FundOSS terms and conditions</a></Link></>} 
                     checked={values.tc}
                     value
                     onChange={handleChange}
@@ -257,8 +261,9 @@ const CheckoutForm = ({ user }) => {
                     isInvalid={!!errors.tc}
                   />
                 </Form.Group>
+                
+                <div className="airy">{statusSubmitButton(status, isSubmitting, totals.amount)}</div>
                 {status?.error ? <p className="text-danger text-center">{status.error}</p> : null}
-                {statusSubmitButton(status?.paymentStatus, isSubmitting, totals.amount)}
               </Col>
             </Row>
           </Form>

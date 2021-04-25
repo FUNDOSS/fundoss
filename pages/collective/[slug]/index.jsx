@@ -123,7 +123,7 @@ const collectivePage = ({
                           user={state.user}
                         />
                       ) : null}
-                    <p>Sign Up to be when you can support {name}</p>
+                    <p>Sign Up to be notified when you can support {name}</p>
                     <SubscriptionForm user={state.user} />
                   </Card.Body>
                   <Card.Footer className="text-center content">
