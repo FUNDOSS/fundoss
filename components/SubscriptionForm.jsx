@@ -2,7 +2,7 @@ import React from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import {
-  Row, Col, Button, Form, 
+  Button, Form, Spinner, 
 } from 'react-bootstrap';
 
 export const SubscriptionForm = ({ user }) => {
@@ -16,7 +16,7 @@ export const SubscriptionForm = ({ user }) => {
     name: user?.name || user?.username,
   };
 
-  const handleSubmit = async (values) => {
+  const handleSubmit = async (values, { setStatus, setValues, setTouched }) => {
     const res = await fetch('/api/subscribe', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -24,6 +24,9 @@ export const SubscriptionForm = ({ user }) => {
     });
     if (res.status === 200) {
       const result = await res.json();
+      setValues({ email: '', name: '' });
+      setTouched({ email: false, name: false });
+      setStatus({ subscribed: result.subscribed });
     } else {
       setStatus({ error: await res.json() });
     }
@@ -36,7 +39,7 @@ export const SubscriptionForm = ({ user }) => {
       initialValues={initialValues}
       onSubmit={handleSubmit}
     >{({
-      errors, touched, isSubmitting, values, handleChange, handleSubmit,
+      errors, touched, isSubmitting, values, handleChange, handleSubmit, status,
     }) => (
       <Form noValidate onSubmit={handleSubmit}>
         <Form.Group controlId="name">
@@ -62,14 +65,14 @@ export const SubscriptionForm = ({ user }) => {
           />
           <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
         </Form.Group>
-
+        { status?.subscribed ? (<>Awesome! You will hear from us soon.</>) : null }
         <Button block variant="primary" disabled={isSubmitting} type="submit">
-          Subscribe for FundOSS updates
+          {isSubmitting ? <Spinner size="sm" animation="border" /> : null } Subscribe for FundOSS updates
         </Button>
       </Form>
     )}
     </Formik>
-  );
+  ); 
 };
 
 export default SubscriptionForm;

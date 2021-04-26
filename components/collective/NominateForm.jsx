@@ -58,10 +58,7 @@ export const NominateForm = ({ sessionId }) => {
         <Button block variant="primary" disabled={isSubmitting} type="submit">
           <Icons.Award size={22} /> Nominate a collective
         </Button>
-        <p className="text-center">
-          Or&nbsp;
-          <Button variant="link" href="https://opencollective.com/create" target="_blank">Create your collective</Button>
-        </p>
+
       </Form>
     )}
     </Formik>

@@ -116,11 +116,19 @@ const FundingSession = ({
 
             {!started ? (
               <Col xs={{ order: 2, span: 12 }} lg={{ order: 1, span: 4 }}>
-                <Card className="invert glass">
+                <Card className="invert glass" style={{maxWidth: '350px', margin: '10px auto'}}>
                   <Card.Body className="content text-center airy">
                     { session.nominate ? <Nominate sessionId={session._id} /> : null }
-                    <h3>Sign Up to be notified when you can support our collectives</h3>
+                    <h3>Sign Up to be notified when {session.name} starts</h3>
                     <SubscriptionForm user={user} />
+                    
+                    <p className="airy">
+                      Do you want your project included in a future round?
+                    </p>
+                    <Button variant="link" block href="https://opencollective.com/create" target="_blank">
+                      Create your collective on<br />
+                      <img src="/static/sponsors/osc.svg" alt="Open Source Collectives" width="70%" style={{margin: '10px auto'}} />
+                    </Button>
                   </Card.Body>
                 </Card>
               </Col>
@@ -208,7 +216,7 @@ const FundingSession = ({
                 </div>
               </Col>
             ) : null}
-            { !started ? (
+            { !started && session.nominate ? (
               <Col xs={4} lg={2} className="text-center">
                 <div className="sort"><small className="d-none d-md-inline">Sort by</small>
                   <Button 
