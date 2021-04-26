@@ -134,9 +134,7 @@ const FundingSession = ({
               </Col>
             ) : null}
 
-            <Col xs={{ order: 1, span: 12 }} lg={{ order: 2, span: 7, offset: 1 }} className="content text-center">
-              <h1 className="no-margin" style={{ textShadow: '0 0 10px #000000' }}>{name}</h1>
-
+            <Col xs={{ order: 1, span: 12 }} lg={{ order: 2, span: 7, offset: 1 }} className="content text-center text-lg-left">
               <FundingSessionInfo session={session} predicted={predicted} />
               {user.role === 'admin' ? <AdminLinks disbursments edit session={session} /> : null}
               {user.donations?.length 

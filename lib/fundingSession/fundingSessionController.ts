@@ -133,7 +133,7 @@ export async function getUpcomingSessionInfo():Promise<any> {
   const session = await FundingSession.findOne({
     start: { $gte: new Date() },
     published: true,
-  }).select('_id slug name sponsors description start end averageDonationEst numberDonationEst matchedFunds totals matchingCurve description');
+  }).select('_id slug name tagline sponsors description start end averageDonationEst numberDonationEst matchedFunds totals matchingCurve description');
   return session;
 }
 
@@ -162,7 +162,7 @@ export async function getCurrentSessionInfo():Promise<any> {
     start: { $lte: new Date() },
     end: { $gte: new Date() },
     published: true,
-  }).select('_id name slug description sponsors start end averageDonationEst numberDonationEst matchedFunds totals matchingCurve');
+  }).select('_id name slug tagline description sponsors start end averageDonationEst numberDonationEst matchedFunds totals matchingCurve');
   return session;
 }
 

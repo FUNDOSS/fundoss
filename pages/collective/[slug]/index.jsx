@@ -103,14 +103,13 @@ const collectivePage = ({
               ) : null}
               {!isInCurrentSession && sessions.length ? (
                 <Card className="invert">
-                  <Card.Header className="text-center content"><h3>{state.upcoming.name}</h3></Card.Header>
-                  <Card.Body className="text-center content">
-                    <FundingSessionInfo session={sessions[0]} />
+                  <Card.Header className="text-center content">
+                    <FundingSessionInfo session={state.upcoming} size="sm" />
                     <Link href={`/session/${state.upcoming.slug}`}>
                       <Button size="lg" variant="outline-light">Find out more</Button>
                     </Link>
-                    <hr />
-
+                  </Card.Header>
+                  <Card.Body className="text-center content">
                     {state.upcoming.allowNomination 
                       ? (
                         <NominateBtn 
@@ -190,7 +189,9 @@ export async function getServerSideProps({ query, req, res }) {
         state,
         hasNominated,
         collective: serializable(collective),
-        similar: state.current ? serializable(await collectives.similar(state.current._id, collective._id)) : false,
+        similar: state.current ? serializable(
+          await collectives.similar(state.current._id, collective._id),
+        ) : false,
         sessions: serializable(sessions),
         hostingUrl: process.env.HOSTING_URL,
       },

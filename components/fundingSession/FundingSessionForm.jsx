@@ -18,6 +18,8 @@ const FundingSessionForm = ({ sessionData }) => {
       .required('Please provide a name'),
     description: Yup.string()
       .required('Please provide a description'),
+    tagline: Yup.string()
+      .required('Please provide a tag line'),
   });
   const router = useRouter();
   const availableTags = () => {
@@ -65,8 +67,9 @@ const FundingSessionForm = ({ sessionData }) => {
       body,
     });
     if (res.status === 200) {
+      const result = await res.json();
       setStatus({ saved: true });
-      values._id ? router.reload() : router.push(`/dashboard/funding-session/${session.slug}`);
+      if (result.session.slug) router.push(`/dashboard/funding-session/${result.session.slug}/edit`);
     } else {
       setStatus({ error: res.json() });
     }
@@ -101,6 +104,19 @@ const FundingSessionForm = ({ sessionData }) => {
               isInvalid={touched.name && errors.name}
             />
             <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="tagline">
+            <Form.Label>Tag line</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              placeholder="Tag line"
+              value={values.tagline}
+              onChange={handleChange}
+              isValid={touched.name && !errors.tagline}
+              isInvalid={touched.name && errors.tagline}
+            />
+            <Form.Control.Feedback type="invalid">{errors.tagline}</Form.Control.Feedback>
           </Form.Group>
           <Form.Group controlId="allowNominations">
             <Form.Check 

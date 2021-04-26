@@ -26,21 +26,34 @@ const FundingSessionInfo = ({ session, predicted, size = 'md' }) => {
   ) : session.matchedFunds;
 
   return (
-    <div className={`session-info info-${size}`}>
+    <div className="session-info">
+
+      <p className="lead name">{session.name}&nbsp;
+        {started && !ended ? (
+          <span>
+            ends <Badge variant="danger"> {moment(end).fromNow()}</Badge>
+          </span>
+        ) : null}
+        {!started ? (
+          <span>
+            starts in <Badge variant="danger"> {moment(start).fromNow()}</Badge>
+          </span>
+        ) : null}
+      </p>
+      { size === 'md' ? <h1 className="tagline no-margin">{session.tagline}</h1> : null }
+      { size === 'sm' ? <p className="lead no-margin text-fat">{session.tagline}</p> : null }
       {started && ended ? (<h2><small>Ended</small> {moment(end).format('MMMM Do YYYY')}</h2>) : null}
       {!started && !ended ? (
         <>
-          <span className="info-span">
-            <span className="lead text-fat">
-              from {moment(start).format('MMMM Do')} <br />
-              to {moment(end).format('MMMM Do YYYY')}
-            </span> 
+          <span className="info-span"> 
+            from <span className="lead text-fat">{moment(start).format('MMMM Do')}</span> <br />
+            to <span className="lead text-fat">{moment(end).format('MMMM Do YYYY')}</span>
           </span>
-          <span className="info-span">
-            in matched funding<br />
-            <span className="display-3 match">
+          <span className="info-span matched">
+            matched funds:
+            <div className="display-3 match" style={{ marginTop: '-10px' }}>
               {formatAmountForDisplay(session.matchedFunds, 'USD')}
-            </span>
+            </div>
           </span>
         </>
       ) : null}
@@ -65,11 +78,7 @@ const FundingSessionInfo = ({ session, predicted, size = 'md' }) => {
           </span>
         </div>
       ) : null }
-      {started && !ended ? (
-        <span className="lead text-fat">
-          ends {moment(end).format('MMMM Do')} <Badge variant="danger"> {moment(end).fromNow()}</Badge>
-        </span>
-      ) : null}
+
     </div>
   );
 };
