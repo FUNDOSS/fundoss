@@ -26,7 +26,7 @@ export const SubscriptionForm = ({ user }) => {
       const result = await res.json();
       setValues({ email: '', name: '' });
       setTouched({ email: false, name: false });
-      setStatus({ subscribed: result.subscribed });
+      setStatus({ subscribed: 'true' });
     } else {
       setStatus({ error: await res.json() });
     }

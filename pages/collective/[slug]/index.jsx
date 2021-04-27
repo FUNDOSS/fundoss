@@ -110,7 +110,7 @@ const collectivePage = ({
                     </Link>
                   </Card.Header>
                   <Card.Body className="text-center content">
-                    {state.upcoming.allowNomination 
+                    {state.upcoming.allowNominations 
                       ? (
                         <NominateBtn 
                           size="lg"

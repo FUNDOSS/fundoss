@@ -118,7 +118,7 @@ const FundingSession = ({
               <Col xs={{ order: 2, span: 12 }} lg={{ order: 1, span: 4 }}>
                 <Card className="invert glass" style={{maxWidth: '350px', margin: '10px auto'}}>
                   <Card.Body className="content text-center airy">
-                    { session.nominate ? <Nominate sessionId={session._id} /> : null }
+                    { session.allowNominations ? (<><Nominate sessionId={session._id} /><hr /></>) : null }
                     <h3>Sign Up to be notified when {session.name} starts</h3>
                     <SubscriptionForm user={user} />
                     
@@ -165,7 +165,7 @@ const FundingSession = ({
                   </>
                 )}
 
-              <Sponsors sponsors={sponsors} />
+              <Sponsors sponsors={sponsors} className="text-md-left" />
             </Col>
           </Row>
           <div style={{ padding: '30px 0', marginBottom: '20px' }} className="text-center content">
@@ -175,7 +175,7 @@ const FundingSession = ({
                 collectives we’re sustaining! 👇
               </span>
             ) : null }
-            { !started && session.nominate ? (
+            { !started && session.allowNominations ? (
               <span>
                 👇 Nominate your favorite collectives 👇
               </span>
@@ -214,7 +214,7 @@ const FundingSession = ({
                 </div>
               </Col>
             ) : null}
-            { !started && session.nominate ? (
+            { !started && session.allowNominations ? (
               <Col xs={4} lg={2} className="text-center">
                 <div className="sort"><small className="d-none d-md-inline">Sort by</small>
                   <Button 
@@ -242,7 +242,7 @@ const FundingSession = ({
                 <CollectiveCard 
                   collective={collective}
                   active={started && !ended}
-                  nominate={!started && session.nominate}
+                  nominate={!started && session.allowNominations}
                   nominations={nominations[collective._id]}
                   nominated={nominations.user.indexOf(collective._id) > -1}
                   session={session}
