@@ -36,7 +36,7 @@ const FundingSessionInfo = ({ session, predicted, size = 'md' }) => {
         ) : null}
         {!started ? (
           <span>
-            starts in <Badge variant="danger"> {moment(start).fromNow()}</Badge>
+            starts <Badge variant="danger"> {moment(start).fromNow()}</Badge>
           </span>
         ) : null}
       </p>
