@@ -16,7 +16,7 @@ handler.post(async (req: any, res: NextApiResponse) => {
     }
     return res.status(200).json({ sub });
   }
-  return res.status(500).json({ statusCode: 500, message: 'email not sent' });
+  return res.status(500).json({ statusCode: 500, message: 'email missing' });
 });
 
 export default handler;

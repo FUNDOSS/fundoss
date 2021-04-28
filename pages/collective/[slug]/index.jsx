@@ -19,7 +19,7 @@ import ShareButton from '../../../components/social/ShareButton';
 import NominateBtn from '../../../components/collective/NominateBtn';
 import FundingSessionInfo from '../../../components/fundingSession/FundingSessionInfo';
 import Sponsors from '../../../components/fundingSession/Sponsors';
-import SubscriptionForm from '../../../components/SubscriptionForm';
+import Subscriptionform from '../../../components/SubscriptionForm';
 
 const collectivePage = ({
   collective, state, 
@@ -44,7 +44,7 @@ const collectivePage = ({
   return (
     <div className="bg1">
       <Layout
-        title={`FundOSS | ${!isInCurrentSession ? 'vote for' : 'multiply your donations for'} ${name}`}
+        title={`FundOSS | ${!isInCurrentSession ? 'A new a way to support' : 'multiply your donations for'} ${name}`}
         state={state} 
         meta={{ 
           card: 'summary_large_image',
@@ -123,7 +123,7 @@ const collectivePage = ({
                         />
                       ) : null}
                     <p>Sign Up to be notified when you can support {name}</p>
-                    <SubscriptionForm user={state.user} />
+                    <Subscriptionform user={state.user} />
                   </Card.Body>
                   <Card.Footer className="text-center content">
 
