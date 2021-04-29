@@ -67,8 +67,8 @@ const Layout = ({
                   <Icons.Buoy size={20} /> How democratic funding works
                 </Nav.Link>
               </Link>
-              <Link href="/Blog">
-                <Nav.Link href="/Blog">
+              <Link href="/blog">
+                <Nav.Link href="/blog">
                   <Icons.Globe size={20} /> Blog
                 </Nav.Link>
               </Link>
