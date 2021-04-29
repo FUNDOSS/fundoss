@@ -19,9 +19,9 @@ const Footer = ({ minimal, state }) => (
           <Col>
             <h5>Platform</h5>
             <Nav className="flex-column">
-              <Nav.Link><Link href="/about">About</Link></Nav.Link>
               <Nav.Link href="https://blog.opencollective.com/fundoss-faqv1/">FAQ</Nav.Link>
-              <Nav.Link><Link href="/democratic-funding">How democratic funding works</Link></Nav.Link>
+              <Link href="/democratic-funding"><Nav.Link href="/democratic-funding">How democratic funding works</Nav.Link></Link>
+              <Nav.Link href="https://opencollective.com/fundoss" target="_blank">FundOSS Collective</Nav.Link>
             </Nav>
             <h5>Social</h5>
             <Nav className="flex-column">
@@ -37,7 +37,7 @@ const Footer = ({ minimal, state }) => (
             <Nav className="flex-column">
               <Nav.Link href="/api/auth/github">Register to Donate</Nav.Link>
               <Nav.Link href="https://opencollective.com/create" target="_blank">Create A Collective</Nav.Link>
-              <Nav.Link href="mailto:info@opencollective.com">Get In Touch</Nav.Link>
+              <Nav.Link href="mailto:support@opencollective.com">Get In Touch</Nav.Link>
             </Nav>
             <h5>Partnership</h5>
             <p>
@@ -46,7 +46,6 @@ const Footer = ({ minimal, state }) => (
             </p>
           </Col>
           <Col md={6}>
-            <Button href="https://github.com/humanific/fundoss/issues" block size="lg" variant="outline-light">🐞Submit Bugs or Issues</Button>
             <h5>Share FundOSS.org</h5>
             <ShareButton platform="twitter" variant="link" siteUrl={state.siteUrl} url="/" />
             <ShareButton platform="facebook" variant="link" siteUrl={state.siteUrl} url="/" />

@@ -59,7 +59,7 @@ const Layout = ({
           <Link href="/"><Navbar.Brand href="/"><Logo className="logo" /></Navbar.Brand></Link>
           <Navbar.Collapse id="primary-nav">
             <Nav activeKey={router.pathname} className="mr-auto">
-              <Nav.Link href="https://blog.opencollective.com/fundoss-faqv1/">
+              <Nav.Link href="/blog/faq">
                 <Icons.Question size={20} /> FAQ
               </Nav.Link>
               <Link href="/democratic-funding">
