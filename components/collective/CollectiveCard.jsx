@@ -115,7 +115,7 @@ const CollectiveCard = ({
             ) : null}
           </Col>
           <Col>
-            <Button block variant="link"><Link href={`/collective/${slug}`}>...more</Link></Button>
+            <Button block variant="link"><Link href={`/collective/${slug}`}>read more</Link></Button>
           </Col>
         </Row>
 
