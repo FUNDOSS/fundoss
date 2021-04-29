@@ -127,7 +127,7 @@ const collectivePage = ({
                   </Card.Body>
                   <Card.Footer className="text-center content">
 
-                    <Sponsors sponsors={state.upcoming.sponsors} /> 
+                    <Sponsors sponsors={state.upcoming.sponsors} align="center" /> 
                   </Card.Footer>
                 </Card>
               ) : null}

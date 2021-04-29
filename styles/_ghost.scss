@@ -8,3 +8,13 @@
     .meta{margin: 10px 0;}
     line-height: 1.8rem;
 }
+
+.page-content{
+    line-height: 2.3rem;
+    font-size: 1.2rem;
+}
+
+.page-content h3{
+    margin:$grid-gutter-width * 2 0 $grid-gutter-width;
+    font-size: 1.4rem;
+}

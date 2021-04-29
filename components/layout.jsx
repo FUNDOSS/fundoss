@@ -67,7 +67,11 @@ const Layout = ({
                   <Icons.Buoy size={20} /> How democratic funding works
                 </Nav.Link>
               </Link>
-  
+              <Link href="/Blog">
+                <Nav.Link href="/Blog">
+                  <Icons.Globe size={20} /> Blog
+                </Nav.Link>
+              </Link>
               { current && upcoming._id ? (
                 <Link href="/upcoming">
                   <Nav.Link href="/upcoming">

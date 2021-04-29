@@ -1,7 +1,8 @@
 import React from 'react';
 import Container from 'react-bootstrap/Container';
-import { Card, Row, Col } from 'react-bootstrap';
+import { Row, Col, Button } from 'react-bootstrap';
 import Link from 'next/link';
+import Ghost from '../lib/ghost';
 import Layout from '../components/layout';
 import middleware from '../middleware/all';
 import ServerProps from '../lib/serverProps';
@@ -9,36 +10,25 @@ import Calculator from '../components/qf/calculator';
 import FundingSessionInfo from '../components/fundingSession/FundingSessionInfo';
 import Sponsors from '../components/fundingSession/Sponsors';
 
-const QFPage = ({ state }) => (
+const QFPage = ({ state, page }) => (
   <Layout title="FundOSS | What is democratic Funding ?" state={state}>
     <div className="seamless invert">
       <Container>
         <Row className="align-items-center content">
           <Col xs={12} md={8}>
-            <h1 className="display-2">What is Democratic Funding ?</h1>
+            <h1 className="display-2">{page.title}</h1>
           </Col>
           <Col>
-            <p className="lead">Democratic Funding is the mathematically optimal way to fund public goods in a democratic community where the number of contributors matters more than the actual amount funded.</p>
+            <p className="lead">{page.excerpt}</p>
           </Col>
         </Row>
         
       </Container>
     </div>
-    <Container className="content">
+    <Container className="page-content">
       <Row>
         <Col md={{ span: 8, offset: 2 }} lg={{ span: 6, offset: 3 }}>
-          <h4>A matching pool is raised, and then a crowdfund campaign is matched according to the QF algorithm:</h4>
-          <img
-            src="/static/df-formula.svg" 
-            style={{ display: 'block', maxWidth: '230px', margin: '10px auto' }}
-          />
-
-          <br />
-
-          <h3>Number of contributors matters more than amount funded.</h3><br />
-          <h3>This pushes power to the edges, away from whales & other central power brokers.</h3><br />
-          <h3>This creates more democracy in public goods funding decisions! 🦄</h3><br />
-
+        <div className="gh-content" dangerouslySetInnerHTML={{ __html: page.html }} />
           <br />
           <Calculator avg={10} number={500} /><br /><br />
 
@@ -48,13 +38,25 @@ const QFPage = ({ state }) => (
     <div className="seamless" style={{ marginBottom: '-60px' }}>
       <Container className="content text-center">
         {state.current ? (
-          <><h2><Link href="/"><a>{state.current.name}</a></Link></h2>
+          <>
             <div className="session-description" dangerouslySetInnerHTML={{ __html: state.current.description }} />
             <FundingSessionInfo session={state.current} />
-            <Sponsors sponsors={state.current.sponsors}/>
+            <Link href={`/session/${state.current.slug}`}>
+              <Button size="lg" variant="outline-light">Find out more</Button>
+            </Link>
+            <Sponsors sponsors={state.current.sponsors} align="center" />
           </>
         ) : null }
-    
+        {state.upcoming._id ? (
+          <>
+            <div className="session-description" dangerouslySetInnerHTML={{ __html: state.upcoming.description }} />
+            <FundingSessionInfo session={state.upcoming} />
+            <Link href={`/session/${state.upcoming.slug}`}>
+              <Button size="lg" variant="outline-light">Find out more</Button>
+            </Link>
+            <Sponsors sponsors={state.upcoming.sponsors} align="center" />
+          </>
+        ) : null }
       </Container>
     </div>
   </Layout>
@@ -63,7 +65,8 @@ const QFPage = ({ state }) => (
 export async function getServerSideProps({ req, res }) {
   await middleware.run(req, res);
   const state = await ServerProps.getAppState(req.user, req.session.cart);
-  return { props: { state } };
+  const page = await Ghost.getPage('democratic-funding');
+  return { props: { state, page } };
 }
 
 export default QFPage;
