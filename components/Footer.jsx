@@ -46,6 +46,7 @@ const Footer = ({ minimal, state }) => (
             </p>
           </Col>
           <Col md={6}>
+            <Button href="https://github.com/humanific/fundoss/issues" block size="lg" variant="outline-light">🐞Submit Bugs or Issues</Button>
             <h5>Share FundOSS.org</h5>
             <ShareButton platform="twitter" variant="link" siteUrl={state.siteUrl} url="/" />
             <ShareButton platform="facebook" variant="link" siteUrl={state.siteUrl} url="/" />
