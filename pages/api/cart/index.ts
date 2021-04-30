@@ -2,6 +2,7 @@ import nextConnect from 'next-connect';
 import { NextApiResponse } from 'next';
 import { all } from '../../../middleware/index';
 import Cart from '../../../lib/cart/CartController';
+import FundingSessionController from '../../../lib/fundingSession/fundingSessionController';
 
 const handler = nextConnect();
 
@@ -19,9 +20,15 @@ handler.get(async (req:any, res:NextApiResponse) => {
 
 handler.post(async (req:any, res:NextApiResponse) => {
   const cart = req.session.cart || {};
-  const newCart = req.body.reduce((cart, item) => ({ ...cart, [item.collective]: item.amount }), cart);
-  req.session.cart = newCart;
-  return res.status(200).json(newCart);
+  const config = FundingSessionController.getDonationsConfig();
+  req.session.cart = req.body.reduce(
+    (acc, item) => ({
+      ...acc,
+      [item.collective]: config.min < item.amount ? item.amount : config.min,
+    }
+    ), cart,
+  );
+  return res.status(200).json(req.session.cart);
 });
 
 handler.delete(async (req:any, res:NextApiResponse) => {
