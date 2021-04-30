@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Pluralize from 'pluralize';
 import {
-  Badge, Col, Row, InputGroup, 
+  Badge, Col, Row,  
 } from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
-import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Button from 'react-bootstrap/Button';
 import Link from 'next/link';
