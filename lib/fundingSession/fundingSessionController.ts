@@ -94,7 +94,7 @@ export const getPredictedAverages = (session) => {
   };
 };
 
-export async function insertSession(session):Promise<IFundingSession> {
+export async function insertSession(session) {
   await dbConnect();
   if (session.collectives) {
     session.collectives = (await getCollectivesFromInput(session)).collectives;
