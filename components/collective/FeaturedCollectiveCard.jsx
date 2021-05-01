@@ -105,7 +105,7 @@ const FeaturedCollectiveCard = ({ collective, active, session }) => {
               <Col xs={7}>
                 {inCart != amount ? (
                   <Button block variant="outline-primary" onClick={() => Cart.addItem(collective, amount, false)}>
-                    <Icons.Cart size={18} /> Update cart
+                    <Icons.Cart size={18} /> Add to cart
                   </Button>
                 ) : (
                   <Button block variant="outline-primary" onClick={() => Cart.show(collective._id)}>
