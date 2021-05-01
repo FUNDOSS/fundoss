@@ -14,9 +14,9 @@ const Footer = ({ minimal, state }) => (
       <Container>&copy; Fundoss 2021</Container>
     ) : (
       <Container>
-        <Logo className="logo" width={340} height={80} />
+        <Logo className="logo" width={240} height={80} />
         <Row>
-          <Col>
+          <Col lg={{span:3, offset:1}}>
             <h5>Platform</h5>
             <Nav className="flex-column">
               <Nav.Link href="https://blog.opencollective.com/fundoss-faqv1/">FAQ</Nav.Link>
@@ -31,7 +31,7 @@ const Footer = ({ minimal, state }) => (
               <Nav.Link href="https://slack.opencollective.com/" target="_blank">OSC Slack</Nav.Link>
             </Nav>
           </Col>
-          <Col> 
+          <Col lg={3}> 
             
             <h5>Join</h5>
             <Nav className="flex-column">
@@ -45,7 +45,7 @@ const Footer = ({ minimal, state }) => (
               and <a href="https://opencollective.com" target="_blank">Open Source Collective</a>
             </p>
           </Col>
-          <Col md={6}>
+          <Col md={6} lg={4}>
             <Button href="https://github.com/humanific/fundoss/issues" block size="lg" variant="outline-light">🐞Submit Bugs or Issues</Button>
             <h5>Share FundOSS.org</h5>
             <ShareButton platform="twitter" variant="link" siteUrl={state.siteUrl} url="/" />
