@@ -44,7 +44,7 @@ const Ghost = {
     const subs = await Ghost.initAdmin()
       .members.browse({ filter: `email:${email}` })
       .catch((e) => console.log(e));
-    return subs.length ? subs[0] : false;
+    return subs?.length ? subs[0] : false;
   },
   api: null,
   adminApi: null,
