@@ -116,7 +116,7 @@ const FundingSession = ({
 
             {!started ? (
               <Col xs={{ order: 2, span: 12 }} lg={{ order: 1, span: 4 }}>
-                <Card className="invert glass" style={{maxWidth: '350px', margin: '10px auto'}}>
+                <Card className="invert glass" style={{ maxWidth: '350px', margin: '10px auto' }}>
                   <Card.Body className="content text-center airy">
                     { session.allowNominations ? (<><Nominate sessionId={session._id} /><hr /></>) : null }
                     <h3>Sign Up to be notified when {session.name} starts</h3>
@@ -127,7 +127,7 @@ const FundingSession = ({
                     </p>
                     <Button variant="link" block href="https://opencollective.com/create" target="_blank">
                       Create your collective on<br />
-                      <img src="/static/sponsors/osc.svg" alt="Open Source Collectives" width="70%" style={{margin: '10px auto'}} />
+                      <img src="/static/sponsors/osc.svg" alt="Open Source Collectives" width="70%" style={{ margin: '10px auto' }} />
                     </Button>
                   </Card.Body>
                 </Card>
@@ -232,8 +232,18 @@ const FundingSession = ({
                 </div>
               </Col>
             ) : null}
+            { !started && !session.allowNominations ? (
+              <Col xs={4} lg={3} className="text-center">
+                <Button
+                  href="https://opencollective.com/fundoss"
+                  target="_blank" 
+                  variant="link"
+                > 🔥🔥 Donate&nbsp;
+                  <span className="d-none d-md-inline">to our matching pool</span>
+                </Button>
+              </Col>
+            ) : null}
           </Row>
-
         </Card>
         <Row>{
           collectivesList.map(
