@@ -104,7 +104,7 @@ export async function insertSession(session):Promise<IFundingSession> {
   return FundingSession.create(session);
 }
 
-export async function editSession(session):Promise {
+export async function editSession(session) {
   await dbConnect();
   await FundingSession.updateOne(
     { _id: session._id },
