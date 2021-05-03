@@ -2,6 +2,7 @@ import nextConnect from 'next-connect';
 import moment from 'moment';
 import { NextApiResponse } from 'next';
 import Stripe from 'stripe';
+import { PaymentMethod } from '@stripe/stripe-js';
 import { all } from '../../../middleware/index';
 import Payment from '../../../lib/payment/paymentController';
 import { formatAmountForStripe } from '../../../utils/currency';
@@ -10,6 +11,7 @@ import Cart from '../../../lib/cart/CartController';
 import FundingSessionController from '../../../lib/fundingSession/fundingSessionController';
 import Mail from '../../../lib/mail';
 import Ghost from '../../../lib/ghost';
+
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2020-08-27',
@@ -87,10 +89,16 @@ handler.post(async (req: any, res: NextApiResponse) => {
       if (!savedPayment) return res.status(500).json({ statusCode: 500, message: 'invalid payment' });
       try {
         const intent: Stripe.PaymentIntent = await stripe.paymentIntents.retrieve(
-          savedPayment.intentId, { expand: ['charges.data.balance_transaction'] },
+          savedPayment.intentId, { expand:
+            [
+              'charges.data.balance_transaction',
+              'payment_method',
+            ],
+          },
         );
         if (intent.status === 'succeeded') {
           const donations = await Cart.get(req.session.cart);
+          const paymentMethod = intent.payment_method;
           const update = {
             sid: savedPayment.sid,
             amount: savedPayment.amount,
@@ -98,6 +106,7 @@ handler.post(async (req: any, res: NextApiResponse) => {
             session: savedPayment.session._id,
             user: savedPayment.user._id,
             status: intent.status,
+            cardFingerPrint: (paymentMethod as PaymentMethod).card.fingerprint,
             confirmation: intent,
             donations: donations.reduce((data, item) => (
               { ...data, [item.collective._id]: item.amount }
