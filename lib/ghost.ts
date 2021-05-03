@@ -38,7 +38,6 @@ const Ghost = {
     return Ghost.initAdmin().members.edit(
       { id: existing.id, subscribed: member.subscribed },
     ).catch((e) => console.log(e));
-    return existing;
   },
   getMember: async (email) => {
     const subs = await Ghost.initAdmin()
