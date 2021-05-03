@@ -98,7 +98,7 @@ const ThanksPage = ({ state, payment }) => {
             
             {!state.upcoming?._id ? (
               <Card.Footer style={{ marginTop: '20px' }}>
-                <Link href="/upcoming">
+                <Link href="/">
                   <Button size="lg" block variant="outline-primary">
                     Back to home
                   </Button>
