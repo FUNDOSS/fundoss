@@ -94,7 +94,19 @@ const ThanksPage = ({ state, payment }) => {
                   </Button>
                 </Link>
               </Card.Footer>
-            ) : null }     
+            ) : null }    
+            
+            {!state.upcoming?._id ? (
+              <Card.Footer style={{ marginTop: '20px' }}>
+                <Link href="/upcoming">
+                  <Button size="lg" block variant="outline-primary">
+                    Back to home
+                  </Button>
+                </Link>
+              </Card.Footer>
+            ) : null }  
+
+
           </Card>
         </Container>
       </div>
