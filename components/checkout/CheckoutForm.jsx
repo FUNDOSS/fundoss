@@ -32,6 +32,8 @@ const CheckoutForm = ({ user }) => {
   const router = useRouter();
   const initialValues = {
     cardholderName: user.name || '',
+    tc: false,
+    subscribe: false,
     billing_details: user.billing || {
       name: user.name || '',
       email: user.email || '',
@@ -40,7 +42,7 @@ const CheckoutForm = ({ user }) => {
 
   const handleSubmit = async (values, { setStatus }) => {
     setStatus({ paymentStatus: 'verify' });
-    const response = await fetchPostJSON('/api/checkout', { billing_details: values.billing_details });
+    const response = await fetchPostJSON('/api/checkout', { billing_details: values.billing_details, subscribe: values.subscribe });
     const { paymentId, clientSecret } = response;
     const cardElement = elements.getElement(CardElement);
     const { error, paymentIntent } = await stripe.confirmCardPayment(
