@@ -9,6 +9,7 @@ import Users from '../../../lib/user/usersController';
 import Cart from '../../../lib/cart/CartController';
 import FundingSessionController from '../../../lib/fundingSession/fundingSessionController';
 import Mail from '../../../lib/mail';
+import Ghost from '../../../lib/ghost';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2020-08-27',
@@ -23,14 +24,21 @@ handler.post(async (req: any, res: NextApiResponse) => {
     return res.status(401).send('Unauthorized');
   }
 
-  const current = FundingSessionController.getCurrentSessionInfo();
+  const current = await FundingSessionController.getCurrentSessionInfo();
   const config = FundingSessionController.getDonationsConfig();
 
-  if (!current) return res.status(500).json({ statusCode: 500, message: 'no active session' });
+  if (!current._id) return res.status(500).json({ statusCode: 500, message: 'no active session' });
 
   if (!req.body.payment) {
     if (req.body.billing_details) {
       Users.update({ _id: req.user._id, billing: req.body.billing_details });
+    }
+    if (req.body.subscribe) {
+      Ghost.subscribe({
+        name: req.body.billing_details.name,
+        email: req.body.billing_details.email,
+        subscribed: true,
+      });
     }
     const amount = Object.keys(req.session.cart)
       .map((_id) => req.session.cart[_id])
@@ -43,12 +51,18 @@ handler.post(async (req: any, res: NextApiResponse) => {
       const cartData = (await Cart.get(req.session.cart)).reduce((data, item) => ({
         amount: data.amount + Number(item.amount),
         meta: { ...data.meta, [item.collective.slug]: item.amount },
-      }), { amount: 0, meta: {} });
+      }), {
+        amount: 0,
+        meta: {
+          user: req.user._id.toString(),
+          session: current.slug,
+        },
+      });
       const params: Stripe.PaymentIntentCreateParams = {
         payment_method_types: ['card'],
         amount: formatAmountForStripe(cartData.amount),
         currency: 'USD',
-        description: process.env.STRIPE_PAYMENT_DESCRIPTION ?? '',
+        description: `${process.env.STRIPE_PAYMENT_DESCRIPTION} ${current.name}`,
         metadata: cartData.meta,
       };
       const paymentIntent: Stripe.PaymentIntent = await stripe.paymentIntents.create(
