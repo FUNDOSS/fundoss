@@ -12,7 +12,6 @@ import FundingSessionController from '../../../lib/fundingSession/fundingSession
 import Mail from '../../../lib/mail';
 import Ghost from '../../../lib/ghost';
 
-
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2020-08-27',
 });
@@ -89,7 +88,8 @@ handler.post(async (req: any, res: NextApiResponse) => {
       if (!savedPayment) return res.status(500).json({ statusCode: 500, message: 'invalid payment' });
       try {
         const intent: Stripe.PaymentIntent = await stripe.paymentIntents.retrieve(
-          savedPayment.intentId, { expand:
+          savedPayment.intentId, {
+            expand:
             [
               'charges.data.balance_transaction',
               'payment_method',
@@ -98,7 +98,7 @@ handler.post(async (req: any, res: NextApiResponse) => {
         );
         if (intent.status === 'succeeded') {
           const donations = await Cart.get(req.session.cart);
-          const paymentMethod = intent.payment_method;
+          const paymentMethod:PaymentMethod = intent.payment_method as PaymentMethod;
           const update = {
             sid: savedPayment.sid,
             amount: savedPayment.amount,
@@ -106,7 +106,7 @@ handler.post(async (req: any, res: NextApiResponse) => {
             session: savedPayment.session._id,
             user: savedPayment.user._id,
             status: intent.status,
-            cardFingerPrint: (paymentMethod as PaymentMethod).card.fingerprint,
+            cardFingerPrint: paymentMethod.card.fingerprint,
             confirmation: intent,
             donations: donations.reduce((data, item) => (
               { ...data, [item.collective._id]: item.amount }
