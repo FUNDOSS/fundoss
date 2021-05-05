@@ -1,13 +1,9 @@
 /* eslint-disable react/no-danger */
 import React, { useState } from 'react';
-import Container from 'react-bootstrap/Container';
 import Link from 'next/link';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import FormControl from 'react-bootstrap/FormControl';
 import moment from 'moment';
-import Button from 'react-bootstrap/Button';
-import { Card, Image } from 'react-bootstrap';
+import { Card, Image, Alert, Col, Row, Button, Container } from 'react-bootstrap';
 import CollectiveCard from '../collective/CollectiveCard';
 import FeaturedCollectiveCard from '../collective/FeaturedCollectiveCard';
 import Sponsors from './Sponsors';
@@ -16,7 +12,7 @@ import FundingSessionInfo from './FundingSessionInfo';
 import Nominate from '../collective/NominateForm';
 import AdminLinks from './AdminLinks';
 import ShareButton from '../social/ShareButton';
-import SubscriptionForm from '../SubscriptionForm';
+import Subscriptionform from '../SubscriptionForm';
 
 const FundingSession = ({
   session, user, predicted, state, nominations = { user: [] }, featured,
@@ -25,7 +21,11 @@ const FundingSession = ({
     name, description, collectives, start, end, sponsors, 
   } = session;
 
-  const [collectivesList, setCollectivesList] = useState(collectives.map((c) => ({ ...c })));
+  const [collectivesList, setCollectivesList] = useState(
+    collectives.map((c) => ({ ...c })).sort(
+      () => 0.5 - Math.random(),
+    ),
+  );
   const [sort, setSort] = useState('desc');
   const [setSortOn] = useState('total');
   const [tags, setTags] = useState([]);
@@ -60,11 +60,11 @@ const FundingSession = ({
   const change = (filters) => {
     if (filters.sort) setSort(filters.sort);
     if (filters.sortOn) setSortOn(filters.sortOn);
-    if (filters.search) setSearch(filters.search);
+    setSearch(filters.search);
     if (filters.tags) setTags(filters.tags);
     let list = collectives;
-    if (filters.search || search) {
-      const src = filters.search || search;
+    if (filters.search) {
+      const src = filters.search;
       list = collectives.filter((col) => col.name.toLowerCase().indexOf(src) > -1
       || col.description?.toLowerCase().indexOf(src) > -1
       || col.longDescription?.toLowerCase().indexOf(src) > -1);
@@ -120,7 +120,7 @@ const FundingSession = ({
                   <Card.Body className="content text-center airy">
                     { session.allowNominations ? (<><Nominate sessionId={session._id} /><hr /></>) : null }
                     <h3>Sign Up to be notified when {session.name} starts</h3>
-                    <SubscriptionForm user={user} />
+                    <Subscriptionform user={user} />
                     
                     <p className="airy">
                       Do you want your project included in a future round?
@@ -193,6 +193,7 @@ const FundingSession = ({
                 placeholder="Filter by name and description"
                 className="mr-sm-2"
                 onChange={(e) => typeInSearch(e.target.value.toLowerCase())}
+                onKeyUp={(e) => typeInSearch(e.target.value.toLowerCase())}
               />
             </Col>
             { started ? (
@@ -245,7 +246,8 @@ const FundingSession = ({
             ) : null}
           </Row>
         </Card>
-        <Row>{
+        {collectivesList.length ? (
+          <Row>{
           collectivesList.map(
             (collective) => (
               <Col md={6} lg={4} key={collective.slug}>
@@ -263,7 +265,10 @@ const FundingSession = ({
             ),
           )
         }
-        </Row>
+          </Row>
+        ) : null}
+
+        {!collectivesList.length ? <Alert variant="info">No collectives found</Alert> : null}
       </Container>
     </>
   );
