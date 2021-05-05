@@ -15,7 +15,7 @@ const PaymentsList = ({ payments, state }) => (
           <Card key={payment._id} className="payment glass">
             <Card.Header>
               <Row>
-                <Col xs={6} md={8} >
+                <Col xs={6} md={7} >
                   
                   <span className="lead text-fat">{formatAmountForDisplay(payment.amount)}</span>&nbsp;
                   <Badge variant="info">{moment(payment.timeslug).format('MMMM Do YYYY')}</Badge>&nbsp;
@@ -36,7 +36,7 @@ const PaymentsList = ({ payments, state }) => (
                   <Col xs={3} md={2} xl={1} className="text-fat">
                     {formatAmountForDisplay(don.amount)}
                   </Col>
-                  <Col className="text-fat">
+                  <Col>
                     <Link href={`/collective/${don.collective.slug}`}>
                       <a><Image src={don.collective.imageUrl} roundedCircle width={20} />&nbsp;
                       {don.collective.name}</a>

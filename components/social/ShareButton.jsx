@@ -27,7 +27,7 @@ const ShareButton = ({
   const Sharer = platforms[platform || 'twitter'];
   return (
     <Button target="_blank" href={Sharer.url(shareUrl)} variant={variant || 'primary'} size={size || 'md'}>
-      <Sharer.icon size={22} />
+      <Sharer.icon size={18} />
       { !mini ? <span>&nbsp;{Sharer.text}</span> : null}
     </Button>
   ); 
