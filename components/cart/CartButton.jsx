@@ -11,7 +11,7 @@ const CartButton = ({ itemCount }) => {
   }, []);
 
   return (
-    <Button variant="link" onClick={() => Cart.show()}>
+    <Button className="btn-cart" variant="link" onClick={() => Cart.show()}>
       <Icons.Cart size={22} />
       {count ? <Badge variant="danger" className="round">{count}</Badge> : null}
     </Button>

@@ -18,13 +18,13 @@ const AuthLinks = ({ user }) => (
           menuAlign="right"
           title={(
             <span className="authDropdownLabel">
-              <Image width="20" height="20" src={user?.avatar} roundedCircle />
-              <span>{` Hi ${user?.name || user?.username}`}</span>
+              <Image width="20" height="20" src={user?.avatar} roundedCircle />&nbsp;
+              <span>{user?.name || user?.username}</span>
             </span>
       )}
         >
           <Link href="/account">
-            <Dropdown.Item  href="/account">
+            <Dropdown.Item href="/account">
               Account
             </Dropdown.Item>
           </Link>
