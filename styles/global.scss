@@ -317,21 +317,12 @@ h1{margin:2rem 0}
     padding: 40px 0;
 }
 
-
-@include media-breakpoint-down(sm) {
-    .authDropdownLabel span{display:none}
-    header a.navbar-brand svg.logo{max-width:110px}
-    header .btn{padding: 0.1rem 0.2rem;}
-    .match.big{
-        font-size: 1.2rem;
-    }
-}
-
 @include media-breakpoint-down(md) {
+    header a.navbar-brand svg.logo{max-width:120px}
     header .logo{
         position: absolute;
-        top: 10px;
-        left:60px;
+        top: 13px;
+        left:90px;
     }
     header .btn-cart{
         position: absolute;
@@ -344,6 +335,19 @@ h1{margin:2rem 0}
         right:20px;
     }
 }
+
+@include media-breakpoint-down(sm) {
+    .authDropdownLabel span{display:none}
+    header a.navbar-brand svg.logo{max-width:110px}
+    header .btn{padding: 0.1rem 0.2rem;}
+    .match.big{
+        font-size: 1.2rem;
+    }
+    header .auth{ right:10px; }
+    header .btn-cart{ right:60px; }
+}
+
+
 
 
 .StripeElement--complete{
