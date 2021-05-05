@@ -123,7 +123,8 @@ export async function getCurrentSession():Promise<any> {
   if (session) {
     const sessionData = await setCollectiveTotals(session);
     sessionData.donateConfig = getDonationsConfig();
-    return session;
+    sessionData.collectives = session.collectives.sort(() => 0.5 - Math.random());
+    return sessionData;
   }
   return false;
 }
@@ -143,6 +144,7 @@ export async function getUpcomingSession():Promise<any> {
     start: { $gte: new Date() },
     published: true,
   }).populate('collectives');
+
   return session;
 }
 
@@ -175,6 +177,7 @@ export async function getAll():Promise<IFundingSession[]> {
 export async function getById(id:string):Promise<IFundingSession> {
   await dbConnect();
   const session = await FundingSession.findOne({ _id: id }).populate('collectives');
+  session.collectives = session.collectives.sort(() => 0.5 - Math.random());
   return session;
 }
 
@@ -183,6 +186,7 @@ export async function getBySlug(slug:string):Promise<IFundingSession> {
   const session = await FundingSession.findOne({ slug }).populate('collectives');
   if (session._id) {
     const sessionData = await setCollectiveTotals(session);
+    sessionData.collectives = sessionData.collectives.sort(() => 0.5 - Math.random());
     sessionData.donateConfig = getDonationsConfig();
     return sessionData;
   }

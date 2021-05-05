@@ -22,9 +22,7 @@ const FundingSession = ({
   } = session;
 
   const [collectivesList, setCollectivesList] = useState(
-    collectives.map((c) => ({ ...c })).sort(
-      () => 0.5 - Math.random(),
-    ),
+    collectives.map((c) => ({ ...c })),
   );
   const [sort, setSort] = useState('desc');
   const [setSortOn] = useState('total');
