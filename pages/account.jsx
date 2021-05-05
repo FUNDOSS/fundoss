@@ -28,7 +28,7 @@ const AccountPage = ({ payments, state, subscription }) => {
         <Container style={{ paddingTop: '40px' }} className="content">
           {user._id ? (
             <Row>
-              <Col md={3} className="text-center text-md-left"> 
+              <Col md={4} lg={3} className="text-center text-md-left"> 
                 <h2>Profile</h2>
                 <Image src={user.avatar} roundedCircle width={100} />
                 <h5>Name</h5>
@@ -44,30 +44,23 @@ const AccountPage = ({ payments, state, subscription }) => {
                 <Form.Check 
                   label="Subscribed for updates" 
                   checked={subscribed} 
-                  onChange={(e) => setSubscribed(e.target.checked)}
+                  onChange={async (e) => {
+                    setSubscribed(e.target.checked);
+                    setSubmitting(true);
+                    const result = await fetch('/api/subscribe', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({
+                        email: user.email,
+                        subscribed: e.target.checked,
+                      }),
+                    });
+                    const sub = await result.json();
+                    setSub(sub.sub);
+                    setSubmitting(false);
+                  }}
                 />
-                {(subscribed !== sub?.subscribed) ? (
-                  <Button
-                    onClick={async () => {
-                      setSubmitting(true);
-                      const result = await fetch('/api/subscribe', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                          email: user.email,
-                          subscribed,
-                        }),
-                      });
-                      const sub = await result.json();
-                      setSub(sub.sub);
-                      setSubmitting(false);
-                    }}
-                    disabled={!!submitting}
-                    variant="outline-primary"
-                    size="sm"
-                  >{ submitting ? <Spinner animation="border" size="sm" /> : null} Update subscription 
-                  </Button>
-                ) : null}
+                { submitting ? <Spinner animation="border" size="sm" /> : null} 
               </Col>
               <Col>
                 <h2 style={{ margin: '30px 0' }} className="text-center text-md-left">Donations History</h2>
