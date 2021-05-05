@@ -2,7 +2,6 @@ import { GraphQLClient, gql } from 'graphql-request';
 import moment from 'moment';
 import mongoose from 'mongoose';
 import Collective from './CollectiveModel';
-import FundingSessions from '../fundingSession/fundingSessionController';
 import CollectiveSessionTotals from '../payment/collectiveSessionTotalsModel';
 import dbConnect from '../dbConnect';
 import NominationModel from './NominationModel';
@@ -137,7 +136,7 @@ export async function similarCollectives(session, collective) {
     return similarAggregate.map((s) => s.collective[0]);
   }
 
-  return [];// current ? current.collectives.filter(() => (Math.random() > 0.9)) : [];
+  return [];
 }
 
 export async function getCollective(slug:string):Promise<any> {
