@@ -1,7 +1,7 @@
 import React from 'react';
+import { useRouter } from 'next/router';
 import Button from 'react-bootstrap/Button';
 import Icons from '../icons';
-import { useRouter } from 'next/router';
 
 const ShareButton = ({
   url = null, platform, size, variant, mini = false, siteUrl,
@@ -21,7 +21,7 @@ const ShareButton = ({
     email: {
       text: 'Email',
       icon: Icons.Email,
-      url: (url) => (`mailto:?subject=&body=${url}`),
+      url: (url) => (`mailto:?subject=${encodeURIComponent('FundOSS democtratic funding for open source projects')}&body=${encodeURIComponent(url)}`),
     },
   };
   const Sharer = platforms[platform || 'twitter'];
