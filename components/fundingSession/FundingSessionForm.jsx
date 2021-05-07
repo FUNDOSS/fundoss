@@ -58,9 +58,10 @@ const FundingSessionForm = ({ sessionData }) => {
 
   const started = moment(sessionData?.start) < moment();
   const ended = moment(sessionData?.end) > moment();
-
+  const curve = false;
   const handleSubmit = async (values, { setStatus }) => {
     const body = JSON.stringify(values);
+    
     const res = await fetch('/api/funding-session', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -204,7 +205,7 @@ const FundingSessionForm = ({ sessionData }) => {
                 <Form.Control.Feedback type="invalid">{errors.numberDonationEst}</Form.Control.Feedback>
               </Form.Group>
             </Col>
-            {!started ? (            
+            {!started && curve ? (            
               <Col>
                 <Form.Group controlId="matchingCurve.exp">
                   <Form.Label>exp</Form.Label>
@@ -221,7 +222,7 @@ const FundingSessionForm = ({ sessionData }) => {
               </Col>
             ) : null}
           </Row>
-          {!started ? ( 
+          {!started && curve ? ( 
             <Form.Group controlId="matchingCurve.symetric">
               <Form.Check 
                 label="symetric curve" 
@@ -246,8 +247,6 @@ const FundingSessionForm = ({ sessionData }) => {
             width={520}
             height={300}
           />
-
-
 
           <Form.Group controlId="description">
             <Form.Label>Session description</Form.Label>
