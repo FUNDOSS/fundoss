@@ -58,11 +58,11 @@ const FundingSession = ({
   const change = (filters) => {
     if (filters.sort) setSort(filters.sort);
     if (filters.sortOn) setSortOn(filters.sortOn);
-    setSearch(filters.search);
+    if (filters.search !== undefined) setSearch(filters.search);
     if (filters.tags) setTags(filters.tags);
     let list = collectives;
-    if (filters.search) {
-      const src = filters.search;
+    if (filters.search || (filters.search === undefined && search)) {
+      const src = filters.search || search;
       list = collectives.filter((col) => col.name.toLowerCase().indexOf(src) > -1
       || col.description?.toLowerCase().indexOf(src) > -1
       || col.longDescription?.toLowerCase().indexOf(src) > -1);
