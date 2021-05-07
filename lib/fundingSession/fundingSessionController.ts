@@ -186,7 +186,6 @@ export async function getBySlug(slug:string):Promise<IFundingSession> {
   const session = await FundingSession.findOne({ slug }).populate('collectives');
   if (session._id) {
     const sessionData = await setCollectiveTotals(session);
-    sessionData.collectives = sessionData.collectives.sort(() => 0.5 - Math.random());
     sessionData.donateConfig = getDonationsConfig();
     return sessionData;
   }
