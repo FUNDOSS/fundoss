@@ -22,6 +22,9 @@ const Footer = ({ minimal, state }) => (
               <Nav.Link href="https://blog.opencollective.com/fundoss-faqv1/">FAQ</Nav.Link>
               <Link href="/democratic-funding"><Nav.Link href="/democratic-funding">How democratic funding works</Nav.Link></Link>
               <Nav.Link href="https://opencollective.com/fundoss" target="_blank">Contribute to future rounds</Nav.Link>
+              <Nav.Link href="/page/privacy" target="_blank">Privacy Policy</Nav.Link>
+              <Nav.Link href="/page/terms-and-conditions" target="_blank">Terms and Conditions</Nav.Link>
+
             </Nav>
             <h5>Social</h5>
             <Nav className="flex-column">
