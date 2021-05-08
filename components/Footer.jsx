@@ -44,8 +44,8 @@ const Footer = ({ minimal, state }) => (
             </Nav>
             <h5>Partnership</h5>
             <p>
-              FundOSS is a partnership between <a href="https://gitcoin.co" target="_blank">Gitcoin</a>&nbsp;
-              and <a href="https://opencollective.com" target="_blank">Open Source Collective</a>
+              FundOSS is a partnership between <a href="https://gitcoin.co" target="_blank" rel="noreferrer">Gitcoin</a>&nbsp;
+              and <a href="https://opencollective.com" target="_blank" rel="noreferrer">Open Source Collective</a>
             </p>
           </Col>
           <Col md={6} lg={4}>
@@ -55,7 +55,7 @@ const Footer = ({ minimal, state }) => (
             <ShareButton platform="facebook" variant="link" siteUrl={state.siteUrl} url="/" />
             <ShareButton platform="email" variant="link" siteUrl={state.siteUrl} url="/" />
             <p>Another way you can support the amazing OSC collectives&nbsp;
-               hosted here is by getting the word out!
+              hosted here is by getting the word out!
             </p>
             <p>Please consider sharing with your friends and family.</p>
           </Col>
