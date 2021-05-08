@@ -110,7 +110,7 @@ export async function similarCollectives(session, collective) {
         { $limit: 10 },
         {
           $match: {
-            collective: {$ne: collective},
+            collective: { $ne: collective },
             user: { $in: userDonnations[0].users },
             session: mongoose.Types.ObjectId(session),
           },
@@ -149,8 +149,8 @@ export async function getCollective(slug:string):Promise<any> {
   }
 
   const query = gql`
-  query collectives($slug: String!) {
-    collective(slug: $slug) {
+  query accounts($slug: String!) {
+    account(slug: $slug) {
       name
       twitterHandle
       githubHandle
@@ -178,17 +178,20 @@ export async function getCollective(slug:string):Promise<any> {
   const client = new GraphQLClient(endpoint);
   try {
     const data = await client.request(query, variables);
-    data.collective.membersCount = data.collective.members.totalCount;
-    data.collective.members = data.collective.members.nodes
-      .map((member) => member.account.imageUrl);
-    data.collective.lastUpdate = new Date();
-    data.collective.slug = slug;
-    if (!savedCollective) {
-      return Collective.create(data.collective);
+    if (data.account?.members.totalCount) {
+      data.account.membersCount = data.account.members.totalCount;
+      data.account.members = data.account.members.nodes
+        .map((member) => member.account.imageUrl);
     }
-    await Collective.updateOne({ _id: savedCollective._id }, data.collective);
+    data.account.lastUpdate = new Date();
+    data.account.slug = slug;
+    if (!savedCollective) {
+      return Collective.create(data.account);
+    }
+    await Collective.updateOne({ _id: savedCollective._id }, data.account);
     return await findBySlug(slug);
   } catch (error) {
+    console.log(error);
     return { error: error.response.errors[0].message, slug };
   }
 }
