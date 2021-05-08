@@ -75,23 +75,24 @@ const collectivePage = ({
             &nbsp;<div className="d-block d-lg-none" />
               <span style={{ padding: '5px 0 0 10px' }} className="lead">Fiscal Host: Open Source Collective 501(c)(6)</span>
               <div className="collective-content" dangerouslySetInnerHTML={{ __html: longDescription }} style={{ padding: '20px 0' }} />
-              <h3>Community</h3>
-              <div style={{ borderLeft: ' 5px solid #02E2AC', padding: '10px 0 10px 20px', marginBottom: '20px' }}>
-                <p>{collective.membersCount || members.length} {Pluralize('member', collective.membersCount || members.length)}</p>
-                {members.map(
-                  (member, index) => (
-                    index < 10 ? (
-                      <Image 
-                        key={index}
-                        src={member} 
-                        roundedCircle
-                        width={35}
-                        height={35}
-                      />
-                    ) : null
-                  ),
-                )}
-              </div>
+              {members.length ? (
+                <><h3>Community</h3>
+                  <div style={{ borderLeft: ' 5px solid #02E2AC', padding: '10px 0 10px 20px', marginBottom: '20px' }}>
+                    <p>{collective.membersCount || members.length} {Pluralize('member', collective.membersCount || members.length)}</p>
+                    {members.map(
+                      (member, index) => (
+                        <Image 
+                          key={index}
+                          src={member} 
+                          roundedCircle
+                          width={35}
+                          height={35}
+                        />
+                      ),
+                    )}
+                  </div>
+                </>
+              ) : null }
             </Col>
             <Col>
               {isInCurrentSession ? (
@@ -146,7 +147,7 @@ const collectivePage = ({
           </Row>
           <Row />
         </Container>
-        { similar ? (
+        { similar?.length ? (
           <div className="similar">
             <Container>
               <h3>Similar Collectives</h3>
