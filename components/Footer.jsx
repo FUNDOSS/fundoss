@@ -16,7 +16,7 @@ const Footer = ({ minimal, state }) => (
       <Container>
         <Logo className="logo" width={240} height={80} />
         <Row>
-          <Col lg={{span:3, offset:1}}>
+          <Col lg={{ span: 3, offset: 1 }}>
             <h5>Platform</h5>
             <Nav className="flex-column">
               <Nav.Link href="https://blog.opencollective.com/fundoss-faqv1/">FAQ</Nav.Link>
