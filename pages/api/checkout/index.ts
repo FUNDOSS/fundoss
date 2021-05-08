@@ -1,5 +1,4 @@
 import nextConnect from 'next-connect';
-import moment from 'moment';
 import { NextApiResponse } from 'next';
 import Stripe from 'stripe';
 import { PaymentMethod } from '@stripe/stripe-js';
@@ -98,7 +97,7 @@ handler.post(async (req: any, res: NextApiResponse) => {
         );
         if (intent.status === 'succeeded') {
           const donations = await Cart.get(req.session.cart);
-          const paymentMethod:PaymentMethod = intent.payment_method as PaymentMethod;
+          const paymentMethod = intent.payment_method;
           const update = {
             sid: savedPayment.sid,
             amount: savedPayment.amount,
@@ -106,7 +105,7 @@ handler.post(async (req: any, res: NextApiResponse) => {
             session: savedPayment.session._id,
             user: savedPayment.user._id,
             status: intent.status,
-            cardFingerPrint: paymentMethod.card.fingerprint,
+            cardFingerPrint: (paymentMethod as PaymentMethod).card.fingerprint,
             confirmation: intent,
             donations: donations.reduce((data, item) => (
               { ...data, [item.collective._id]: item.amount }
