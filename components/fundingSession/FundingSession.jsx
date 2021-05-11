@@ -232,7 +232,7 @@ const FundingSession = ({
               </Col>
             ) : null}
             { !started && !session.allowNominations ? (
-              <Col xs={4} md={5} lg={3} className="text-center">
+              <Col xs={4} md={5} lg={4} className="text-center">
                 <Button
                   href="https://opencollective.com/fundoss"
                   target="_blank" 
