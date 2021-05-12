@@ -26,16 +26,18 @@ const CollectiveCard = ({
     cartEvents.on('cartChange', () => setInCart(Cart.collectives[collective._id]));
   }, []);
 
+  const truncate = (input, length) => (input.length > length ? `${input.substring(0, length)}...` : input);
+
   return (
     <Card className="collective-card" id={`collective-${slug}`}>
       <Card.Header style={{ minHeight: '110px' }}>
-        <Row>
+        <Row className="align-items-center">
           <Col xs={2} md={3}>
             { imageUrl ? <Image width="50" height="50" src={imageUrl} roundedCircle fluid /> : null }
           </Col>
           <Col>
             <Card.Title>
-              <Link href={`/collective/${slug}`}>{name}</Link>
+              <Link href={`/collective/${slug}`}>{truncate(name, 20)}</Link>
             </Card.Title>
             { website ? (
               <a variant="link" target="_blank" rel="noreferrer" href={website} style={{ marginRight: '10px' }}>
@@ -115,7 +117,7 @@ const CollectiveCard = ({
             ) : null}
           </Col>
           <Col>
-            <Button block variant="link"><Link href={`/collective/${slug}`}>read&nbsp;more</Link></Button>
+            <Button block variant={active || nominate ? 'link' : 'outline-primary'}><Link href={`/collective/${slug}`}>read&nbsp;more</Link></Button>
           </Col>
         </Row>
 
