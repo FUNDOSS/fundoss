@@ -104,7 +104,7 @@ const CollectiveCard = ({
             {active ? (
               <>
                 { !inCart ? (
-                  <Button block variant="outline-primary" onClick={() => Cart.addItem(collective, donateConfig.def, true)}>
+                  <Button block variant="outline-primary" onClick={() => Cart.addItem(collective, donateConfig.def)}>
                     <Icons.Cart size={18} /> Add to cart
                   </Button>
                 ) : (
@@ -117,7 +117,9 @@ const CollectiveCard = ({
             ) : null}
           </Col>
           <Col>
-            <Button block variant={active || nominate ? 'link' : 'outline-primary'}><Link href={`/collective/${slug}`}>read&nbsp;more</Link></Button>
+            <Link href={`/collective/${slug}`}>
+              <Button block variant={active || nominate ? 'link' : 'outline-primary'}>read&nbsp;more</Button>
+            </Link>
           </Col>
         </Row>
 
