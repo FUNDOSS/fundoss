@@ -157,11 +157,11 @@ const collectivePage = ({
                   similar.map(
                     (collective) => (
                       <Col md={6} lg={4} key={collective.slug}>
-                        <CollectiveCard collective={collective} />
+                        <CollectiveCard active={isInCurrentSession} collective={collective} />
                       </Col>
                     ),
                   )
-}
+                }
               </Row>
             </Container>
           </div>
