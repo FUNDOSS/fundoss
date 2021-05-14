@@ -5,7 +5,7 @@
     "@typescript-eslint"
   ],
   "extends": [
-  //  "airbnb",
+    "airbnb",
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended"
@@ -29,7 +29,8 @@
     ],
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/no-explicit-any": "off",
-    "no-trailing-spaces":"off"
+    "no-trailing-spaces":"off",
+    "jsx-a11y/anchor-is-valid":"off",
   },
   "overrides": [{
     "files": ["*.jsx"],
