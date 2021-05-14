@@ -52,6 +52,7 @@ export async function updatePayment(payment) {
     await fundingSessionModel.updateOne({ _id: payment.session }, { totals: sessionTotals });
 
     paymentUpdates.donations = donations;
+    paymentUpdates.browserFingerprint = payment.browserFingerprint;
     paymentUpdates.fee = fee;
   }
 

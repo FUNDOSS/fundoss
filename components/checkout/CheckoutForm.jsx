@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import FingerprintJS from '@fingerprintjs/fingerprintjs';
 import * as Yup from 'yup';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import {
@@ -17,6 +18,7 @@ import Icons from '../icons';
 const CheckoutForm = ({ user }) => {
   const stripe = useStripe();
   const elements = useElements();
+  
   const checkoutValidationSchema = Yup.object({
     cardholderName: Yup.string()
       .required('Please enter the name on your card'),
@@ -61,7 +63,11 @@ const CheckoutForm = ({ user }) => {
     } else if (paymentIntent) {
       setStatus({ paymentStatus: paymentIntent.status });
       if (paymentIntent.status === 'succeeded') {
-        const confirmation = await fetchPostJSON('/api/checkout', { payment: { status: 'succeeded', id: paymentId } });
+        const fp = await FingerprintJS.load();
+        const browserFingerprint = (await fp.get()).visitorId;
+        const confirmation = await fetchPostJSON('/api/checkout', { 
+          payment: { status: 'succeeded', id: paymentId, browserFingerprint },
+        });
         if (confirmation.status === 'succeeded') {
           setStatus({ paymentStatus: 'completed' });
           router.push('/thanks');

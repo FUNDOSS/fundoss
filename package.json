@@ -13,6 +13,7 @@
   "author": "Francois Richir",
   "license": "GPL-3.0-or-later",
   "dependencies": {
+    "@fingerprintjs/fingerprintjs": "^3.1.2",
     "@sendgrid/mail": "^7.4.0",
     "@stripe/react-stripe-js": "^1.4.0",
     "@stripe/stripe-js": "^1.13.1",

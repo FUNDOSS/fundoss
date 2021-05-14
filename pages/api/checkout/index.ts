@@ -110,6 +110,7 @@ handler.post(async (req: any, res: NextApiResponse) => {
             donations: donations.reduce((data, item) => (
               { ...data, [item.collective._id]: item.amount }
             ), {}),
+            browserFingerprint: payment.browserFingerprint,
           };
           await Payment.update(update);
           req.session.cart = {};

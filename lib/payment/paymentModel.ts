@@ -13,6 +13,7 @@ export interface IPaymentInput {
   intentId?: string;
   confirmation?: any;
   cardFingerPrint?: string;
+  browserFingerprint?: string;
   error?: any;
 }
 
@@ -29,6 +30,7 @@ export interface IPayment extends Document {
   shareImage:string;
   session:IFundingSession;
   cardFingerPrint: string;
+  browserFingerprint: string;
 }
 
 const PaymentSchema = new Schema({
@@ -60,6 +62,9 @@ const PaymentSchema = new Schema({
     type: Schema.Types.Mixed,
   },
   cardFingerPrint: {
+    type: String,
+  },
+  browserFingerprint: {
     type: String,
   },
   error: {
