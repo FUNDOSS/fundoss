@@ -6,6 +6,7 @@ import FundingSessions from '../fundingSession/fundingSessionController';
 import Collectives from '../collectives/CollectivesController';
 import fundingSessionModel from '../fundingSession/fundingSessionModel';
 import Qf from '../../utils/qf';
+import calculateSybilAttackScore from './sybilAttackScore';
 
 export async function insertPayment(payment) {
   await dbConnect();
@@ -38,7 +39,6 @@ export async function updatePayment(payment) {
           return donation._id;
         }),
     );
-
     const sessionTotals = (await Donation
       .aggregate([
         { $match: { session: mongoose.Types.ObjectId(payment.session) } },
@@ -50,7 +50,7 @@ export async function updatePayment(payment) {
       }), { donations: [], amount: 0 });
 
     await fundingSessionModel.updateOne({ _id: payment.session }, { totals: sessionTotals });
-
+    paymentUpdates.sybilAttackScore = await calculateSybilAttackScore(payment);
     paymentUpdates.donations = donations;
     paymentUpdates.browserFingerprint = payment.browserFingerprint;
     paymentUpdates.fee = fee;

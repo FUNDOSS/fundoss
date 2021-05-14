@@ -14,6 +14,7 @@ export interface IPaymentInput {
   confirmation?: any;
   cardFingerPrint?: string;
   browserFingerprint?: string;
+  sybilAttackScore?: string;
   error?: any;
 }
 
@@ -31,6 +32,7 @@ export interface IPayment extends Document {
   session:IFundingSession;
   cardFingerPrint: string;
   browserFingerprint: string;
+  sybilAttackScore: string;
 }
 
 const PaymentSchema = new Schema({
@@ -66,6 +68,9 @@ const PaymentSchema = new Schema({
   },
   browserFingerprint: {
     type: String,
+  },
+  sybilAttackScore: {
+    type: Number,
   },
   error: {
     type: Schema.Types.Mixed,
