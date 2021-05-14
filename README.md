@@ -4,7 +4,7 @@
 
 Start the development server by running `yarn dev` or `npm run dev`. The project supports using `.env`. Getting started by create a `.env` file with the above variables.
 
-you will need a mongodb 
+you will also need a mongodb instance
 
 #### `.env`
 
