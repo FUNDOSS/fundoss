@@ -27,6 +27,9 @@ const PaymentsTable = ({ payments }) => (
           return (<b key={don.collective.slug}>.</b>);
         })}
         </td>
+        <td>
+          {payment.sybilAttackScore}
+        </td>
       </tr>
     ))}
   </Table>
