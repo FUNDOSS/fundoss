@@ -58,21 +58,22 @@ const collectivePage = ({
             <Col lg={{ span: 7 }} className="text-center text-lg-left">
               <Image width={80} src={imageUrl} fluid roundedCircle />
               <h1 className="display-4">{name}</h1>
-            
               { website ? (
                 <Button className="round" size="sm" variant="outline-secondary" target="_blank" href={website} style={{ marginRight: '10px' }}>
                   <Icons.Globe size={15} />
                 </Button>
               ) : null }
               { twitterHandle ? (
-                <Button className="round" size="sm" variant="outline-secondary" target="_blank" href={`https://github.com/${twitterHandle}`} style={{ marginRight: '10px' }}>
+                <Button className="round" size="sm" variant="outline-secondary" target="_blank" href={`https://twitter.com/${twitterHandle}`} style={{ marginRight: '10px' }}>
                   <Icons.Twitter size={15} />
                 </Button>
               ) : null }
-              <Button className="round" size="sm" variant="outline-secondary" target="_blank" href={`https://github.com/${githubHandle}`}>
-                <Icons.Github size={15} />
-              </Button>
-            &nbsp;<div className="d-block d-lg-none" />
+              { githubHandle ? (
+                <Button className="round" size="sm" variant="outline-secondary" target="_blank" href={`https://github.com/${githubHandle}`}>
+                  <Icons.Github size={15} />
+                </Button>
+              ) : null }
+              &nbsp;<div className="d-block d-lg-none" />
               <span style={{ padding: '5px 0 0 10px' }} className="lead">Fiscal Host: Open Source Collective 501(c)(6)</span>
               <div className="collective-content" dangerouslySetInnerHTML={{ __html: longDescription }} style={{ padding: '20px 0' }} />
               {members.length ? (
