@@ -88,7 +88,7 @@ export async function findById(id:string) {
 
 export async function getPayments(query) {
   await dbConnect();
-  return Payment.find(query).select('user session amount donations fee status time')
+  return Payment.find(query).select('user session amount donations fee status time sybilAttackScore')
     .populate({ path: 'session', select: 'name' })
     .populate({ path: 'user', select: 'avatar username' })
     .populate({
