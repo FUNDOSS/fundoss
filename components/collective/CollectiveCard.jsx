@@ -39,14 +39,16 @@ const CollectiveCard = ({
             <Card.Title>
               <Link href={`/collective/${slug}`}>{truncate(name, 20)}</Link>
             </Card.Title>
-            { website ? (
+            { website && website.indexOf('https://github.com') < 0 ? (
               <a variant="link" target="_blank" rel="noreferrer" href={website} style={{ marginRight: '10px' }}>
                 <Icons.Globe size={15} /> website 
               </a>
             ) : null }
-            <a variant="link" target="_blank" rel="noreferrer" href={`https://github.com/${githubHandle}`}>
-              <Icons.Github size={15} /> github
-            </a>
+            { githubHandle ? (
+              <a variant="link" target="_blank" rel="noreferrer" href={`https://github.com/${githubHandle}`}>
+                <Icons.Github size={15} /> github
+              </a>
+            ) : null }
           </Col>
         </Row>
         <div className="text-center small" style={{ margin: '10px 0 -10px 0' }}>
