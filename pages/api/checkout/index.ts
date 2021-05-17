@@ -105,7 +105,7 @@ handler.post(async (req: any, res: NextApiResponse) => {
             session: savedPayment.session._id,
             user: savedPayment.user._id,
             status: intent.status,
-            cardFingerPrint: (paymentMethod as any).card.fingerprint,
+            cardFingerprint: (paymentMethod as any).card.fingerprint,
             confirmation: intent,
             donations: donations.reduce((data, item) => (
               { ...data, [item.collective._id]: item.amount }

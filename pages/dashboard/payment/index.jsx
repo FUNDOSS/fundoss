@@ -27,9 +27,9 @@ const PaymentsPage = ({ user, payments }) => {
   );
 };
 
-export async function getServerSideProps({ req, res }) {
+export async function getServerSideProps({ query, req, res }) {
   await middleware.run(req, res);
-  const payments = await Payments.get();
+  const payments = await Payments.get(query);
   return { props: { user: serializable(req.user), payments: serializable(payments) } };
 }
 

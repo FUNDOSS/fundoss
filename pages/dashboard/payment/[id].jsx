@@ -6,6 +6,7 @@ import Col from 'react-bootstrap/Col';
 import Badge from 'react-bootstrap/Badge';
 import Button from 'react-bootstrap/Button';
 import Image from 'react-bootstrap/Image';
+import Link from 'next/link';
 import ServerProps from '../../../lib/serverProps';
 import Error from '../../../components/Error';
 import DashboardNav from '../../../components/dashboard/DashboardNav';
@@ -38,7 +39,9 @@ const PaymentsPage = ({ state, payment }) => {
               <small>-{payment.fee} fee</small>
               <Badge variant={payment.status === 'succeeded' ? 'success' : 'danger'}>{payment.status}</Badge>
             </h3>
-            
+            <div>Sybil Attack Score: {payment.sybilAttackScore}</div>
+            <div>card fingerprint: <Link href={`/dashboard/payment?cardFingerprint=${payment.cardFingerprint}`}>{payment.cardFingerprint}</Link></div>
+            <div>browser fingerprint: <Link href={`/dashboard/payment?browserFingerprint=${payment.browserFingerprint}`}>{payment.browserFingerprint}</Link></div>
             <h4>{moment(payment.time).format('lll')}</h4>
             <Button href={`/session/${payment.session.slug}`}>{payment.session.name}</Button>
           </Col>
@@ -46,21 +49,21 @@ const PaymentsPage = ({ state, payment }) => {
         </Row>
         
         {payment.donations.map((don) => (
-              <Row key={don.collective.slug} style={{borderBottom:'1px solid #ccc', margin: '10px 0'}} >
-                <Col xs={1} className="text-fat">
-                  {formatAmountForDisplay(don.amount)}
-                </Col>
-                <Col xs={3} className="text-fat">
-                  <a href={'/collective' + don.collective.slug}>
-                    <Image src={don.collective.imageUrl} roundedCircle width={20} />&nbsp;
-                    {don.collective.name}
-                  </a>
-                </Col>
-                <Col>
-                {formatAmountForDisplay(don.fee)} 
-                </Col>
-              </Row>
-            ))}
+          <Row key={don.collective.slug} style={{ borderBottom: '1px solid #ccc', margin: '10px 0' }}>
+            <Col xs={1} className="text-fat">
+              {formatAmountForDisplay(don.amount)}
+            </Col>
+            <Col xs={3} className="text-fat">
+              <a href={`/collective${don.collective.slug}`}>
+                <Image src={don.collective.imageUrl} roundedCircle width={20} />&nbsp;
+                {don.collective.name}
+              </a>
+            </Col>
+            <Col>
+              {formatAmountForDisplay(don.fee)} 
+            </Col>
+          </Row>
+        ))}
         <Dump data={payment.confirmation} />
       </Container>
     </Layout>

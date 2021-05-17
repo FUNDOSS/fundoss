@@ -10,17 +10,17 @@ const calculateSybilAttackScore = async (payment) => {
           user: { $ne: mongoose.Types.ObjectId(payment.user) },
         },
       },
-      { $group: { _id: { card: '$cardFingerPrint', user: '$user' } } },
+      { $group: { _id: { card: '$cardFingerprint', user: '$user' } } },
     ]);
   const sameBrowser = await Payment
     .aggregate([
       {
         $match: {
-          browserFingerPrint: payment.browserFingerPrint,
+          browserFingerprint: payment.browserFingerprint,
           user: { $ne: mongoose.Types.ObjectId(payment.user) },
         },
       },
-      { $group: { _id: { browser: '$browserFingerPrint', user: '$user' } } },
+      { $group: { _id: { browser: '$browserFingerprint', user: '$user' } } },
     ]);
   const cardScore = sameCard.reduce((s) => s + 1, 0);
   const browserScore = sameBrowser.reduce((s) => s + 1, 0);
