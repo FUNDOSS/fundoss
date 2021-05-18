@@ -14,7 +14,7 @@ import { formatAmountForDisplay } from '../../utils/currency';
 import Qf from '../../utils/qf';
 
 const CollectiveCard = ({
-  collective, active, nominate, session, nominations, nominated, user, donateConfig,
+  collective, active, nominate, session, nominations, nominated, user, donateConfig, ended, 
 }) => {
   const {
     name, description, imageUrl, slug, website, githubHandle, totals,
@@ -52,7 +52,7 @@ const CollectiveCard = ({
           </Col>
         </Row>
         <div className="text-center small" style={{ margin: '10px 0 -10px 0' }}>
-          {active && totals?.donations?.length ? (
+          {(active || ended) && totals?.donations?.length ? (
             <>
               Raised <span className="text-fat">{formatAmountForDisplay(totals.amount)}</span> + 
               est. <span className="match">{formatAmountForDisplay(totals.donations.reduce((total, amount) => total + Qf.calculate(amount), 0))}</span> match 
