@@ -129,6 +129,21 @@ export async function getCurrentSession():Promise<any> {
   return false;
 }
 
+export async function getFinishedSession():Promise<any> {
+  await dbConnect();
+  const session = await FundingSession.findOne({
+    end: { $gte: moment().subtract(5, 'days').toDate() },
+    published: true,
+  }).populate('collectives');
+  if (session) {
+    const sessionData = await setCollectiveTotals(session);
+    sessionData.donateConfig = getDonationsConfig();
+    sessionData.collectives = session.collectives.sort(() => 0.5 - Math.random());
+    return sessionData;
+  }
+  return false;
+}
+
 export async function getUpcomingSessionInfo():Promise<any> {
   await dbConnect();
   const session = await FundingSession.findOne({
@@ -253,6 +268,8 @@ export async function getUserNominations(user, session) {
 
 export default class FundingSessionController {
     static insert = insertSession
+
+    static getFinished = getFinishedSession
 
     static getCurrent = getCurrentSession
 
