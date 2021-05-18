@@ -99,7 +99,7 @@ const FundingSession = ({
       <div className="seamless trapezoid">
         <Container>
           <Row className="align-items-center">
-            {started ? (
+            {started && !ended ? (
               <Col xs={{ order: 1, span: 4 }} className="d-none d-lg-block">
                 <div style={{ maxWidth: '370px', margin: '0 auto' }}>
                 
@@ -108,6 +108,14 @@ const FundingSession = ({
                     active={started && !ended}
                     session={state.current}
                   />
+                </div>
+              </Col>
+            ) : null}
+
+            {ended ? (
+              <Col xs={{ order: 1, span: 4 }} className="d-none d-lg-block">
+                <div style={{ maxWidth: '370px', margin: '0 auto' }}>
+
                 </div>
               </Col>
             ) : null}
@@ -256,6 +264,7 @@ const FundingSession = ({
                   nominations={nominations[collective._id]}
                   nominated={nominations.user.indexOf(collective._id) > -1}
                   session={session}
+                  ended={ended}
                   donateConfig={state.current?.donateConfig}
                   user={user}
                 />
