@@ -106,6 +106,8 @@ export async function insertSession(session) {
 
 export async function editSession(session) {
   await dbConnect();
+  session.start = moment(session.start).utc().set('hour', 12).toDate();
+  session.end = moment(session.end).utc().set('hour', 12).toDate();
   await FundingSession.updateOne(
     { _id: session._id },
     session.collectives ? { ...session, ...await getCollectivesFromInput(session) } : session,
