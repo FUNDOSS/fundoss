@@ -143,7 +143,7 @@ export async function getCollective(slug:string):Promise<any> {
   await dbConnect();
   const savedCollective = await Collective.findOne({ slug });
   if (savedCollective) {
-    if (moment().diff(moment(savedCollective.lastUpdate), 'days') < 2) {
+    if (moment().diff(moment(savedCollective.lastUpdate), 'hours') < 12) {
       return savedCollective;
     }
   }
