@@ -158,7 +158,7 @@ const collectivePage = ({
                   similar.map(
                     (collective) => (
                       <Col md={6} lg={4} key={collective.slug}>
-                        <CollectiveCard active={isInCurrentSession} collective={collective} />
+                        <CollectiveCard active={isInCurrentSession} collective={collective} donateConfig={state.current.donateConfig} />
                       </Col>
                     ),
                   )
@@ -192,7 +192,7 @@ export async function getServerSideProps({ query, req, res }) {
         hasNominated,
         collective: serializable(collective),
         similar: state.current ? serializable(
-          await collectives.similar(state.current._id, collective._id),
+          await collectives.similar(state.current._id, [collective._id]),
         ) : false,
         sessions: serializable(sessions),
         hostingUrl: process.env.HOSTING_URL,
