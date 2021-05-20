@@ -86,11 +86,16 @@ export async function updateCollectivesTotals(ids:Array<string>, session:string)
   return donations;
 }
 
-export async function similarCollectives(session, collective) {
+export async function similarCollectives(session, collectives) {
   await dbConnect();
   const userDonnations = await Donation.aggregate(
     [
-      { $match: { session: mongoose.Types.ObjectId(session), collective } },
+      {
+        $match: {
+          session: mongoose.Types.ObjectId(session),
+          collective: { $in: collectives.map((col) => mongoose.Types.ObjectId(col)) },
+        },
+      },
       {
         $group: {
           _id: '$session',
@@ -110,7 +115,7 @@ export async function similarCollectives(session, collective) {
         { $limit: 10 },
         {
           $match: {
-            collective: { $ne: collective },
+            collective: { $nin: collectives.map((col) => mongoose.Types.ObjectId(col)) },
             user: { $in: userDonnations[0].users },
             session: mongoose.Types.ObjectId(session),
           },
