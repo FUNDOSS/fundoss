@@ -6,7 +6,7 @@ import { Badge } from 'react-bootstrap';
 import Qf from '../../utils/qf';
 import CartItemList from './CartItemList';
 import { formatAmountForDisplay } from '../../utils/currency';
-
+import CartSimilar from './CartSimilar';
 
 export const cartEvents = {
   on(event, callback) {
@@ -162,12 +162,13 @@ const Cart = ({
       <Modal.Body>
         {items}
         {!cartData.length ? (
-          <p className="lead text-center" style={{margin: '40px'}}>Your cart is empty! Click “Add to Cart” on your
+          <p className="lead text-center" style={{ margin: '40px' }}>Your cart is empty! Click “Add to Cart” on your
             favorite OSS projects to support projects and boost their democratic match!
-            <Button block style={{marginTop: '40px'}} onClick={() => handleClose()} variant="outline-dark">Ok</Button>
+            <Button block style={{ marginTop: '40px' }} onClick={() => handleClose()} variant="outline-dark">Ok</Button>
           </p>
         )
           : null}
+        <CartSimilar data={cartData} />
       </Modal.Body>
       <Modal.Footer>
         {cartData.length ? <Link href="/checkout"><Button block variant="primary">Total <Badge variant="danger round">{formatAmountForDisplay(totals.amount, 'USD')}</Badge> Checkout</Button></Link> : null}
