@@ -168,7 +168,7 @@ const Cart = ({
           </p>
         )
           : null}
-        <CartSimilar data={cartData} />
+        <CartSimilar data={cartData} addItem={(collective) => Cart.addItem(collective, donateConfig.def) } />
       </Modal.Body>
       <Modal.Footer>
         {cartData.length ? <Link href="/checkout"><Button block variant="primary">Total <Badge variant="danger round">{formatAmountForDisplay(totals.amount, 'USD')}</Badge> Checkout</Button></Link> : null}

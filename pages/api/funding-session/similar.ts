@@ -11,8 +11,7 @@ handler.use(all);
 handler.get(async (req: any, res: NextApiResponse) => {
   if (req.query.collectives) {
     const sessionId = await Session.getCurrentId();
-    const collectives = await Collectives.similar(sessionId, req.query.collectives.split(','));
-    console.log('req', sessionId, collectives);
+    const collectives = await Collectives.similar(sessionId, req.query.collectives.split(','), 3);
     return res.status(200).json(collectives);
   }
   return res.status(500).json({ statusCode: 500, message: 'no collectives sent' });

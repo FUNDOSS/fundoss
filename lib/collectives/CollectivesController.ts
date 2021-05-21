@@ -86,7 +86,7 @@ export async function updateCollectivesTotals(ids:Array<string>, session:string)
   return donations;
 }
 
-export async function similarCollectives(session, collectives) {
+export async function similarCollectives(session, collectives, max = 6) {
   await dbConnect();
   const userDonnations = await Donation.aggregate(
     [
@@ -112,7 +112,7 @@ export async function similarCollectives(session, collectives) {
   if (userDonnations?.length && userDonnations[0].users) {
     const similarAggregate = await Donation.aggregate(
       [
-        { $limit: 10 },
+        { $limit: 100 },
         {
           $match: {
             collective: { $nin: collectives.map((col) => mongoose.Types.ObjectId(col)) },
@@ -138,7 +138,7 @@ export async function similarCollectives(session, collectives) {
         },
       ],
     );
-    return similarAggregate.map((s) => s.collective[0]);
+    return similarAggregate.filter((item, idx) => idx < max).map((s) => s.collective[0]);
   }
 
   return [];

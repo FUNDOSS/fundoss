@@ -5,29 +5,36 @@ import {
 } from 'react-bootstrap';
 import Icons from '../icons';
 
-const truncate = (input, length) => (input.length > length ? `${input.substring(0, length)}...` : input);
+const truncate = (input, length) => (input && input?.length > length ? `${input.substring(0, length)}...` : input);
 
-const CartSimilarCollective = ({ collective }) => (
-  <Card className="text-center">
+const CartSimilarCollective = ({ collective, addItem }) => (
+  <Card
+    className="text-center small"
+    style={{
+      height: '250px', marginBottom: '10px',  
+    }}
+  >
     <Card.Header>
-      { collective?.imageUrl ? <Image width="50" height="50" src={collective.imageUrl} roundedCircle fluid /> : null }
-      <Card.Title>
+      { collective?.imageUrl ? <Image width="30" height="30" src={collective.imageUrl} roundedCircle fluid /> : null }
+      <br />
+      <b>
         <Link href={`/collective/${collective.slug}`}>{truncate(collective.name, 20)}</Link>
-      </Card.Title>
+      </b>
     </Card.Header>
     <Card.Body>
-      {truncate(collective.description, 200)}
-      <Button block variant="outline-primary" onClick={() => Cart.addItem(collective, 10)}>
-        <Icons.Cart size={18} /> Add to cart
-      </Button>
+      {truncate(collective.description, 30)}
     </Card.Body>
+    <Card.Footer>
+      <Button block size="sm" variant="outline-primary" onClick={() => addItem(collective)}>
+        Add to cart
+      </Button>
+    </Card.Footer>
   </Card>
 );
 
-const CartSimilar = ({ data }) => {
+const CartSimilar = ({ data, addItem }) => {
   const [similar, setSimilar] = useState();
   useEffect(async () => {
-    // cartEvents.on('cartChange', (e) => console.log('similar', e.data));
     const res = await fetch(`/api/funding-session/similar?collectives=${ 
       data.map((item) => item.collective._id).join(',')}`, {
       method: 'GET',
@@ -36,18 +43,24 @@ const CartSimilar = ({ data }) => {
     setSimilar(await res.json());
   }, [data]);
 
-  return (
-    <Row>
-      {
-    similar?.length ? similar.map(
-      (collective) => (
-        <Col key={collective._id}>
-          <CartSimilarCollective collective={collective} />
-        </Col>
-      ),
+  return (similar?.length
+    ? (
+      <div style={{ padding: '20px 0 0' }}>
+        <p><b>You might like these collectives</b></p>
+        <Row>
+          {
+           similar.map(
+             (collective) => (
+               <Col key={collective._id}>
+                 <CartSimilarCollective collective={collective} addItem={addItem} />
+               </Col>
+             ),
+           ) 
+        }
+        </Row>
+      </div>
     ) : null 
-    }
-    </Row>
+
   );
 };
 
