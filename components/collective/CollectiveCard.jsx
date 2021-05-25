@@ -41,12 +41,12 @@ const CollectiveCard = ({
             </Card.Title>
             { website && website.indexOf('https://github.com') < 0 ? (
               <a variant="link" target="_blank" rel="noreferrer" href={website} style={{ marginRight: '10px' }}>
-                <Icons.Globe size={15} /> website 
+                <Icons.Globe size={15} /> Website 
               </a>
             ) : null }
             { githubHandle ? (
               <a variant="link" target="_blank" rel="noreferrer" href={`https://github.com/${githubHandle}`}>
-                <Icons.Github size={15} /> github
+                <Icons.Github size={15} /> Github
               </a>
             ) : null }
           </Col>
