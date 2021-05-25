@@ -28,6 +28,7 @@
 .collective-card{
     max-width: 350px;
     margin: 0 auto;
+    border: 1px solid $gray-300;
     .card-title{
         font-size: 1rem;
         a{color: $black;}
