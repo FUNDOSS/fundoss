@@ -3,7 +3,9 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import FormControl from 'react-bootstrap/FormControl';
 import moment from 'moment';
-import { Card, Image, Alert, Col, Row, Button, Container } from 'react-bootstrap';
+import {
+  Card, Image, Alert, Col, Row, Button, Container, 
+} from 'react-bootstrap';
 import CollectiveCard from '../collective/CollectiveCard';
 import FeaturedCollectiveCard from '../collective/FeaturedCollectiveCard';
 import Sponsors from './Sponsors';
@@ -114,9 +116,7 @@ const FundingSession = ({
 
             {ended ? (
               <Col xs={{ order: 1, span: 4 }} className="d-none d-lg-block">
-                <div style={{ maxWidth: '370px', margin: '0 auto' }}>
-
-                </div>
+                <div style={{ maxWidth: '370px', margin: '0 auto' }} />
               </Col>
             ) : null}
 
@@ -191,7 +191,7 @@ const FundingSession = ({
         </Container>
       </div>
       <Container>
-        <Card style={{ margin: '10px 0 28px', padding: '5px' }}>
+        <Card style={{ margin: '10px 0 28px', padding: '.75rem' }}>
           <Row className="no-gutters">
             <Col>
               <FormControl
