@@ -41,14 +41,13 @@ const Shape = ({
 const shapeColors = ['#FFDB5E', '#02E2AC'];
 const rnd = (max) => Math.floor(Math.random() * max);
 const shapes = [];
-const generate = (width, height) => {
-  const cnt = 60;
+const generate = (width, height, num) => {
+  const cnt = num;
   for (let i = 0; i < cnt; i += 1) {
     const col = shapeColors[rnd(shapeColors.length)];
     const r = rnd(10);
     let shape = 'coin';
-    let x = rnd(width / 2);
-    if (x > width / 3) x = ( width / 2) + x;
+    const x = rnd(width - 60) + 30;
     if (r > 3) shape = 'shape1';
     if (r > 7) shape = 'shape2'; 
     shapes.push(<Shape
@@ -58,32 +57,24 @@ const generate = (width, height) => {
       x={x}
       height={height}
       dur={Math.round((-i + cnt + 30) / 3)}
-      transform={`scale(${(10 + i) / (cnt + 100)}) 
+      transform={`scale(${(30 + i) / (cnt + 100)}) 
       rotate(${rnd(380)})`}
     />);
   }
   return shapes;
 };
 
-const CoinsAnimation = ({ width, height, style = {} }) => {
+const CoinsAnimation = ({
+  width, height, style = {}, num, flip, 
+}) => {
   const [tags, setTags] = useState([]);
   useEffect(() => {
-    setTags(generate(width, height));
+    setTags(generate(width, height, num));
   }, []);
-
   return (
     <div suppressHydrationWarning style={style}>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox={`0 0 ${width} ${height}`}>
-        <defs>
-          <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style={{ stopColor: 'rgba(148,81,235)', stopOpacity: 0.3 }} />
-            <stop offset="30%" style={{ stopColor: '#0e0c4d', stopOpacity: 0.6 }} />
-            <stop offset="80%" style={{ stopColor: '#0e0c4d', stopOpacity: 0.7 }} />
-            <stop offset="100%" style={{ stopColor: 'rgba(148,81,235)', stopOpacity: 0.3 }} />
-          </linearGradient>
-        </defs>
         {tags.map((s) => s) }
-        <rect x="0" y="0" width={width} height={height} fill="url(#grad1)" />
       </svg>
     </div>
   ); 
