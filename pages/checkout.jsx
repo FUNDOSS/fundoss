@@ -55,7 +55,7 @@ const CheckoutPage = ({
                       <div className="match big">
                         {totalMatch ? formatAmountForDisplay(totalMatch, 'USD') : ''}
                       </div>
-                      <small>estimated match</small>
+                      <small>Estimated Match from FundOSS</small>
                     </Col>
                   </Row>
                 </Col>
