@@ -61,7 +61,7 @@ const CheckoutPage = ({
                 </Col>
               </Row>
               <Elements stripe={stripePromise}>
-                <CheckoutForm user={state.user} />
+                <CheckoutForm user={state.user} test={stripekey.indexOf('pk_test') === 0} />
               </Elements>
             </Container>
           ) : (
