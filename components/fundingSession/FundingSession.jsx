@@ -15,6 +15,7 @@ import Nominate from '../collective/NominateForm';
 import AdminLinks from './AdminLinks';
 import ShareButton from '../social/ShareButton';
 import Subscriptionform from '../SubscriptionForm';
+import CoinsAnimation from '../illustration/CoinsAnimation';
 
 const FundingSession = ({
   session, user, predicted, state, nominations = { user: [] }, featured,
@@ -98,7 +99,19 @@ const FundingSession = ({
   };
   return (
     <>
-      <div className="seamless trapezoid">
+      <div
+        className="trapezoid invert"
+        style={{
+          padding: '50px 0 60px',
+        }}
+      >
+        <CoinsAnimation
+          width={600}
+          height={400}
+          style={{
+            position: 'absolute', zIndex: -10, width: '100%', height: '450px', top: '-50px'
+          }}
+        />
         <Container>
           <Row className="align-items-center">
             {started && !ended ? (
