@@ -26,6 +26,16 @@
         url('/static/bg-seamless.svg') ;
 }
 
+.darkgradient{
+    @extend .invert;
+    background: $darkpurple url('/static/bg-seamless.svg') ;
+    padding: 40px 0;
+    background:
+        linear-gradient(279deg, rgba($purple,.3), rgba($darkpurple,0.9) 30%, rgba($purple,.4)), 
+        radial-gradient(ellipse at bottom, rgba($teal,.9), rgba($orange,.3))
+}
+
+
 .seamless-hand{
     @extend .invert;
     background: $darkpurple url('/static/bg-seamless.svg') ;
