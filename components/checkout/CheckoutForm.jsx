@@ -15,7 +15,7 @@ import { formatAmountForDisplay } from '../../utils/currency';
 import { cartEvents, getCartTotals } from '../cart/Cart';
 import Icons from '../icons';
 
-const CheckoutForm = ({ user }) => {
+const CheckoutForm = ({ user, test }) => {
   const stripe = useStripe();
   const elements = useElements();
   
@@ -145,7 +145,7 @@ const CheckoutForm = ({ user }) => {
                   <Form.Control.Feedback type="invalid">{errors.cardholderName}</Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group>
-                  <StripeTestCards />
+                  {test ? <StripeTestCards /> : <Form.Label>Card Number</Form.Label>}
                   <CardElement
                     onChange={({ error, complete, empty }) => {
                       setStatus({
