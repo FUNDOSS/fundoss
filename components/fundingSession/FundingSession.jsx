@@ -10,7 +10,6 @@ import CollectiveCard from '../collective/CollectiveCard';
 import FeaturedCollectiveCard from '../collective/FeaturedCollectiveCard';
 import Sponsors from './Sponsors';
 import Qf from '../../utils/qf';
-import useScroll from '../../utils/useScroll';
 import FundingSessionInfo from './FundingSessionInfo';
 import Nominate from '../collective/NominateForm';
 import AdminLinks from './AdminLinks';
