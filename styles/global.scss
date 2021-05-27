@@ -335,6 +335,22 @@ h1{margin:2rem 0}
     }
 }
 
+.session-header{
+    @extend .invert;
+    @extend .trapezoid;
+    @extend .seamless;
+}
+
+@include media-breakpoint-up(md) {
+    .session-header{
+        background:
+        
+        linear-gradient(279deg, rgba($purple,.3), rgba($darkpurple,0.9) 30%, rgba($purple,.4)), 
+        radial-gradient(ellipse at bottom, rgba($teal,.9), rgba($orange,.3)),
+        $darkpurple
+    }
+}
+
 @include media-breakpoint-down(sm) {
     .authDropdownLabel span{display:none}
     header a.navbar-brand svg.logo{max-width:110px}

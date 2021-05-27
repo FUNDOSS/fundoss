@@ -100,12 +100,12 @@ const FundingSession = ({
   return (
     <>
       <div
-        className="trapezoid darkgradient"
+        className="session-header"
         style={{
           padding: '50px 0 60px',
         }}
       >
-        <CoinsAnimation
+        <CoinsAnimation className="d-none d-md-block"
           width={300}
           height={450}
           num={14}
@@ -113,7 +113,7 @@ const FundingSession = ({
             position: 'absolute', zIndex: -10, width: '600px', height: '450px', top: '-50px',
           }}
         />
-        <CoinsAnimation
+        <CoinsAnimation className="d-none d-md-block"
           width={100}
           height={450}
           num={7}
@@ -185,7 +185,7 @@ const FundingSession = ({
                   <>
                     <div className="session-description" dangerouslySetInnerHTML={{ __html: description }} />
                     <p>
-                      <Link href="/democratic-funding">Learn More about Democratic Funding</Link> or share on   
+                      <Link href="/democratic-funding">Learn More about Democratic Funding</Link><br className="d-block d-sm-none" /> or share on   
                       <span>
                         <ShareButton platform="twitter" variant="link" siteUrl={state.siteUrl} />
                         <ShareButton platform="facebook" variant="link" siteUrl={state.siteUrl} />

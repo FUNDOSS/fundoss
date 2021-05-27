@@ -65,14 +65,14 @@ const generate = (width, height, num) => {
 };
 
 const CoinsAnimation = ({
-  width, height, style = {}, num, flip, 
+  width, height, style = {}, num, flip, className,
 }) => {
   const [tags, setTags] = useState([]);
   useEffect(() => {
     setTags(generate(width, height, num));
   }, []);
   return (
-    <div suppressHydrationWarning style={style}>
+    <div suppressHydrationWarning style={style} className={className}>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox={`0 0 ${width} ${height}`}>
         {tags.map((s) => s) }
       </svg>
