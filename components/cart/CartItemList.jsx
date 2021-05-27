@@ -43,12 +43,12 @@ const CartItem = ({
           {selected !== collective._id ? (
             <Col xs={4} className="text-right text-nowrap ">
               <Badge className="round" style={{ fontSize: '0.8rem' }} variant="primary">
-                {formatAmountForDisplay(amount, 'USD')}
+                {formatAmountForDisplay(amount)}
               </Badge> &nbsp;
               <span className="d-none d-sm-inline">
                 <small>+est</small>&nbsp;
                 <span className="match ">
-                  {formatAmountForDisplay(calculateMatch(amount, collective._id), 'USD')}
+                  {formatAmountForDisplay(calculateMatch(amount, collective._id))}
                 </span>
                 &nbsp;
                 <Button
@@ -96,7 +96,7 @@ const CartItem = ({
             </Col>
             <Col xs={5} className="text-right">
               <div className="match big">
-                {formatAmountForDisplay(calculateMatch(amount, collective._id), 'USD')}
+                {formatAmountForDisplay(calculateMatch(amount, collective._id))}
               </div>
               <small>estimated match</small>
             </Col>

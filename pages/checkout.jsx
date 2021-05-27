@@ -49,11 +49,11 @@ const CheckoutPage = ({
               <Row>
                 <Col md={{ offset: 3, span: 6 }}>
                   <Row className="align-items-center text-center">
-                    <Col>Total: <span className="lead text-fat">{formatAmountForDisplay(total, 'USD')}</span></Col>
+                    <Col>Total: <span className="lead text-fat">{formatAmountForDisplay(total)}</span></Col>
                     <Col className="lead">+</Col>
                     <Col>
                       <div className="match big">
-                        {totalMatch ? formatAmountForDisplay(totalMatch, 'USD') : ''}
+                        {totalMatch ? formatAmountForDisplay(totalMatch) : ''}
                       </div>
                       <small>Estimated Match from FundOSS</small>
                     </Col>

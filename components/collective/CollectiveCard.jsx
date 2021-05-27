@@ -69,7 +69,7 @@ const CollectiveCard = ({
         </div>
 
       </Card.Header>
-      <Card.Body style={{ minHeight: '160px' }}>
+      <Card.Body>
         <Card.Text className="text-center" style={{ maxHeight: '80px', overflow: 'hidden' }}>
           {description}
         </Card.Text>
@@ -80,11 +80,11 @@ const CollectiveCard = ({
           <div className="text-center small" style={{ margin: '-20px 0 5px 0' }}>
             You donated&nbsp;
             <span className="text-fat"> 
-              {formatAmountForDisplay(Cart.previousDonations[collective._id], 'USD')}
+              {formatAmountForDisplay(Cart.previousDonations[collective._id])}
             </span>&nbsp;
             for a&nbsp;
             <span className="match"> 
-              {formatAmountForDisplay(Qf.calculate(Cart.previousDonations[collective._id]), 'USD')}
+              {formatAmountForDisplay(Qf.calculate(Cart.previousDonations[collective._id]))}
             </span> match
           </div>
         ) : null }
@@ -111,7 +111,7 @@ const CollectiveCard = ({
                   </Button>
                 ) : (
                   <Button block variant="primary" onClick={() => Cart.show(collective._id)}>
-                    <Badge className="round" variant="danger">{formatAmountForDisplay(inCart, 'USD')}</Badge>&nbsp;
+                    <Badge className="round" variant="danger">{formatAmountForDisplay(inCart)}</Badge>&nbsp;
                     <span className="d-none d-sm-inline">Open</span> <Icons.Cart size={18} /> 
                   </Button>
                 )}

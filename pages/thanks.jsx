@@ -41,7 +41,7 @@ const ThanksPage = ({ state, payment }) => {
               <p className="lead">A receipt has been emailed to your email address</p>
               <p className="lead">The &nbsp;
                 <span className="text-fat ">
-                  {formatAmountForDisplay(payment.amount, 'USD')}
+                  {formatAmountForDisplay(payment.amount)}
                 </span> you donated will be matched<br />with an estimated &nbsp;
                 <span className="match ">
                   {formatAmountForDisplay(payment.donations ? payment.donations.reduce(
@@ -50,7 +50,7 @@ const ThanksPage = ({ state, payment }) => {
                       return acc + match;
                     },
                     0,
-                  ) : null, 'USD') }
+                  ) : null) }
                 
                 </span> from the donor pot! 
               </p>

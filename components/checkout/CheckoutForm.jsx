@@ -95,7 +95,7 @@ const CheckoutForm = ({ user, test }) => {
     return (
       <Button block size="lg" variant="outline-primary" disabled={!status?.cardValid} type="submit"> 
         <small>{status?.cardValid ? 'Complete Checkout' : 'Fill in your card details' } :</small> Pay&nbsp;
-        <Badge variant="danger round">{formatAmountForDisplay(total, 'USD')}</Badge>
+        <Badge variant="danger round">{formatAmountForDisplay(total)}</Badge>
       </Button>
     );
   };

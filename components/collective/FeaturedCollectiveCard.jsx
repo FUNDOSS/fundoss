@@ -87,7 +87,7 @@ const FeaturedCollectiveCard = ({ collective, active, session }) => {
             </Col>
             <Col xs={5} className="text-right text-nowrap">
               <div style={{ marginBottom: '-10px' }} className="match big">
-                {formatAmountForDisplay(calculateMatch(amount, collective._id), 'USD')}
+                {formatAmountForDisplay(calculateMatch(amount, collective._id))}
               </div>
               <small>estimated match</small> 
   
@@ -111,7 +111,7 @@ const FeaturedCollectiveCard = ({ collective, active, session }) => {
                   </Button>
                 ) : (
                   <Button block variant="outline-primary" onClick={() => Cart.show(collective._id)}>
-                    <Badge className="round" variant="danger">{formatAmountForDisplay(inCart, 'USD')}</Badge>&nbsp;
+                    <Badge className="round" variant="danger">{formatAmountForDisplay(inCart)}</Badge>&nbsp;
                     <span className="d-none d-sm-inline">Open</span> <Icons.Cart size={18} /> 
                   </Button>
                 )}

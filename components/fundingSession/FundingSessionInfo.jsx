@@ -52,7 +52,7 @@ const FundingSessionInfo = ({ session, predicted, size = 'md' }) => {
           <span className="info-span matched">
             matched funds:
             <div className="display-3 match" style={{ marginTop: '-10px' }}>
-              {formatAmountForDisplay(session.matchedFunds, 'USD')}
+              {formatAmountForDisplay(session.matchedFunds)}
             </div>
           </span>
         </>
@@ -67,13 +67,13 @@ const FundingSessionInfo = ({ session, predicted, size = 'md' }) => {
           <span className="info-span text-center">
             Estimated match<br />
             <span className="text-fat display-3 text-success">
-              {formatAmountForDisplay(Math.round(totalMatches), 'USD')}
+              {formatAmountForDisplay(Math.round(totalMatches))}
             </span>
           </span>&nbsp;&nbsp;
           <span className="info-span text-center">
             Remaining<br />
             <span className="display-3 text-fat">
-              {formatAmountForDisplay(Math.round(session.matchedFunds - totalMatches), 'USD')}
+              {formatAmountForDisplay(Math.round(session.matchedFunds - totalMatches))}
             </span>
           </span>
         </div>

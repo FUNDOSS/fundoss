@@ -1,12 +1,12 @@
 export function formatAmountForDisplay(
   amount: number,
-  currency = 'USD',
+  floor = true,
 ): string {
   const numberFormat = new Intl.NumberFormat(['en-US']);
   const floored = Math.floor(amount);
   const digits = Math.floor((amount * 100) - (floored * 100));
   let digitsDisplay = '';
-  if (digits) {
+  if (digits && !floor) {
     if (digits < 10) {
       digitsDisplay = `.0${digits}`;
     } else {
