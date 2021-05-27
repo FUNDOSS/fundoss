@@ -1,5 +1,5 @@
 /* eslint-disable react/no-danger */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import FormControl from 'react-bootstrap/FormControl';
 import moment from 'moment';
@@ -10,6 +10,7 @@ import CollectiveCard from '../collective/CollectiveCard';
 import FeaturedCollectiveCard from '../collective/FeaturedCollectiveCard';
 import Sponsors from './Sponsors';
 import Qf from '../../utils/qf';
+import useScroll from '../../utils/useScroll';
 import FundingSessionInfo from './FundingSessionInfo';
 import Nominate from '../collective/NominateForm';
 import AdminLinks from './AdminLinks';
@@ -29,6 +30,7 @@ const FundingSession = ({
   );
   const [sort, setSort] = useState('desc');
   const [setSortOn] = useState('total');
+  const [display, setDisplay] = useState(6);
   const [tags, setTags] = useState([]);
   const [search, setSearch] = useState(null);
   const started = moment() > moment(start);
@@ -97,6 +99,32 @@ const FundingSession = ({
 
     setCollectivesList(list);
   };
+
+  let scrollTimer;
+  let currentDisplay = display;
+  const showMoreCollectives = () => {
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(() => {
+      currentDisplay += 3;
+      setDisplay(currentDisplay);
+      return () => clearTimeout(scrollTimer);
+    }, 100);
+  };
+
+  const listener = (e) => {
+    const doc = e.target;
+    if (currentDisplay < collectives.length && doc.getElementById('collectives').offsetHeight + doc.body.getBoundingClientRect().y < 1000) {
+      showMoreCollectives();
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', listener);
+    return () => {
+      window.removeEventListener('scroll', listener);
+    };
+  }, []);
+
   return (
     <>
       <div
@@ -105,7 +133,8 @@ const FundingSession = ({
           padding: '50px 0 60px',
         }}
       >
-        <CoinsAnimation className="d-none d-md-block"
+        <CoinsAnimation
+          className="d-none d-md-block"
           width={300}
           height={450}
           num={14}
@@ -113,7 +142,8 @@ const FundingSession = ({
             position: 'absolute', zIndex: -10, width: '600px', height: '450px', top: '-50px',
           }}
         />
-        <CoinsAnimation className="d-none d-md-block"
+        <CoinsAnimation
+          className="d-none d-md-block"
           width={100}
           height={450}
           num={7}
@@ -276,23 +306,28 @@ const FundingSession = ({
           </Row>
         </Card>
         {collectivesList.length ? (
-          <Row>{
+          <Row id="collectives">{
           collectivesList.map(
-            (collective) => (
-              <Col md={6} lg={4} key={collective.slug}>
-                <CollectiveCard 
-                  collective={collective}
-                  active={started && !ended}
-                  nominate={!started && session.allowNominations}
-                  nominations={nominations[collective._id]}
-                  nominated={nominations.user.indexOf(collective._id) > -1}
-                  session={session}
-                  ended={ended}
-                  donateConfig={state.current?.donateConfig}
-                  user={user}
-                />
-              </Col>
-            ),
+            (collective, index) => { 
+              if (index < display) {
+                return (
+                  <Col md={6} lg={4} key={collective.slug}>
+                    <CollectiveCard 
+                      collective={collective}
+                      active={started && !ended}
+                      nominate={!started && session.allowNominations}
+                      nominations={nominations[collective._id]}
+                      nominated={nominations.user.indexOf(collective._id) > -1}
+                      session={session}
+                      ended={ended}
+                      donateConfig={state.current?.donateConfig}
+                      user={user}
+                    />
+                  </Col>
+                ); 
+              }
+              return <></>;
+            },
           )
         }
           </Row>
