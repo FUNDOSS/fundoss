@@ -120,7 +120,7 @@ footer{
     }
 }
 
-
+.donation-card{}
 
 .btn.btn-link {box-shadow:none}
 
@@ -316,6 +316,11 @@ h1{margin:2rem 0}
     padding: 40px 0;
 }
 
+
+.donation-card .matches .match, .donation-card .donation{
+    font-size: 1.3rem;
+}
+
 @include media-breakpoint-down(md) {
     header a.navbar-brand svg.logo{max-width:120px}
     header .logo{
@@ -349,6 +354,9 @@ h1{margin:2rem 0}
         radial-gradient(ellipse at bottom, rgba($teal,.9), rgba($orange,.3)),
         $darkpurple
     }
+    .donation-card .matches .match, .donation-card .donation{
+        font-size: 1.8rem;
+    }
 }
 
 @include media-breakpoint-down(sm) {
@@ -360,6 +368,8 @@ h1{margin:2rem 0}
     }
     header .auth{ right:10px; }
     header .btn-cart{ right:60px; }
+
+
 }
 
 

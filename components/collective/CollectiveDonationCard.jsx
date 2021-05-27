@@ -41,15 +41,13 @@ const CollectiveDonationCard = ({ collective, session }) => {
           <div style={{ margin: '10px 0 20px' }} className="text-center">
             <b>{totals.donations.length}</b> {Pluralize('donor', totals.donations.length)} raised
             <Row className="no-gutters text-center align-items-center">
-              <Col xs={5} className="text-right">
-                <span style={{ fontSize: '1.8rem' }}>
-                  {formatAmountForDisplay(totals.amount)}
-                </span>
+              <Col xs={4} lg={5} className="text-right donations">
+                <span className="donation">{formatAmountForDisplay(totals.amount)}</span>
                 <div className="small">in donations</div>
               </Col>
               <Col>+</Col>
-              <Col xs={5} className="text-left">
-                <span className="match" style={{ fontSize: '1.8rem' }}>{formatAmountForDisplay(totals.donations.reduce((total, amount) => total + Qf.calculate(amount), 0))}</span>
+              <Col xs={6} lg={5} className="text-left matches">
+                <span className="match">{formatAmountForDisplay(totals.donations.reduce((total, amount) => total + Qf.calculate(amount), 0))}</span>
                 <div className="small">in estimated matches</div>
               </Col>
             </Row>
@@ -79,7 +77,7 @@ const CollectiveDonationCard = ({ collective, session }) => {
                     }}
                     variant={amt === amount ? 'primary' : 'outline-primary'}
                   >
-                    ${amt} for a estimated <span className="text-fat">{formatAmountForDisplay(calculateMatch(amt, collective._id), 'USD')}</span>
+                    ${amt} for a estimated <span className="text-fat">{formatAmountForDisplay(calculateMatch(amt, collective._id))}</span>
                     &nbsp;match
                   </Button>
                 ),
@@ -100,7 +98,7 @@ const CollectiveDonationCard = ({ collective, session }) => {
                 <Col>
                   + 
                   <span className="match big">
-                    {formatAmountForDisplay(calculateMatch(Number(amount), collective._id), 'USD')}
+                    {formatAmountForDisplay(calculateMatch(Number(amount), collective._id))}
                   </span>
                   <div className="small">estimated match</div>
                 </Col>
@@ -140,7 +138,7 @@ const CollectiveDonationCard = ({ collective, session }) => {
                 </Button>
               ) : (
                 <Button block variant="outline-primary" onClick={() => Cart.show(collective._id)}>
-                  <Badge className="round" variant="danger">{formatAmountForDisplay(inCart, 'USD')}</Badge>&nbsp;
+                  <Badge className="round" variant="danger">{formatAmountForDisplay(inCart)}</Badge>&nbsp;
                   <span className="d-none d-sm-inline">Open</span> <Icons.Cart size={18} /> 
                 </Button>
               )}

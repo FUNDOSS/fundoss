@@ -28,7 +28,6 @@
 .collective-card{
     max-width: 350px;
     margin: 0 auto;
-    border: 1px solid $gray-300;
     .card-title{
         font-size: 1rem;
         a{color: $black;}
@@ -41,6 +40,11 @@
     .card-body{padding:1rem 2rem}
     .card-header{padding:1.5rem 2rem 1rem}
     .card-footer{padding:0rem 2rem 2rem}
+}
+@include media-breakpoint-up(sm) {
+    .collective-card{
+        .card-body{ min-height: 160px; }
+    }
 }
 
 .card-header{border-bottom: 1px solid $gray-200;}
