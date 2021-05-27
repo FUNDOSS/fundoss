@@ -13,7 +13,7 @@ const Footer = ({ minimal, state }) => (
     {minimal ? (
       <Container>&copy; Fundoss 2021</Container>
     ) : (
-      <Container>
+      <Container className="text-center text-lg-left">
         <Logo className="logo" width={240} height={80} />
         <Row>
           <Col lg={{ span: 3, offset: 1 }}>
