@@ -4,7 +4,7 @@ import Link from 'next/link';
 import FormControl from 'react-bootstrap/FormControl';
 import moment from 'moment';
 import {
-  Card, Image, Alert, Col, Row, Button, Container, 
+  Card, Image, Alert, Col, Row, Button, Container, Spinner, 
 } from 'react-bootstrap';
 import CollectiveCard from '../collective/CollectiveCard';
 import FeaturedCollectiveCard from '../collective/FeaturedCollectiveCard';
@@ -29,7 +29,7 @@ const FundingSession = ({
   );
   const [sort, setSort] = useState('desc');
   const [setSortOn] = useState('total');
-  const [display, setDisplay] = useState(6);
+  const [display, setDisplay] = useState(3);
   const [tags, setTags] = useState([]);
   const [search, setSearch] = useState(null);
   const started = moment() > moment(start);
@@ -112,7 +112,10 @@ const FundingSession = ({
 
   const listener = (e) => {
     const doc = e.target;
-    if (currentDisplay < collectives.length && doc.getElementById('collectives').offsetHeight + doc.body.getBoundingClientRect().y < 1000) {
+    if (
+      currentDisplay < collectives.length 
+      && doc.getElementById('collectives').offsetHeight + doc.body.getBoundingClientRect().y < 1000
+    ) {
       showMoreCollectives();
     }
   };
@@ -333,6 +336,7 @@ const FundingSession = ({
         ) : null}
 
         {!collectivesList.length ? <Alert variant="info">No collectives found</Alert> : null}
+        {collectivesList.length > display ? <div className="text-center"><Spinner animation="border" variant="secundary" /></div> : null}
       </Container>
     </>
   );
