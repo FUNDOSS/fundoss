@@ -69,7 +69,8 @@ const FundingSession = ({
       const src = filters.search || search;
       list = collectives.filter((col) => col.name.toLowerCase().indexOf(src) > -1
       || col.description?.toLowerCase().indexOf(src) > -1
-      || col.longDescription?.toLowerCase().indexOf(src) > -1);
+      || col.longDescription?.toLowerCase().indexOf(src) > -1
+      || col.slug?.indexOf(src) > -1);
     }
     if (filters.tags?.length || (tags?.length && !filters.tags)) {
       const tagsFilter = filters.tags || tags;
@@ -99,32 +100,27 @@ const FundingSession = ({
     setCollectivesList(list);
   };
 
+  const srollTimeout = () => setTimeout(() => {
+    clearTimeout(scrollTimer);
+    if (displayMore(window.document)) showMoreCollectives();
+  }, 300);
+  const displayMore = (doc) => currentDisplay < collectives.length 
+    && doc.getElementById('collectives')?.offsetHeight + doc.body.getBoundingClientRect().y < 1000;
+
   let scrollTimer;
   let currentDisplay = display;
+
   const showMoreCollectives = () => {
     clearTimeout(scrollTimer);
-    scrollTimer = setTimeout(() => {
-      currentDisplay += 3;
-      setDisplay(currentDisplay);
-      return () => clearTimeout(scrollTimer);
-    }, 100);
-  };
-
-  const listener = (e) => {
-    const doc = e.target;
-    if (
-      currentDisplay < collectives.length 
-      && doc.getElementById('collectives').offsetHeight + doc.body.getBoundingClientRect().y < 1000
-    ) {
-      showMoreCollectives();
-    }
+    currentDisplay += 3;
+    setDisplay(currentDisplay);
+    window.addEventListener('scroll', () => scrollTimer = srollTimeout());
+    if (currentDisplay < collectives.length) scrollTimer = srollTimeout();
   };
 
   useEffect(() => {
-    window.addEventListener('scroll', listener);
-    return () => {
-      window.removeEventListener('scroll', listener);
-    };
+    srollTimeout();
+    return () => clearTimeout(scrollTimer);
   }, []);
 
   return (
@@ -336,7 +332,7 @@ const FundingSession = ({
         ) : null}
 
         {!collectivesList.length ? <Alert variant="info">No collectives found</Alert> : null}
-        {collectivesList.length > display ? <div className="text-center"><Spinner animation="border" variant="secundary" /></div> : null}
+        {collectivesList.length > display ? <div className="text-center"><Spinner animation="border" variant="light" /></div> : null}
       </Container>
     </>
   );
