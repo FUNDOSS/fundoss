@@ -22,7 +22,7 @@ const CartItem = ({
     onSelect(selection);
     setSelected(selection);
   };
-
+  const truncate = (input, length) => (input.length > length ? `${input.substring(0, length)}...` : input);
   return (
     <div className="cart-item">
       <div
@@ -38,7 +38,7 @@ const CartItem = ({
             <Image src={collective.imageUrl} width={30} roundedCircle fluid />
           </Col>
           <Col className="text-fat" style={{ fontSize: '1.1rem' }}>
-            {collective.name}
+            {truncate(collective.name, 20)}
           </Col>
           {selected !== collective._id ? (
             <Col xs={4} className="text-right text-nowrap ">

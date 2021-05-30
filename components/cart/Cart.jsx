@@ -80,20 +80,24 @@ const Cart = ({
     cartEvents.dispatch('cartChange', { data });
   };
 
-  Cart.addItem = (collective, amount, open = false) => {
+  Cart.addItem = (collective, amount, open = false, top = true) => {
     saveCart([{ collective: collective._id, amount }]);
-    Cart.addItems([{ collective, amount }]);
+    Cart.addItems([{ collective, amount }], top);
     if (open) Cart.show(collective._id);
   };
 
-  Cart.addItems = (items, open = false) => {
+  Cart.addItems = (items, open = false, top = true) => {
     const collectiveIds = items.reduce((ids, item) => [...ids, item.collective._id], []);
     saveCart(items.reduce(
       (items, item) => [...items, { collective: item.collective._id, amount: item.amount }], 
       [],
     ));
     const data = cartData.filter((item) => collectiveIds.indexOf(item.collective._id) === -1);
-    items.map((item) => data.unshift(
+    const addAt = (item, top) => {
+      if (top) return data.unshift(item); 
+      return data.push(item); 
+    };
+    items.map((item) => addAt(
       {
         ...item,
         ...{ 
@@ -101,7 +105,7 @@ const Cart = ({
           previousMatch: getPreviousMatch(item.collective._id),
         }, 
       },
-    ));
+    ), top);
     changeCart(data);
     if (open) Cart.show();
   };
@@ -168,7 +172,7 @@ const Cart = ({
           </p>
         )
           : null}
-        <CartSimilar data={cartData} addItem={(collective) => Cart.addItem(collective, donateConfig.def) } />
+        <CartSimilar data={cartData} addItem={(collective) => Cart.addItem(collective, donateConfig.def, true, false)} />
       </Modal.Body>
       <Modal.Footer>
         {cartData.length ? <Link href="/checkout"><Button block variant="primary">Total <Badge variant="danger round">{formatAmountForDisplay(totals.amount)}</Badge> Checkout</Button></Link> : null}

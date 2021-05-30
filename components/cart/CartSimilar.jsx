@@ -20,12 +20,12 @@ const CartSimilarCollective = ({ collective, addItem }) => (
         </b>
       </Card.Header>
       <Card.Body style={{ padding: '10px' }}>
-        {truncate(collective.description, 30)}
-      </Card.Body>
-      <Card.Footer style={{ padding: '10px' }}>
         <Button block size="sm" variant="outline-primary" onClick={() => addItem(collective)}>
           Add to cart
         </Button>
+      </Card.Body>
+      <Card.Footer style={{ padding: '10px' }}>
+        {truncate(collective.description, 30)}
         <Link href={`/collective/${collective.slug}`}>
           <Button block size="sm" variant="link">
             Read more
@@ -56,12 +56,12 @@ const CartSimilar = ({ data, addItem }) => {
   return (similar?.length
     ? (
       <div style={{ padding: '20px 0 0' }}>
-        <p><b>You might like these collectives</b></p>
+        <p className="text-center airy">You might also like these collectives</p>
         <Row>
           {
            similar.map(
              (collective) => (
-               <Col key={collective._id} className="d-flex align-items-stretch">
+               <Col key={collective._id} className="d-flex align-items-stretch" sm={4}>
                  <CartSimilarCollective collective={collective} addItem={addItem} />
                </Col>
              ),
