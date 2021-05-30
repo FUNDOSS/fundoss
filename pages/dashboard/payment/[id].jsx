@@ -60,7 +60,7 @@ const PaymentsPage = ({ state, payment }) => {
               </a>
             </Col>
             <Col>
-              {formatAmountForDisplay(don.fee)} 
+              {formatAmountForDisplay(don.fee, false)} 
             </Col>
           </Row>
         ))}
