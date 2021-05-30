@@ -38,7 +38,7 @@ const CheckoutPage = ({
           {total ? (
             <Container style={{ paddingTop: '40px' }} className="content">
               <Row>
-                <Col md={{ span: 3 }} style={{marginBottom:'40px'}}>
+                <Col md={{ span: 3 }} style={{ marginBottom: '40px' }}>
                   <h3 className="text-secondary text-center text-md-left"> <Icons.Cart size={30} /> Checkout</h3>
                 </Col>
                 <Col md={{ span: 6 }}>
@@ -49,13 +49,18 @@ const CheckoutPage = ({
               <Row>
                 <Col md={{ offset: 3, span: 6 }}>
                   <Row className="align-items-center text-center">
-                    <Col>Total: <span className="lead text-fat">{formatAmountForDisplay(total)}</span></Col>
-                    <Col className="lead">+</Col>
-                    <Col>
-                      <div className="match big">
-                        {totalMatch ? formatAmountForDisplay(totalMatch) : ''}
+                    <Col className="big">
+                      <div className="circle total">
+                        You pay: <br /><span className="big lead text-fat">{formatAmountForDisplay(total)}</span>
                       </div>
-                      <small>Estimated Match from FundOSS</small>
+                    </Col>
+                    <Col>
+                      <div className="circle totalmatch">
+                        <small>The projects receive <br />an estimated total of</small>
+                        <div className="text-fat big lead">
+                          {totalMatch ? formatAmountForDisplay(totalMatch + total) : ''}
+                        </div>
+                      </div>
                     </Col>
                   </Row>
                 </Col>
