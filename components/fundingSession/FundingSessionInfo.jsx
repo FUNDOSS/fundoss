@@ -3,6 +3,7 @@ import moment from 'moment';
 import { Badge } from 'react-bootstrap';
 import Qf from '../../utils/qf';
 import { formatAmountForDisplay } from '../../utils/currency';
+import Currency from '../Currency';
 
 const FundingSessionInfo = ({ session, predicted, size = 'md' }) => {
   const {
@@ -39,10 +40,19 @@ const FundingSessionInfo = ({ session, predicted, size = 'md' }) => {
             starts <Badge variant="danger"> {moment(start).fromNow()}</Badge>
           </span>
         ) : null}
+        {ended ? (
+          <span>
+            ended <Badge variant="danger"> {moment(end).fromNow()}</Badge>
+          </span>
+        ) : null}
       </p>
       { size === 'md' ? <h1 className="tagline no-margin">{session.tagline}</h1> : null }
       { size === 'sm' ? <p className="lead no-margin text-fat">{session.tagline}</p> : null }
-      {started && ended ? (<h2><small>Ended</small> {moment(end).format('MMMM Do YYYY')}</h2>) : null}
+      {started && ended ? (
+        <div className="display-1 final-total text-fat" style={{ marginTop: '-10px' }}>
+          <Currency value={session.matchedFunds + totals.amount} />
+        </div>
+      ) : null}
       {!started && !ended ? (
         <>
           <span className="info-span"> 

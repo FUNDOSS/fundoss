@@ -165,20 +165,16 @@ const FundingSession = ({
               </Col>
             ) : null}
 
-            {ended ? (
-              <Col xs={{ order: 1, span: 4 }} className="d-none d-lg-block">
-                <div style={{ maxWidth: '370px', margin: '0 auto' }} />
-              </Col>
-            ) : null}
-
-            {!started ? (
+            {!started || ended ? (
               <Col xs={{ order: 2, span: 12 }} lg={{ order: 1, span: 4 }}>
                 <Card className="invert glass" style={{ maxWidth: '350px', margin: '10px auto' }}>
                   <Card.Body className="content text-center airy">
-                    { session.allowNominations ? (<><Nominate sessionId={session._id} /><hr /></>) : null }
-                    <h3>Sign Up to be notified when {session.name} starts</h3>
+                    { session.allowNominations ? (<><Nominate sessionId={session._id} /><hr /></>) 
+                      : null }
+                    {ended 
+                      ? <h3>Sign Up to be notified for our next round</h3> 
+                      : <h3>Sign Up to be notified when {session.name} starts</h3> }
                     <Subscriptionform user={user} />
-                    
                     <p className="airy">
                       Do you want your project included in a future round?
                     </p>
