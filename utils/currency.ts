@@ -1,6 +1,7 @@
 export function formatAmountForDisplay(
   amount: number,
   floor = true,
+  symbol = true,
 ): string {
   const numberFormat = new Intl.NumberFormat(['en-US']);
   const floored = Math.floor(amount);
@@ -13,7 +14,7 @@ export function formatAmountForDisplay(
       digitsDisplay = `.${digits}`;
     }
   }
-  return `$${numberFormat.format(floored)}${digitsDisplay}`;
+  return (symbol ? '$' : '') + numberFormat.format(floored) + digitsDisplay;
 }
 
 export function formatAmountForStripe(
