@@ -2,7 +2,6 @@ import React from 'react';
 import moment from 'moment';
 import { Badge } from 'react-bootstrap';
 import Qf from '../../utils/qf';
-import { formatAmountForDisplay } from '../../utils/currency';
 import Currency from '../Currency';
 
 const FundingSessionInfo = ({ session, predicted, size = 'md' }) => {
@@ -49,9 +48,13 @@ const FundingSessionInfo = ({ session, predicted, size = 'md' }) => {
       { size === 'md' ? <h1 className="tagline no-margin">{session.tagline}</h1> : null }
       { size === 'sm' ? <p className="lead no-margin text-fat">{session.tagline}</p> : null }
       {started && ended ? (
-        <div className="display-1 final-total text-fat" style={{ marginTop: '-10px' }}>
-          <Currency value={session.matchedFunds + totals.amount} />
-        </div>
+        <>
+          <h3>Thanks to you, we raised</h3>
+          <div className="display-1 final-total text-fat" style={{ marginTop: '-10px' }}>
+            <Currency value={session.matchedFunds + totals.amount} />
+          </div>
+          <h3>We couldn’t have done it without you.</h3>
+        </>
       ) : null}
       {!started && !ended ? (
         <>
@@ -62,7 +65,7 @@ const FundingSessionInfo = ({ session, predicted, size = 'md' }) => {
           <span className="info-span matched">
             matched funds:
             <div className="display-3 match" style={{ marginTop: '-10px' }}>
-              {formatAmountForDisplay(session.matchedFunds)}
+              <Currency value={session.matchedFunds} />
             </div>
           </span>
         </>
@@ -71,19 +74,19 @@ const FundingSessionInfo = ({ session, predicted, size = 'md' }) => {
         <div>
           <span className="info-span text-center">
             {totals?.donations.length} donors<br />
-            <span className="display-3">{formatAmountForDisplay(totals?.amount || 0)}</span>
+            <span className="display-3"> <Currency value={totals?.amount || 0} /></span>
           </span>
           <span className="display-4">+</span>
           <span className="info-span text-center">
             Estimated match<br />
             <span className="text-fat display-3 text-success">
-              {formatAmountForDisplay(Math.round(totalMatches))}
+              <Currency value={totalMatches} />
             </span>
           </span>&nbsp;&nbsp;
           <span className="info-span text-center">
             Remaining<br />
             <span className="display-3 text-fat">
-              {formatAmountForDisplay(Math.round(session.matchedFunds - totalMatches))}
+              <Currency value={session.matchedFunds - totalMatches} />
             </span>
           </span>
         </div>

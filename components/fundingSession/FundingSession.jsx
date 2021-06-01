@@ -135,7 +135,7 @@ const FundingSession = ({
           className="d-none d-md-block"
           width={300}
           height={450}
-          num={14}
+          num={10}
           style={{
             position: 'absolute', zIndex: -10, width: '600px', height: '450px', top: '-50px',
           }}
@@ -144,7 +144,7 @@ const FundingSession = ({
           className="d-none d-md-block"
           width={100}
           height={450}
-          num={7}
+          num={5}
           flip
           style={{
             position: 'absolute', zIndex: -10, width: '200px', height: '450px', top: '-50px', right: 0,
