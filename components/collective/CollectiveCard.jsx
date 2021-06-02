@@ -12,6 +12,7 @@ import NominateBtn from './NominateBtn';
 import Icons from '../icons';
 import { formatAmountForDisplay } from '../../utils/currency';
 import Qf from '../../utils/qf';
+import Currency from '../Currency';
 
 const CollectiveCard = ({
   collective, active, nominate, session, nominations, nominated, user, donateConfig, ended, 
@@ -52,13 +53,14 @@ const CollectiveCard = ({
           </Col>
         </Row>
         <div className="text-center small" style={{ margin: '10px 0 -10px 0' }}>
-          {(active || ended) && totals?.donations?.length ? (
+          {(active && !ended) && totals?.donations?.length ? (
             <>
               Raised <span className="text-fat">{formatAmountForDisplay(totals.amount)}</span> + 
               est. <span className="match">{formatAmountForDisplay(totals.donations.reduce((total, amount) => total + Qf.calculate(amount), 0))}</span> match 
               from <span className="text-fat">{totals.donations.length}</span> {Pluralize('donor', totals.donations.length)}
             </>
-          ) : null }   
+          ) : null }  
+  
           {nominate ? (
             <span>
               {nominations 
@@ -66,12 +68,25 @@ const CollectiveCard = ({
                 : 'Be the first to nominate ❤️'}
             </span>
           ) : null}     
+ 
         </div>
 
       </Card.Header>
       <Card.Body>
         <Card.Text className="text-center" style={{ maxHeight: '80px', overflow: 'hidden' }}>
-          {description}
+          {ended && totals.donations.length > 0 ? (
+            <div className="text-center">
+              <div>🎉
+                <span className="match display-4">
+                  <Currency value={session.disbursments[slug].total} />
+                </span>🎉
+              </div>
+              <b><Currency value={session.disbursments[slug].donation} /></b> +&nbsp;
+              <b className="text-success"><Currency value={session.disbursments[slug].matched} /></b> match from&nbsp;
+              <b>{totals.donations.length}</b> {Pluralize('donor', totals.donations.length)}
+
+            </div>
+          ) : description } 
         </Card.Text>
 
       </Card.Body>
@@ -88,7 +103,7 @@ const CollectiveCard = ({
             </span> match
           </div>
         ) : null }
-        
+
         <Row className="no-gutters">
           <Col xs={7}>
             {nominate ? (
