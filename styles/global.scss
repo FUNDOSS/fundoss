@@ -244,31 +244,31 @@ header .navbar-toggler{
     border-bottom: 0;
 }
 
-
-
-
-
-
-
 h4, h5 {font-family: $font-family-sans-serif; margin:20px 0 10px; text-transform: uppercase;}
 h5{font-size: 1rem;line-height: 1.3rem;}
 h4{font-size: 1.1rem;line-height: 1.3rem;}
 h3{font-size: 1.2rem;line-height: 1.4rem;}
 h1{margin:2rem 0}
 
+@keyframes rainbow {
+    0% {text-shadow: 5px 5px $red, 10px 10px $teal; }
+    33% { text-shadow: 5px 5px $orange, 10px 10px $blue; }
+    66% { text-shadow: 5px 5px $purple, 10px 10px $red; }
+    100% { text-shadow: 5px 5px $red, 10px 10px $teal; }
+}
 
 .final-total{
     color: $darkpurple;
     font-size: 5rem;
-    text-shadow: 5px 5px $red, 10px 10px $teal;
+    animation: rainbow 1.5s linear infinite;
+    animation-direction: alternate;
 }
+
 .invert .final-total{color:$white}
+
 .currency small{font-size: 50%;vertical-align:middle;display:inline-block}
 
 .no-margin{margin:0}
-
-
-
 
 .modal-header .close {
     padding: 4px 9px;
@@ -347,6 +347,7 @@ h1{margin:2rem 0}
    width: 170px; height: 170px; padding: 30px; background: $teal; color:$white;
    .big {font-size: 2.2rem;}
 }
+
 
 
 @include media-breakpoint-down(md) {
