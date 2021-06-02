@@ -258,11 +258,12 @@ h1{margin:2rem 0}
 
 
 .final-total{
+    color: $darkpurple;
     font-size: 5rem;
     text-shadow: 5px 5px $red, 10px 10px $teal;
-    small{font-size: 1.8rem;}
 }
-
+.invert .final-total{color:$white}
+.currency small{font-size: 50%;vertical-align:middle;display:inline-block}
 
 .no-margin{margin:0}
 
