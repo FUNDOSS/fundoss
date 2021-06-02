@@ -140,7 +140,6 @@ export async function getFinishedSession():Promise<any> {
     published: true,
   }).populate('collectives');
   if (session) {
-    console.log(session.disbursments);
     if (!session.disbursments) {
       const disbursments = (await Payments.getSessionDisbursement(session._id))
         .reduce((obj, col) => (
