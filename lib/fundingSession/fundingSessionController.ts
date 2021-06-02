@@ -1,12 +1,14 @@
 /* eslint-disable no-param-reassign */
 import moment from 'moment';
 import mongoose from 'mongoose';
+import { collectFields } from 'graphql/execution/execute';
 import FundingSession, { IFundingSession, IFundingSessionInput } from './fundingSessionModel';
 import Collectives from '../collectives/CollectivesController';
 import CollectiveSessionTotals from '../payment/collectiveSessionTotalsModel';
 import Qf from '../../utils/qf';
 import dbConnect from '../dbConnect';
 import NominationModel from '../collectives/NominationModel';
+import Payments from '../payment/paymentController';
 
 const getCollectivesFromInput = async (session) => {
   const collectivesSlugs = session.collectives.split('\n')
@@ -138,8 +140,16 @@ export async function getFinishedSession():Promise<any> {
     published: true,
   }).populate('collectives');
   if (session) {
+    console.log(session.disbursments);
+    if (!session.disbursments) {
+      const disbursments = (await Payments.getSessionDisbursement(session._id))
+        .reduce((obj, col) => (
+          { ...obj, ...{ [col.slug]: col } }
+        ), {});
+      FundingSession.updateOne({ _id: session._id, disbursments });
+      session.disbursments = disbursments;
+    }
     const sessionData = await setCollectiveTotals(session);
-    sessionData.donateConfig = getDonationsConfig();
     sessionData.collectives = session.collectives.sort(() => 0.5 - Math.random());
     return sessionData;
   }

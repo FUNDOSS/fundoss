@@ -80,6 +80,9 @@ const FundingSessionSchema = new Schema({
   tags: [{
     type: String,
   }],
+  disbursments: {
+    type: Schema.Types.Mixed,
+  },
   collectives: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Collective',
