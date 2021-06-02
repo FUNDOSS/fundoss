@@ -143,10 +143,11 @@ export async function getSessionDisbursement(sessionId) {
     {},
   );
   const collectiveTotals = matches.reduce((totals, m) => {
+    const total = totals[m.collective] ? totals[m.collective] : { donation: 0, match: 0, fee: 0 };
     const collective = {
-      donation: totals[m.collective].donation + m.amount,
-      match: totals[m.collective].match + (m.match / matchRatio),
-      fee: totals[m.collective].fee + m.fee,
+      donation: total.donation + m.amount,
+      match: total.match + (m.match / matchRatio),
+      fee: total.fee + m.fee,
     };
     return { ...totals, ...{ [m.collective]: collective } };
   }, collectivesTotalsInit);
