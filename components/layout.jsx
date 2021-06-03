@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import Navbar from 'react-bootstrap/Navbar';
+import { Navbar, Container, Button } from 'react-bootstrap';
 import Nav from 'react-bootstrap/Nav';
 import Link from 'next/link';
 import AuthLinks from './auth/AuthLinks';
@@ -11,6 +11,7 @@ import Logo from './Logo';
 import Footer from './Footer';
 import Icons from './icons';
 import Qf from '../utils/qf';
+import GdprBar from './GdprBar';
 
 const Layout = ({
   children, meta, title = 'FundOSS | Democratic funding for open-source collectives', hidefooter, 
@@ -98,6 +99,7 @@ const Layout = ({
           donateConfig={current?.donateConfig}
         />
       ) : null }
+      <GdprBar />
     </div>
   ); 
 };
