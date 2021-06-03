@@ -44,9 +44,11 @@ const CheckoutForm = ({ user, test }) => {
 
   const handleSubmit = async (values, { setStatus }) => {
     setStatus({ paymentStatus: 'verify' });
+    // request a paymentIntent from the server
     const response = await fetchPostJSON('/api/checkout', { billing_details: values.billing_details, subscribe: values.subscribe });
     const { paymentId, clientSecret } = response;
     const cardElement = elements.getElement(CardElement);
+    // confirm Stripe Payment 
     const { error, paymentIntent } = await stripe.confirmCardPayment(
       clientSecret,
       {
@@ -65,6 +67,7 @@ const CheckoutForm = ({ user, test }) => {
       if (paymentIntent.status === 'succeeded') {
         const fp = await FingerprintJS.load();
         const browserFingerprint = (await fp.get()).visitorId;
+        // confirm paymentIntent on the server 
         const confirmation = await fetchPostJSON('/api/checkout', { 
           payment: { status: 'succeeded', id: paymentId, browserFingerprint },
         });
