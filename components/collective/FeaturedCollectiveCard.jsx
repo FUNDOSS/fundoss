@@ -56,7 +56,7 @@ const FeaturedCollectiveCard = ({ collective, active, session }) => {
               ) : null }
             </Col>
           </Row>
-          <div className="text-center small" style={{ margin: '10px 0 -20px' }}>
+          <div className="text-center small" style={{ margin: '10px 0 -10px' }}>
             {totals?.donations?.length ? (
               <>
                 Raised <span className="text-fat">{formatAmountForDisplay(totals.amount)}</span> + 
