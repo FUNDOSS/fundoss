@@ -28,7 +28,7 @@ const CollectiveCard = ({
   }, []);
 
   const truncate = (input, length) => (input.length > length ? `${input.substring(0, length)}...` : input);
-
+  const disbursments = session?.disbursments ? session.disbursments[slug] : {matched:0, total:0, donations:0}; 
   return (
     <Card className="collective-card" id={`collective-${slug}`}>
       <Card.Header style={{ minHeight: '110px' }}>
@@ -78,11 +78,11 @@ const CollectiveCard = ({
             <div className="text-center">
               <div>🎉
                 <span className="match display-4">
-                  <Currency value={session.disbursments[slug].total} />
+                  <Currency value={disbursments.total} floor />
                 </span>🎉
               </div>
-              <b><Currency value={session.disbursments[slug].donation} /></b> +&nbsp;
-              <b className="text-success"><Currency value={session.disbursments[slug].matched} /></b> match from&nbsp;
+              <b><Currency value={disbursments.donation} floor /></b> +&nbsp;
+              <b className="text-success"><Currency value={disbursments.matched} floor /></b> match from&nbsp;
               <b>{totals.donations.length}</b> {Pluralize('donor', totals.donations.length)}
 
             </div>
