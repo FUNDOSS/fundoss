@@ -28,7 +28,7 @@ const CollectiveCard = ({
   }, []);
 
   const truncate = (input, length) => (input.length > length ? `${input.substring(0, length)}...` : input);
-  const disbursments = session?.disbursments ? session.disbursments[slug] : {matched:0, total:0, donations:0}; 
+  const disbursments = session?.disbursments ? session.disbursments[slug] : { matched: 0, total: 0, donations: 0 }; 
   return (
     <Card className="collective-card" id={`collective-${slug}`}>
       <Card.Header style={{ minHeight: '110px' }}>
@@ -133,13 +133,14 @@ const CollectiveCard = ({
               </>
             ) : null}
           </Col>
-          <Col>
-            <Link href={`/collective/${slug}`}>
-              <Button block variant={active || nominate ? 'link' : 'outline-primary'}>read&nbsp;more</Button>
-            </Link>
-          </Col>
+          {!ended ? (
+            <Col>
+              <Link href={`/collective/${slug}`}>
+                <Button block variant={active || nominate ? 'link' : 'outline-primary'}>read&nbsp;more</Button>
+              </Link>
+            </Col>
+          ) : null}
         </Row>
-
       </Card.Footer>
     </Card>
   );
