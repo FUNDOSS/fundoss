@@ -58,6 +58,7 @@ handler.post(async (req: any, res: NextApiResponse) => {
           session: current.slug,
         },
       });
+      // Create Stripe paymentIntent
       const params: Stripe.PaymentIntentCreateParams = {
         payment_method_types: ['card'],
         amount: formatAmountForStripe(cartData.amount),
@@ -68,6 +69,7 @@ handler.post(async (req: any, res: NextApiResponse) => {
       const paymentIntent: Stripe.PaymentIntent = await stripe.paymentIntents.create(
         params,
       );
+      // Save paymentIntent to database
       const payment = await Payment.insert({
         user: req.user._id,
         intentId: paymentIntent.id,
@@ -86,6 +88,7 @@ handler.post(async (req: any, res: NextApiResponse) => {
       const savedPayment = await Payment.findById(payment.id);
       if (!savedPayment) return res.status(500).json({ statusCode: 500, message: 'invalid payment' });
       try {
+        // retrieve stripe intent
         const intent: Stripe.PaymentIntent = await stripe.paymentIntents.retrieve(
           savedPayment.intentId, {
             expand:
@@ -96,6 +99,7 @@ handler.post(async (req: any, res: NextApiResponse) => {
           },
         );
         if (intent.status === 'succeeded') {
+          // Create donations for each collective and update payment
           const donations = await Cart.get(req.session.cart);
           const paymentMethod = intent.payment_method;
           const update = {
