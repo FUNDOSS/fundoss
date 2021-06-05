@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar, Container, Button } from 'react-bootstrap';
-import Cookies from "js-cookie";
+import Cookies from 'js-cookie';
 
 const GdprBar = () => {
-  const [consent, setConsent] = useState(-1);
+  const [consent, setConsent] = useState(1);
   useEffect(() => {
-    setConsent(Cookies.get('consent'));
+    setConsent(Cookies.get('gdprconsent'));
   }, []);
   return (
     <>
-      {consent != 1 ? (
+      {!(Number(consent) === 1) ? (
         <Navbar bg="light" expand="lg" fixed="bottom" className="justify-content-end">
           <Container>
             <Navbar.Text>
@@ -18,7 +18,7 @@ const GdprBar = () => {
             <div>
               <Button
                 onClick={() => {
-                  Cookies.set('consent', 1);
+                  Cookies.set('gdprconsent', 1);
                   setConsent(1); 
                 }}
                 variant="outline-primary"
