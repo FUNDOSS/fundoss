@@ -8,9 +8,6 @@ const Gtag = {
       window.gtag('config', window, Gtag.analyticsId, {
         page_path: url || window.location.href,
       });
-      console.log('gtag not found', window?.gtag, window.location.href, url);
-    } else {
-      console.log('gtag not found', window?.gtag);
     }
   },
   event: ({
