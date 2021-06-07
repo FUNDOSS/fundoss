@@ -30,7 +30,7 @@ const QFPage = ({ state, page }) => (
         <Col md={{ span: 8, offset: 2 }} lg={{ span: 8, offset: 2 }}>
           <div className="gh-content" dangerouslySetInnerHTML={{ __html: page.html }} />
           <br />
-          <div style={{ margin: '20px auto', width: '500px' }}>
+          <div style={{ margin: '20px auto', width: '600px', fontSize: '1rem' }}>
             <Calculator avg={10} number={500} />
           </div><br /><br />
 
