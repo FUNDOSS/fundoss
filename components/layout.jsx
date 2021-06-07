@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import { Navbar, Container, Button } from 'react-bootstrap';
+import { Navbar } from 'react-bootstrap';
 import Nav from 'react-bootstrap/Nav';
 import Link from 'next/link';
 import AuthLinks from './auth/AuthLinks';
@@ -12,6 +12,7 @@ import Footer from './Footer';
 import Icons from './icons';
 import Qf from '../utils/qf';
 import GdprBar from './GdprBar';
+import Gtag from '../lib/gtag';
 
 const Layout = ({
   children, meta, title = 'FundOSS | Democratic funding for open-source collectives', hidefooter, 
@@ -23,6 +24,12 @@ const Layout = ({
   const {
     user, cart, current, upcoming, 
   } = state;
+  if (state?.gtag) Gtag.init(state.gtag);
+
+  useEffect(() => {
+    setTimeout(() => Gtag.pageview(), 1000);
+  }, []);
+  
   if (state && state.current) {
     Qf.init(
       current.predicted.average, 
@@ -53,6 +60,7 @@ const Layout = ({
         {meta?.description ? <meta property="og:description" content={meta?.description} /> : null }
         {meta?.description ? <meta property="twitter:description" content={meta?.description} /> : null }
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${state.gtag}`} />
       </Head>
       <header>
         <Navbar bg="light" expand="lg" fixed="top">
@@ -100,7 +108,21 @@ const Layout = ({
         />
       ) : null }
       <GdprBar />
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+
+                gtag('config', '${state.gtag}', {
+                  page_path: window.location.pathname,
+                });
+        `,
+        }}
+      />
     </div>
+    
   ); 
 };
 

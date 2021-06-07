@@ -2,13 +2,13 @@ import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import NextNprogress from 'nextjs-progressbar';
 import '../styles/global.scss';
-import * as gtag from '../lib/gtag';
+import Gtag from '../lib/gtag';
 
 export default function MyApp({ Component, pageProps }) {
   const router = useRouter();
   useEffect(() => {
     const handleRouteChange = (url) => {
-      gtag.pageview(url);
+      Gtag.pageview(url);
     };
     router.events.on('routeChangeComplete', handleRouteChange);
     return () => {

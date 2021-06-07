@@ -68,7 +68,6 @@ const ServerProps = {
       ...{ donateConfig: FundingSession.getDonationsConfig()}
     } : null;
 
-
     const cart = await Cart.get(sessionCart);
     const upcoming = await FundingSession.getUpcomingSession();
     return {
@@ -77,6 +76,7 @@ const ServerProps = {
       current,
       upcoming: serializable(upcoming),
       siteUrl: process.env.HOSTING_URL,
+      gtag: process.env.GOOGLE_ANALYTICS,
     };
   },
   cart: null,
