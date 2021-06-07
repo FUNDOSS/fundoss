@@ -55,6 +55,8 @@ handler.post(async (req: any, res: NextApiResponse) => {
         amount: 0,
         meta: {
           user: req.user._id.toString(),
+          githubHandle: req.user.username,
+          githubId: req.user.githubid,
           session: current.slug,
         },
       });
