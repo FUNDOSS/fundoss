@@ -390,6 +390,7 @@ h1{margin:2rem 0}
 
 @include media-breakpoint-down(sm) {
     .authDropdownLabel span{display:none}
+    .navbar-toggler-icon {margin-left: -13px;}
     header a.navbar-brand svg.logo{max-width:110px}
     header .btn{padding: 0.1rem 0.2rem;}
     .match.big{
@@ -397,8 +398,6 @@ h1{margin:2rem 0}
     }
     header .auth{ right:10px; }
     header .btn-cart{ right:60px; }
-
-
 }
 
 
