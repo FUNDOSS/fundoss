@@ -61,7 +61,7 @@ const CheckoutForm = ({ user, test }) => {
 
     if (error) {
       setStatus({ cardError: error.message });
-      setStatus({ error: 'Please verify your credit/debit card' });
+      setStatus({ error: `Sorry we can't confirm your payment :${error.message}` });
     } else if (paymentIntent) {
       setStatus({ paymentStatus: paymentIntent.status });
       if (paymentIntent.status === 'succeeded') {
