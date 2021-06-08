@@ -97,7 +97,7 @@ const CollectiveCard = ({
             <span className="text-fat"> 
               {formatAmountForDisplay(Cart.previousDonations[collective._id])}
             </span>&nbsp;
-            for a&nbsp;
+            for a est.&nbsp;
             <span className="match"> 
               {formatAmountForDisplay(Qf.calculate(Cart.previousDonations[collective._id]))}
             </span> match
@@ -121,7 +121,7 @@ const CollectiveCard = ({
             {active ? (
               <>
                 { !inCart ? (
-                  <Button block variant="outline-primary" onClick={() => Cart.addItem(collective, donateConfig.def)}>
+                  <Button block variant="outline-primary" onClick={() => Cart.addItem(collective, donateConfig.def, false)}>
                     <Icons.Cart size={18} /> Add to cart
                   </Button>
                 ) : (

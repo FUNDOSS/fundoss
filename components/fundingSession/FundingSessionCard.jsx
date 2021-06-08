@@ -17,7 +17,7 @@ const FundingSessionCard = ({ session, predicted }) => {
 
       </Card.Body>
       <Card.Footer>
-        <AdminLinks disbursments edit view session={session} />
+        <AdminLinks disbursments edit view donations session={session} />
       </Card.Footer>
     </Card>
   );

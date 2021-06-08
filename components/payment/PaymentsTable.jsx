@@ -28,7 +28,7 @@ const PaymentsTable = ({ payments }) => (
         })}
         </td>
         <td>
-          {payment.sybilAttackScore}
+          {payment.sybilAttackScore} {payment.stripeRisk}
         </td>
       </tr>
     ))}
