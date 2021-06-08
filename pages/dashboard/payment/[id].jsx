@@ -33,13 +33,15 @@ const PaymentsPage = ({ state, payment }) => {
         <h1>Payments</h1>
         <Row>
           <Col>
-
             &nbsp;
             <h3>{formatAmountForDisplay(payment.amount)} 
               <small>-{payment.fee} fee</small>
               <Badge variant={payment.status === 'succeeded' ? 'success' : 'danger'}>{payment.status}</Badge>
             </h3>
             <div>Sybil Attack Score: {payment.sybilAttackScore}</div>
+            { payment.ipAddress 
+              ? <div>IP address: <Link href={`/dashboard/payment?ipAddress=${payment.ipAddress}`}>{payment.ipAddress}</Link></div>
+              : null}
             <div>card fingerprint: <Link href={`/dashboard/payment?cardFingerprint=${payment.cardFingerprint}`}>{payment.cardFingerprint}</Link></div>
             <div>browser fingerprint: <Link href={`/dashboard/payment?browserFingerprint=${payment.browserFingerprint}`}>{payment.browserFingerprint}</Link></div>
             <h4>{moment(payment.time).format('lll')}</h4>

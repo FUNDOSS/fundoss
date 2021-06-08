@@ -1,7 +1,6 @@
 import nextConnect from 'next-connect';
 import { NextApiResponse } from 'next';
 import Stripe from 'stripe';
-import { PaymentMethod } from '@stripe/stripe-js';
 import { all } from '../../../middleware/index';
 import Payment from '../../../lib/payment/paymentController';
 import { formatAmountForStripe } from '../../../utils/currency';
@@ -75,6 +74,7 @@ handler.post(async (req: any, res: NextApiResponse) => {
       const payment = await Payment.insert({
         user: req.user._id,
         intentId: paymentIntent.id,
+        ipAddress: req.headers['x-real-ip'],
         amount,
       });
       return res.status(200).json({

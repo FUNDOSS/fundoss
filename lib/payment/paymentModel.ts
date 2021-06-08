@@ -15,6 +15,7 @@ export interface IPaymentInput {
   cardFingerprint?: string;
   browserFingerprint?: string;
   sybilAttackScore?: string;
+  ipAddress?: string;
   error?: any;
 }
 
@@ -33,6 +34,7 @@ export interface IPayment extends Document {
   cardFingerprint: string;
   browserFingerprint: string;
   sybilAttackScore: string;
+  ipAddress: string;
 }
 
 const PaymentSchema = new Schema({
@@ -67,6 +69,9 @@ const PaymentSchema = new Schema({
     type: String,
   },
   browserFingerprint: {
+    type: String,
+  },
+  ipAddress: {
     type: String,
   },
   sybilAttackScore: {
