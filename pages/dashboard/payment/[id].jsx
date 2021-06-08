@@ -38,7 +38,8 @@ const PaymentsPage = ({ state, payment }) => {
               <small>-{payment.fee} fee</small>
               <Badge variant={payment.status === 'succeeded' ? 'success' : 'danger'}>{payment.status}</Badge>
             </h3>
-            <div>Sybil Attack Score: {payment.sybilAttackScore}</div>
+            <div>Sybil attack score: {payment.sybilAttackScore}</div>
+            <div>Stripe risk Score: {payment.stripeRisk}</div>
             { payment.ipAddress 
               ? <div>IP address: <Link href={`/dashboard/payment?ipAddress=${payment.ipAddress}`}>{payment.ipAddress}</Link></div>
               : null}
