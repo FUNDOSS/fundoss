@@ -250,7 +250,7 @@ const FundingSession = ({
               />
             </Col>
             { started ? (
-              <Col xs={4} lg={2} className="text-center">
+              <Col xs={4} lg={3} className="text-center">
                 <div className="sort">
                   <small className="d-none d-md-inline">Sort by</small>
                   <Button 
