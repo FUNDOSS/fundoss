@@ -26,6 +26,12 @@
         url('/static/bg-seamless.svg') ;
 }
 
+.seamlesslight{
+    background:
+        linear-gradient(279deg, rgba($white,.8), rgba($white,0.9) 30%, rgba($white,.8)), 
+        url('/static/bg-seamless.svg') ;
+}
+
 .darkgradient{
     @extend .invert;
     padding: 40px 0;

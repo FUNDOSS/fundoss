@@ -109,7 +109,9 @@ footer{
 .shadow-light{
     box-shadow: $input-box-shadow;
 }
-
+img.shadow-light{
+    background: $gray-100;
+}
 .input-group{
     .form-control{box-shadow:none}
     .input-group-prepend{background: none;font-size: 0.8rem;}
@@ -338,13 +340,13 @@ h1{margin:2rem 0}
    
     
 }
-.circle.total{
-    background: $purple; color:$white;
-    .big {font-size: 1.4rem;}
+.checkout-total{
+    .big {font-size: 2.3rem;}
 }
 
-.circle.totalmatch{
-   width: 170px; height: 170px; padding: 30px; background: $teal; color:$white;
+.checkout-totalmatch{
+    border-radius: $border-radius;
+    background-color: $gray-200;
    .big {font-size: 2.2rem;}
 }
 
