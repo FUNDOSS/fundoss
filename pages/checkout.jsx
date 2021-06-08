@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import {
-  Container, Row, Col, Button, 
+  Container, Row, Col, Button, Image,
 } from 'react-bootstrap';
 import Layout from '../components/layout';
 import middleware from '../middleware/all';
@@ -13,6 +13,7 @@ import ServerProps from '../lib/serverProps';
 import { formatAmountForDisplay } from '../utils/currency';
 import Icons from '../components/icons';
 import Sponsors from '../components/fundingSession/Sponsors';
+import Currency from '../components/Currency';
 
 const CheckoutPage = ({
   state, stripekey,
@@ -45,20 +46,43 @@ const CheckoutPage = ({
                   <Cart display="inline" cart={state.cart} user={state.user} donateConfig={state.current.donateConfig} />
                 </Col>
               </Row>
-              <hr />
-              <Row>
+              <Row style={{ marginTop: '30px' }}>
                 <Col md={{ offset: 3, span: 6 }}>
-                  <Row className="align-items-center text-center">
-                    <Col className="big">
-                      <div className="circle total">
-                        You pay: <br /><span className="big lead text-fat">{formatAmountForDisplay(total)}</span>
+                  <Row className="align-items-center text-center d-flex align-items-stretch">
+                    <Col className="big" lg={4}>
+                      <div className="checkout-total text-center" style={{ padding: '20px' }}>
+                        <Image className="shadow-light" style={{ width: '40px', height: '40px', margin: '0 -5px' }} src={state.user?.avatar} roundedCircle />
+                        <div style={{ minHeight: '30px' }}>
+                          You pay only 
+                        </div>
+                        <span className="big text-primary lead text-fat">
+                          <Currency value={total} />
+                        </span>
                       </div>
                     </Col>
                     <Col>
-                      <div className="circle totalmatch">
-                        <small>The projects receive <br />an estimated total of</small>
-                        <div className="text-fat big lead">
-                          {totalMatch ? formatAmountForDisplay(totalMatch + total) : ''}
+                      <div className="checkout-totalmatch seamlesslight text-center shadow-light" style={{ padding: '20px' }}>
+                        <Image className="shadow-light" style={{ width: '40px', height: '40px' }} src={state.user?.avatar} roundedCircle />
+                        &nbsp;+&nbsp;
+                        <Image className="shadow-light" style={{ width: '40px', height: '40px' }} src="/static/favicon.svg" roundedCircle />
+                        &nbsp;&nbsp;➜&nbsp;&nbsp;
+                        {Cart.data ? Cart.data.map(
+                          (item, index) => (
+                            index < 6 ? (
+                              <Image
+                                className="shadow-light" 
+                                style={{ width: '40px', height: '40px', margin: '0 -20px 0 0' }} 
+                                key={item.collective.slug._id}
+                                src={item.collective.imageUrl}
+                                roundedCircle
+                                fluid
+                              />
+                            ) : '.' 
+                          ),
+                        ) : null}
+                        <div style={{ minHeight: '30px' }}>Your contribution + FundOSS's estimated match</div>
+                        <div className="text-fat text-success big lead">
+                          {totalMatch ? <Currency value={totalMatch + total} /> : null}
                         </div>
                       </div>
                     </Col>
@@ -73,7 +97,7 @@ const CheckoutPage = ({
             <div className="seamless-hand" style={{ marginBottom: '-60px' }}>
               <Container>
                 <Row className="no-gutter align-items-center">
-                  <Col md={6}><Sponsors align="center" sponsors={state.current.sponsors} /></Col>
+                  <Col md={6} />
                   <Col md={{ span: 4, offset: 1 }} className="text-center content">
                     <div style={{ maxWidth: '550px', margin: '250px auto' }}>
                       <h3>Oops.. Your cart is empty</h3>
