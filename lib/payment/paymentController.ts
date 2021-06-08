@@ -74,7 +74,7 @@ export async function getSessionTotals(session) {
 
 export async function findById(id:string) {
   await dbConnect();
-  return Payment.findOne({ _id: id }).select('user sid intentId session amount donations fee status time confirmation cardFingerprint browserFingerprint sybilAttackScore ipAddress')
+  return Payment.findOne({ _id: id }).select('user sid intentId session amount donations fee status time confirmation cardFingerprint browserFingerprint sybilAttackScore ipAddress stripeRisk')
     .populate({ path: 'user' })
     .populate({ path: 'session', select: 'name slug' })
     .populate({
@@ -88,7 +88,7 @@ export async function findById(id:string) {
 
 export async function getPayments(query) {
   await dbConnect();
-  return Payment.find(query).select('user session amount donations fee status time sybilAttackScore')
+  return Payment.find(query).select('user session amount donations fee status time sybilAttackScore stripeRisk')
     .populate({ path: 'session', select: 'name' })
     .populate({ path: 'user', select: 'avatar username' })
     .populate({
