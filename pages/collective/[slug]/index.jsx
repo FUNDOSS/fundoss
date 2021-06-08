@@ -86,8 +86,8 @@ const collectivePage = ({
                           key={index}
                           src={member} 
                           roundedCircle
-                          width={35}
-                          height={35}
+                          className="shadow-light" 
+                          style={{ width: '35px', height: '35px', margin: '0 -10px 0 0' }} 
                         />
                       ),
                     )}
