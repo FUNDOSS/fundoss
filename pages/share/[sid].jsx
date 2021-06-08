@@ -36,7 +36,7 @@ const SharePage = ({
             <div style={{ maxWidth: '550px', margin: '70px auto' }}>
               <Image src={payment.user.avatar} roundedCircle width={100} />
               <h2 style={{ margin: '20px 0' }}>
-                {payment.user.name || payment.user.username} has backed<br /> {Pluralize('awesome collective', payment.donations.length, true)}
+                {payment.user.name || payment.user.username} has backed<br /> {Pluralize('collective', payment.donations.length, true)}
               </h2>
               <p className="lead">And unlocked&nbsp;
                 <span className="match">{
