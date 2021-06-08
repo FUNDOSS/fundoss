@@ -28,6 +28,11 @@ handler.post(async (req: any, res: NextApiResponse) => {
 
   if (!current._id) return res.status(500).json({ statusCode: 500, message: 'no active session' });
 
+  if (req.body.error) {
+    await Payment.update({ _id: req.body.id, error: req.body.error, status: 'error' });
+    return res.status(200).json({ status: 'errorlogged' });
+  }
+
   if (!req.body.payment) {
     if (req.body.billing_details) {
       Users.update({ _id: req.user._id, billing: req.body.billing_details });
