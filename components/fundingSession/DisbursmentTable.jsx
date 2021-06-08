@@ -72,16 +72,16 @@ const DisbursmentsTable = ({ donations, session }) => {
         {disbursments.map((col) => (
           <tr key={col.slug}>
             <td>{col.slug}</td>
-            <td>{formatAmountForDisplay(col.donation)}</td>
-            <td>{formatAmountForDisplay(col.matched)}</td>
-            <td>{formatAmountForDisplay(col.fee)}</td>
+            <td>{formatAmountForDisplay(col.donation, false)}</td>
+            <td>{formatAmountForDisplay(col.matched, false)}</td>
+            <td>{formatAmountForDisplay(col.fee, false)}</td>
           </tr>
         ))}
         <tr className="lead text-fat">
           <td />
-          <td>{formatAmountForDisplay(totals.donation)}</td>
-          <td>{formatAmountForDisplay(totals.matched)}</td>
-          <td>{formatAmountForDisplay(totals.fee)}</td>
+          <td>{formatAmountForDisplay(totals.donation, false)}</td>
+          <td>{formatAmountForDisplay(totals.matched, false)}</td>
+          <td>{formatAmountForDisplay(totals.fee, false)}</td>
         </tr>
       </Table>
       
