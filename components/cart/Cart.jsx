@@ -82,7 +82,7 @@ const Cart = ({
 
   Cart.addItem = (collective, amount, open = false, top = true) => {
     saveCart([{ collective: collective._id, amount }]);
-    Cart.addItems([{ collective, amount }], top);
+    Cart.addItems([{ collective, amount }], open, top);
     if (open) Cart.show(collective._id);
   };
 
