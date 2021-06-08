@@ -104,6 +104,7 @@ handler.post(async (req: any, res: NextApiResponse) => {
           // Create donations for each collective and update payment
           const donations = await Cart.get(req.session.cart);
           const paymentMethod = intent.payment_method;
+          const risk = intent.charges.data[0].outcome.risk_score;
           const update = {
             sid: savedPayment.sid,
             amount: savedPayment.amount,
@@ -113,6 +114,7 @@ handler.post(async (req: any, res: NextApiResponse) => {
             status: intent.status,
             cardFingerprint: (paymentMethod as any).card.fingerprint,
             confirmation: intent,
+            stripeRisk: risk,
             donations: donations.reduce((data, item) => (
               { ...data, [item.collective._id]: item.amount }
             ), {}),
