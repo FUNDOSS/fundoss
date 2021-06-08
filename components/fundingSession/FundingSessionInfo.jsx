@@ -47,11 +47,11 @@ const FundingSessionInfo = ({ session, predicted, size = 'md' }) => {
       </p>
       { size === 'md' ? <h1 className="tagline no-margin">{session.tagline}</h1> : null }
       { size === 'sm' ? <p className="lead no-margin text-fat">{session.tagline}</p> : null }
-      {started && ended ? (
+      {started && ended && totals ? (
         <>
           <h3>Thanks to you, we raised</h3>
           <div className="display-1 final-total text-fat" style={{ marginTop: '-10px' }}>
-            <Currency value={session.matchedFunds + totals.amount} />
+            <Currency value={session.matchedFunds + totals?.amount} />
           </div>
           <h3>We couldn’t have done it without you.</h3>
         </>
