@@ -33,8 +33,8 @@ export interface IFundingSessionInput {
   allowNominations?:boolean;
   published?:boolean;
   protytype?: any;
-  tags: Array<string>;
-  matchingCurve:any;
+  tags?: Array<string>;
+  matchingCurve?:any;
 }
 
 const FundingSessionSchema = new Schema({
