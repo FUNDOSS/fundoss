@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import { Badge } from 'react-bootstrap';
+import Pluralize from 'pluralize';
 import Qf from '../../utils/qf';
 import Currency from '../Currency';
 
@@ -73,7 +74,7 @@ const FundingSessionInfo = ({ session, predicted, size = 'md' }) => {
       {started && !ended ? (
         <div>
           <span className="info-span text-center">
-            {totals?.donations.length} donors<br />
+            {totals?.donations.length} {Pluralize('donor', totals?.donations.length)} <br />
             <span className="display-3"> <Currency value={totals?.amount || 0} floor /></span>
           </span>
           <span className="display-4">+&nbsp;</span>
