@@ -39,7 +39,7 @@ const PaymentsPage = ({ state, payment }) => {
               <small>-{payment.fee} fee</small>
               <Badge variant={payment.status === 'succeeded' ? 'success' : 'danger'}>{payment.status}</Badge>
             </h3>
-            {payment.status != 'error' ? (
+            {payment.status !== 'error' ? (
               <>
                 <div>Sybil attack Score: {payment.sybilAttackScore}</div>
                 <div>Stripe risk Score: {payment.stripeRisk}</div>
@@ -57,7 +57,8 @@ const PaymentsPage = ({ state, payment }) => {
           </Col>
           <Col><UserCard user={payment.user} /></Col>
         </Row>
-        {payment.status != 'error' ? (
+        { payment.status === 'cancelled' && payment.refund ? <Dump data={payment.refund} /> : null }
+        { payment.status !== 'error' ? (
           <>{payment.donations.map((don) => (
             <Row key={don.collective.slug} style={{ borderBottom: '1px solid #ccc', margin: '10px 0' }}>
               <Col xs={1} className="text-fat">
