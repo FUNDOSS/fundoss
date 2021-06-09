@@ -17,6 +17,7 @@ import middleware from '../../../middleware/all';
 import serializable from '../../../lib/serializable';
 import { formatAmountForDisplay } from '../../../utils/currency';
 import Dump from '../../../components/dashboard/Dump';
+import CancelPayment from '../../../components/payment/CancelPayment';
 
 const PaymentsPage = ({ state, payment }) => {
   if (!state.user._id) {
@@ -38,9 +39,9 @@ const PaymentsPage = ({ state, payment }) => {
               <small>-{payment.fee} fee</small>
               <Badge variant={payment.status === 'succeeded' ? 'success' : 'danger'}>{payment.status}</Badge>
             </h3>
-            {payment.status === 'succeeded' ? (
+            {payment.status != 'error' ? (
               <>
-                <div>Sybil attack score: {payment.sybilAttackScore}</div>
+                <div>Sybil attack Score: {payment.sybilAttackScore}</div>
                 <div>Stripe risk Score: {payment.stripeRisk}</div>
                 { payment.ipAddress 
                   ? <div>IP address: <Link href={`/dashboard/payment?ipAddress=${payment.ipAddress}`}>{payment.ipAddress}</Link></div>
@@ -48,13 +49,15 @@ const PaymentsPage = ({ state, payment }) => {
                 <div>card fingerprint: <Link href={`/dashboard/payment?cardFingerprint=${payment.cardFingerprint}`}>{payment.cardFingerprint}</Link></div>
                 <div>browser fingerprint: <Link href={`/dashboard/payment?browserFingerprint=${payment.browserFingerprint}`}>{payment.browserFingerprint}</Link></div>
                 <h4>{moment(payment.time).format('lll')}</h4>
-                <Button href={`/session/${payment.session.slug}`}>{payment.session.name}</Button>
+                <Button href={`/session/${payment.session.slug}`}>session : {payment.session.name}</Button>
+                &nbsp;
+                <CancelPayment payment={payment} />
               </>
             ) : null }
           </Col>
           <Col><UserCard user={payment.user} /></Col>
         </Row>
-        {payment.status === 'succeeded' ? (
+        {payment.status != 'error' ? (
           <>{payment.donations.map((don) => (
             <Row key={don.collective.slug} style={{ borderBottom: '1px solid #ccc', margin: '10px 0' }}>
               <Col xs={1} className="text-fat">
