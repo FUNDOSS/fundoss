@@ -68,12 +68,14 @@ export async function updateCollectivesTotals(ids:Array<string>, session:string)
           collective: {
             $in: ids.map((id) => mongoose.Types.ObjectId(id)),
           },
+          cancelled: {$ne: true},
           session: mongoose.Types.ObjectId(session),
         },
       },
       { $group: { _id: { user: '$user', collective: '$collective' }, amount: { $sum: '$amount' } } },
       { $group: { _id: { collective: '$_id.collective' }, amount: { $sum: '$amount' }, donations: { $push: '$amount' } } },
-    ])).map(
+    ]));
+  const result = donations.map(
     async (collective) => {
       const totalsUpdate = await CollectiveSessionTotals.findOneAndUpdate(
         { session, collective: collective._id.collective },
@@ -83,7 +85,7 @@ export async function updateCollectivesTotals(ids:Array<string>, session:string)
       return totalsUpdate;
     },
   );
-  return donations;
+  return result;
 }
 
 export async function similarCollectives(session, collectives, max = 6) {
@@ -92,6 +94,7 @@ export async function similarCollectives(session, collectives, max = 6) {
     [
       {
         $match: {
+          cancelled: { $ne: true },
           session: mongoose.Types.ObjectId(session),
           collective: { $in: collectives.map((col) => mongoose.Types.ObjectId(col)) },
         },
@@ -118,6 +121,7 @@ export async function similarCollectives(session, collectives, max = 6) {
             collective: { $nin: collectives.map((col) => mongoose.Types.ObjectId(col)) },
             user: { $in: userDonnations[0].users },
             session: mongoose.Types.ObjectId(session),
+            cancelled: { $ne: true },
           },
         },
         {
@@ -148,7 +152,7 @@ export async function getCollective(slug:string):Promise<any> {
   await dbConnect();
   const savedCollective = await Collective.findOne({ slug });
   if (savedCollective) {
-    if (moment().diff(moment(savedCollective.lastUpdate), 'hours') < 12) {
+    if (moment().diff(moment(savedCollective.lastUpdate), 'hours') < 2) {
       return savedCollective;
     }
   }

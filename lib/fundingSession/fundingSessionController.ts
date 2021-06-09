@@ -1,8 +1,8 @@
 /* eslint-disable no-param-reassign */
 import moment from 'moment';
 import mongoose from 'mongoose';
-import { collectFields } from 'graphql/execution/execute';
-import FundingSession, { IFundingSession, IFundingSessionInput } from './fundingSessionModel';
+import FundingSession, { IFundingSession } from './fundingSessionModel';
+import Donation from '../payment/donationModel';
 import Collectives from '../collectives/CollectivesController';
 import CollectiveSessionTotals from '../payment/collectiveSessionTotalsModel';
 import Qf from '../../utils/qf';
@@ -64,7 +64,7 @@ export const getPredictedAverages = (session) => {
     const totalTime = timeElapsed + timeLeft;
     const { donations, amount } = totals || { donations: [], amount: 0 };
     const d = donations.length;
-    const medianDonation = median(donations);
+    // const medianDonation = median(donations);
     const avg = {
       match: matchedFunds / ((numberDonationEst * timeLeft + d * timeElapsed) / totalTime),
       average: (averageDonationEst * timeLeft + (amount / d) * timeElapsed) / totalTime,
@@ -277,6 +277,20 @@ export async function getUserNominations(user, session) {
   return nominations.map((collective) => collective._id.collective);
 }
 
+export async function updateSessionTotals(sessionId) {
+  const sessionTotals = (await Donation
+    .aggregate([
+      { $match: { session: mongoose.Types.ObjectId(sessionId), cancelled: { $ne: true } } },
+      { $group: { _id: { user: '$user', collective: '$collective' }, amount: { $sum: '$amount' } } },
+    ]))
+    .reduce((acc, don) => ({
+      donations: [...acc.donations, don.amount],
+      amount: acc.amount + don.amount,
+    }), { donations: [], amount: 0 });
+
+  await FundingSession.updateOne({ _id: sessionId }, { totals: sessionTotals });
+}
+
 export default class FundingSessionController {
     static insert = insertSession
 
@@ -309,4 +323,6 @@ export default class FundingSessionController {
     static getUserNominations = getUserNominations
 
     static getDonationsConfig = getDonationsConfig
+
+    static updateSessionTotals = updateSessionTotals
 }
