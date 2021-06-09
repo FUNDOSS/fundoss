@@ -24,23 +24,21 @@ handler.post(async (req: any, res: NextApiResponse) => {
     const stripe = await new Stripe(process.env.STRIPE_SECRET_KEY, {
       apiVersion: '2020-08-27',
     });
-    /*
     const refund = await stripe.refunds.create({
       payment_intent: payment.intentId,
-    });*/
-    const up = await Payments.update({ _id: payment._id, status: 'cancelled' });
+    });
+    const up = await Payments.update({ _id: payment._id, status: 'cancelled', refund });
     const donationsIds = payment.donations.map((d) => mongoose.Types.ObjectId(d._id));
-    console.log(donationsIds)
     const donup = await donationModel.updateMany(
       { _id: { $in: donationsIds } },
       { cancelled: true },
     );
-    console.log(donup)
     const collectiveIds = payment.donations.map((d) => d.collective._id);
-    console.log(collectiveIds);
     const totals = await Collectives.updateTotals(collectiveIds, payment.session._id);
     FundingSessionController.updateSessionTotals(payment.session._id);
-    return res.status(200).json({ up, donup, donationsIds });
+    return res.status(200).json({
+      up, donup, donationsIds, totals,
+    });
   }
 });
 
