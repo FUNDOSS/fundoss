@@ -8,6 +8,7 @@ export interface IDonationInput {
   collective?:string;
   fee?:number;
   payment?:string;
+  cancelled?:boolean;
   user?:string;
 }
 
@@ -16,6 +17,7 @@ export interface IDonation extends Document {
   collective:ICollective;
   fee:number;
   payment:IPayment;
+  cancelled:boolean;
   user:IUser;
 }
 
@@ -41,6 +43,9 @@ const DonationSchema = new Schema({
   session: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'FundingSession',
+  },
+  cancelled: {
+    type: Boolean,
   },
 });
 
