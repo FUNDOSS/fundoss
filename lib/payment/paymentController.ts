@@ -4,7 +4,6 @@ import Donation from './donationModel';
 import dbConnect from '../dbConnect';
 import FundingSessions from '../fundingSession/fundingSessionController';
 import Collectives from '../collectives/CollectivesController';
-import fundingSessionModel from '../fundingSession/fundingSessionModel';
 import Qf from '../../utils/qf';
 import calculateSybilAttackScore from './sybilAttackScore';
 
@@ -39,17 +38,7 @@ export async function updatePayment(payment) {
           return donation._id;
         }),
     );
-    const sessionTotals = (await Donation
-      .aggregate([
-        { $match: { session: mongoose.Types.ObjectId(payment.session) } },
-        { $group: { _id: { user: '$user', collective: '$collective' }, amount: { $sum: '$amount' } } },
-      ]))
-      .reduce((acc, don) => ({
-        donations: [...acc.donations, don.amount],
-        amount: acc.amount + don.amount,
-      }), { donations: [], amount: 0 });
-
-    await fundingSessionModel.updateOne({ _id: payment.session }, { totals: sessionTotals });
+    FundingSessions.updateSessionTotals(payment.session);
     paymentUpdates.sybilAttackScore = await calculateSybilAttackScore(payment);
     paymentUpdates.donations = donations;
     paymentUpdates.browserFingerprint = payment.browserFingerprint;
@@ -62,7 +51,7 @@ export async function updatePayment(payment) {
 export async function getSessionTotals(session) {
   const sessionTotals = (await Donation
     .aggregate([
-      { $match: { session: mongoose.Types.ObjectId(session) } },
+      { $match: { session: mongoose.Types.ObjectId(session), cancelled: { $ne: true } } },
       { $group: { _id: { user: '$user', collective: '$collective' }, amount: { $sum: '$amount' } } },
     ]));
   const totals = sessionTotals.reduce((acc, don) => ({
@@ -104,7 +93,7 @@ export async function getPayments(query) {
 export async function getDonationsBySession(sessionId) {
   const donations = Donation
     .aggregate([
-      { $match: { session: mongoose.Types.ObjectId(sessionId) } },
+      { $match: { session: mongoose.Types.ObjectId(sessionId), cancelled: { $ne: true } } },
       { $unwind: { path: '$user' } },
       {
         $group: {
@@ -123,7 +112,7 @@ export async function getSessionDisbursement(sessionId) {
   const session = await FundingSessions.getById(sessionId);
   const donations = await Donation
     .aggregate([
-      { $match: { session: mongoose.Types.ObjectId(sessionId) } },
+      { $match: { session: mongoose.Types.ObjectId(sessionId), cancelled: { $ne: true } } },
       { $group: { _id: { user: '$user', collective: '$collective' }, amount: { $sum: '$amount' }, fee: { $sum: '$fee' } } },
     ]);
   const numDonations = donations.length;
@@ -203,6 +192,7 @@ export async function getGroupedDonationsByUser(userId:string, sessionId:string)
       $match: {
         session: mongoose.Types.ObjectId(sessionId),
         user: mongoose.Types.ObjectId(userId),
+        cancelled: { $ne: true },
       },
     },
     { $group: { _id: { collective: '$collective' }, amount: { $sum: '$amount' } } },
