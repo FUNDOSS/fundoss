@@ -18,6 +18,7 @@ export interface IPaymentInput {
   ipAddress?: string;
   stripeRisk?: string;
   error?: any;
+  refund?:any;
 }
 
 export interface IPayment extends Document {
@@ -37,6 +38,7 @@ export interface IPayment extends Document {
   sybilAttackScore: string;
   stripeRisk: string;
   ipAddress: string;
+  refund:any;
 }
 
 const PaymentSchema = new Schema({
@@ -95,6 +97,9 @@ const PaymentSchema = new Schema({
   },
   shareImage: {
     type: String,
+  },
+  refund: {
+    type: Schema.Types.Mixed,
   },
 });
 
