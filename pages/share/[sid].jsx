@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Container, Button, Col, Image, Row, 
+  Container, Button, Col, Image, Row,
 } from 'react-bootstrap';
 import Pluralize from 'pluralize';
 import Layout from '../../components/layout';
@@ -14,14 +14,14 @@ import { formatAmountForDisplay } from '../../utils/currency';
 import ServerProps from '../../lib/serverProps';
 
 const SharePage = ({
-  payment, state, 
+  payment, state,
 }) => {
   const title = 'Support open source collectives';
   return (
     <Layout
       title={`FundOSS | ${title}`}
-      state={state} 
-      meta={{ 
+      state={state}
+      meta={{
         card: 'summary_large_image',
         img: payment.shareImage ? state.siteUrl + payment.shareImage : `${state.siteUrl}/api/image/share/${payment.sid}`,
         url: `${state.siteUrl}/share/${payment.sid}`,
@@ -31,17 +31,14 @@ const SharePage = ({
       <Container style={{ paddingTop: '40px', margin: '-60px 0' }} fluid>
         <Row className="no-gutter  row-eq-height">
           <Col md={6} className="illu-hand">
-            <div style={{ padding: '40px 0', margin: '300px 0 0 -30px', background: '#0e0c4da6' }} className="content">
-              <Sponsors sponsors={payment.session.sponsors} />
-            </div>
           </Col>
           <Col md={{ span: 4, offset: 1 }} className="text-center">
             <div style={{ maxWidth: '550px', margin: '70px auto' }}>
               <Image src={payment.user.avatar} roundedCircle width={100} />
               <h2 style={{ margin: '20px 0' }}>
-                {payment.user.name || payment.user.username} has backed<br /> {Pluralize('awesome collective', payment.donations.length, true)}
+                {payment.user.name || payment.user.username} has backed<br /> {Pluralize('collective', payment.donations.length, true)}
               </h2>
-              <p className="lead">And unlocked 
+              <p className="lead">And unlocked&nbsp;
                 <span className="match">{
                 formatAmountForDisplay(payment.donations.reduce(
                   (total, donation) => total + Qf.calculate(donation.amount),
@@ -73,7 +70,7 @@ const SharePage = ({
         </Row>
       </Container>
     </Layout>
-  ); 
+  );
 };
 
 export async function getServerSideProps({ query, req, res }) {
@@ -82,11 +79,11 @@ export async function getServerSideProps({ query, req, res }) {
   const state = await ServerProps.getAppState(req.user, req.session.cart);
 
   return {
-    props: { 
+    props: {
       payment: serializable(payment),
-      state, 
-    }, 
+      state,
+    },
   };
-} 
+}
 
 export default SharePage;
