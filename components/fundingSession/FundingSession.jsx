@@ -260,9 +260,9 @@ const FundingSession = ({
                     variant="link"
                   >
                     {sort === 'asc' ? (
-                      <><span className="with-caret-up" />Funding</>
+                      <>▴ Funding</>
                     ) : (
-                      <><span className="with-caret" />Funding</>
+                      <>▾ Funding</>
                     )}
                   </Button>
                 </div>
