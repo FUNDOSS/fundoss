@@ -137,7 +137,7 @@ const collectivePage = ({
                 <h3>Share This Project</h3>
                 <p>Projects that get social boosts from donors have a higher&nbsp;
                   likelihood of hitting their fundraising needs each year.&nbsp;
-                  Please considering lending your voice to suppor these OSS projects!
+                  Please considering lending your voice to support these OSS projects!
                 </p>
                 <ShareButton platform="twitter" variant="link" siteUrl={state.siteUrl} />
                 <ShareButton platform="facebook" variant="link" siteUrl={state.siteUrl} />
