@@ -17,17 +17,18 @@ const CancelPayment = ({ payment }) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ payment: payment._id }),
     });
-    //router.reload();
+    router.reload();
   };
-  return payment.status !== 'error' ? (
+  return payment.status === 'succeeded' ? (
     <Button 
+      variant="outline-danger"
       onClick={
        () => (state === 'confirm' ? doCancel() : setState('confirm'))
       }
     > 
       {state === 'init' ? 'Cancel and Refund this payment' : null}
       {state === 'confirm' ? 'Are you sure? this is forever' : null}
-      {state === 'canceling' ? 'Canceling' : null}
+      {state === 'canceling' ? 'Canceling...' : null}
     </Button>
   ) : null;
 };
