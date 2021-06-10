@@ -11,7 +11,7 @@ const ShareButton = ({
     twitter: {
       text: 'Twitter',
       icon: Icons.Twitter,
-      url: (url) => (`https://twitter.com/share?url=${url}&hashtags=FundOss`),
+      url: (url) => (`https://twitter.com/share?text=I just backed these OSS projects on @_FundOSS!&url=${url}&hashtags=FundOss`),
     },
     facebook: {
       text: 'Facebook',
@@ -21,7 +21,7 @@ const ShareButton = ({
     email: {
       text: 'Email',
       icon: Icons.Email,
-      url: (url) => (`mailto:?subject=${encodeURIComponent('FundOSS democtratic funding for open source projects')}&body=${encodeURIComponent(url)}`),
+      url: (url) => (`mailto:?subject=${encodeURIComponent('FundOSS democtratic funding for open source projects')}&body=I just backed these OSS projects on FundOSS.org! ${encodeURIComponent(url)}`),
     },
   };
   const Sharer = platforms[platform || 'twitter'];
