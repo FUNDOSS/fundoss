@@ -30,7 +30,7 @@ const ShareButton = ({
       <Sharer.icon size={18} />
       { !mini ? <span>&nbsp;{Sharer.text}</span> : null}
     </Button>
-  ); 
+  );
 };
 
 export default ShareButton;

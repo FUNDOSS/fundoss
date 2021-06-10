@@ -16,7 +16,7 @@ const PaymentsList = ({ payments, state }) => (
             <Card.Header>
               <Row>
                 <Col xs={6} md={7} >
-                  
+
                   <span className="lead text-fat">{formatAmountForDisplay(payment.amount)}</span>&nbsp;
                   <Badge variant="info">{moment(payment.timeslug).format('MMMM Do YYYY')}</Badge>&nbsp;
                   <Link href={`/session/${payment.session.slug}`}>
@@ -24,7 +24,8 @@ const PaymentsList = ({ payments, state }) => (
                   </Link>
                 </Col>
                 <Col className="text-right">
-                  Share on :&nbsp;
+                  Share:
+                  <ShareButton mini size="sm" variant="link" siteUrl={state.siteUrl} url={`/share/${payment.sid}`} platform="email" />
                   <ShareButton mini size="sm" variant="link" siteUrl={state.siteUrl} url={`/share/${payment.sid}`} platform="twitter" />
                   <ShareButton mini size="sm" variant="link" siteUrl={state.siteUrl} url={`/share/${payment.sid}`} platform="facebook" />
                 </Col>

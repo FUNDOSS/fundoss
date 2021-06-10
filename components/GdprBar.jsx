@@ -22,9 +22,9 @@ const GdprBar = () => {
                   setConsent(1);
                 }}
                 variant="outline-primary"
-              >Sure I like 🍪's!
+              >Accept 🍪 Cookies
               </Button>
-              <Button href="https://opencollective.com/" variant="outline-secundary">Get me out of here</Button>
+              <Button href="https://opencollective.com/" variant="outline-secundary">Return to Open Collective</Button>
             </div>
           </Container>
         </Navbar>
