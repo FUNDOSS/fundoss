@@ -26,20 +26,20 @@ const ThanksPage = ({ state, payment }) => {
         <CoinsAnimation
           className="d-none d-md-block"
           width={150}
-          height={850}
+          height={450}
           num={5}
           style={{
-            position: 'absolute', width: '200px',
+            position: 'absolute', width: '200px', marginTop: '-33px',
           }}
         />
         <CoinsAnimation
           className="d-none d-md-block"
           width={150}
-          height={850}
+          height={450}
           num={5}
           flip
           style={{
-            position: 'absolute', width: '200px', right: 0,
+            position: 'absolute', width: '200px', right: 0, marginTop: '-33px',
           }}
         />
         <Container>
