@@ -59,21 +59,7 @@ const ThanksPage = ({ state, payment }) => {
             <Card.Body className="text-center">
             
               <p className="lead">A receipt has been emailed to your email address</p>
-              <p className="lead">The &nbsp;
-                <span className="text-fat ">
-                  {formatAmountForDisplay(payment.amount)}
-                </span> you donated will be matched<br />with an estimated &nbsp;
-                <span className="match ">
-                  {formatAmountForDisplay(payment.donations ? payment.donations.reduce(
-                    (acc, donation) => {
-                      const match = Qf.calculate(Number(donation.amount));
-                      return acc + match;
-                    },
-                    0,
-                  ) : null) }
-                
-                </span> from the donor pot! 
-              </p>
+
               <Row>
                 <Col style={{ height: '220px' }} className="seamless-hand-light">
                  &nbsp;
