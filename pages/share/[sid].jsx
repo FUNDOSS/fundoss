@@ -22,8 +22,8 @@ const SharePage = ({
       title={`FundOSS | ${title}`}
       state={state}
       meta={{
-        card: 'summary_large_image',
-        img: payment.shareImage ? state.siteUrl + payment.shareImage : `${state.siteUrl}/api/image/share/${payment.sid}`,
+        card: 'summary',
+        img: `${state.siteUrl}/static/tw-share-light.jpg`,
         url: `${state.siteUrl}/share/${payment.sid}`,
         description: 'Support open source collectives and see your donations multiplied',
       }}
