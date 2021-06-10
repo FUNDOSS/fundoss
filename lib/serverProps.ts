@@ -1,3 +1,4 @@
+import moment from 'moment';
 import serializable from './serializable';
 import Cart from './cart/CartController';
 import Payments from './payment/paymentController';
@@ -16,8 +17,15 @@ const ServerProps = {
     return user;
   },
   getCurrentSession: async () => {
-    const session = await FundingSession.getCurrent();
-    return session ? serializable(session) : null;
+    if (
+      !ServerProps.currentSession
+      || !ServerProps.currentSession.data
+      || moment().diff(ServerProps.currentSession.time, 'seconds') > 30
+    ) {
+      const session = await FundingSession.getCurrent();
+      ServerProps.currentSession = { time: moment(), data: session ? serializable(session) : null };
+    }
+    return ServerProps.currentSession.data;
   },
   getCart: async (reqCart) => {
     const cart = await Cart.get(reqCart);
@@ -47,10 +55,19 @@ const ServerProps = {
     return serializable(nominations);
   },
   getPredicted: async (info) => {
-    const defaultPrediction = {
-      fudge: 1, average: 10, match: 10, exp: 2, symetric: false,
-    };
-    return serializable(info ? getPredictedAverages(info) : defaultPrediction);
+    if (
+      !ServerProps.predicted
+      || !ServerProps.predicted.data
+      || moment().diff(ServerProps.predicted.time, 'seconds') > 30
+      || String(info._id) != ServerProps.predicted?.session
+    ) {
+      const defaultPrediction = {
+        fudge: 1, average: 10, match: 10, exp: 2, symetric: false,
+      };
+      const predicted = serializable(info ? getPredictedAverages(info) : defaultPrediction);
+      ServerProps.predicted = { time: moment(), data: predicted, session: info?._id };
+    }
+    return ServerProps.predicted.data;
   },
   getAppState: async (reqUser, sessionCart) => {
     const currentInfo = await FundingSession.getCurrentSessionInfo();
@@ -64,8 +81,8 @@ const ServerProps = {
     }
     const current = currentInfo ? {
       ...serializable(currentInfo),
-      ...{ predicted: getPredictedAverages(currentInfo) },
-      ...{ donateConfig: FundingSession.getDonationsConfig()}
+      ...{ predicted: await ServerProps.getPredicted(currentInfo) },
+      ...{ donateConfig: FundingSession.getDonationsConfig() },
     } : null;
 
     const cart = await Cart.get(sessionCart);
