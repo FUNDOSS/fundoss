@@ -7,7 +7,7 @@ export function formatAmountForDisplay(
   const floored = Math.floor(amount);
   const digits = Math.floor((amount * 100) - (floored * 100));
   let digitsDisplay = '';
-  if (digits && !floor) {
+  if (digits && (!floor || amount < 10)) {
     if (digits < 10) {
       digitsDisplay = `.0${digits}`;
     } else {
