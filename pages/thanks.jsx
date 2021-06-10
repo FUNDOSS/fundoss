@@ -14,6 +14,7 @@ import Icons from '../components/icons';
 import ShareButton from '../components/social/ShareButton';
 import ServerProps from '../lib/serverProps';
 import FundingSessionInfo from '../components/fundingSession/FundingSessionInfo';
+import CoinsAnimation from '../components/illustration/CoinsAnimation';
 
 const ThanksPage = ({ state, payment }) => {
   if (!state.user._id) {
@@ -21,7 +22,26 @@ const ThanksPage = ({ state, payment }) => {
   }
   return (
     <Layout title="FundOSS | Donations cart" state={state}>
-      <div className="confetti" style={{ marginBottom: '-60px', paddingBottom: '70px' }}>
+      <div className="thanks-header" style={{ marginBottom: '-60px', paddingBottom: '70px' }}>
+        <CoinsAnimation
+          className="d-none d-md-block"
+          width={150}
+          height={850}
+          num={5}
+          style={{
+            position: 'absolute', width: '200px',
+          }}
+        />
+        <CoinsAnimation
+          className="d-none d-md-block"
+          width={150}
+          height={850}
+          num={5}
+          flip
+          style={{
+            position: 'absolute', width: '200px', right: 0,
+          }}
+        />
         <Container>
           <Card style={{ maxWidth: '750px', margin: '30px auto' }}>
             <Card.Header className="text-center">
@@ -105,7 +125,6 @@ const ThanksPage = ({ state, payment }) => {
                 </Link>
               </Card.Footer>
             ) : null }  
-
 
           </Card>
         </Container>

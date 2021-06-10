@@ -377,10 +377,14 @@ h1{margin:2rem 0}
     @extend .seamless;
 }
 
+.thanks-header{
+    @extend .invert;
+    @extend .seamless;
+}
+
 @include media-breakpoint-up(md) {
-    .session-header{
+    .session-header, .thanks-header{
         background:
-        
         linear-gradient(279deg, rgba($purple,.3), rgba($darkpurple,0.9) 30%, rgba($purple,.4)), 
         radial-gradient(ellipse at bottom, rgba($teal,.9), rgba($orange,.3)),
         $darkpurple
