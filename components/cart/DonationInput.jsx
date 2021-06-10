@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { InputGroup, Form } from 'react-bootstrap';
 
-const DonationInput = ({ amount, min, max, onChange }) => {
+const DonationInput = ({
+  amount, min, max, onChange, 
+}) => {
   const [value, setValue] = useState(amount);
   useEffect(() => {
     if (value !== amount) {
@@ -18,7 +20,12 @@ const DonationInput = ({ amount, min, max, onChange }) => {
         max={max}
         min={min}
         onChange={(e) => {
-          let amt = e.currentTarget.value > max ? max : e.currentTarget.value;
+          const amt = e.currentTarget.value;
+          setValue(amt);
+          onChange(amt);
+        }}
+        onBlur={(e) => {
+          let amt = amt > max ? max : amt;
           amt = e.currentTarget.value < min ? min : e.currentTarget.value;
           setValue(amt);
           onChange(amt);
