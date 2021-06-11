@@ -42,15 +42,26 @@ const CartSimilarCollective = ({ collective, addItem }) => (
   </>
 );
 
+let collectives;
+let similarTimeout;
+
 const CartSimilar = ({ data, addItem }) => {
   const [similar, setSimilar] = useState();
-  useEffect(async () => {
-    const res = await fetch(`/api/funding-session/similar?collectives=${ 
-      data.map((item) => item.collective._id).join(',')}`, {
+  
+  const fetchSimilar = async () => {
+    const res = await fetch(`/api/funding-session/similar?collectives=${collectives}`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     });
     setSimilar(await res.json());
+  };
+
+  useEffect(async () => {
+    if (collectives?.length !== data.length) {
+      clearTimeout(similarTimeout);
+      collectives = data.map((item) => item.collective._id);
+      similarTimeout = setTimeout(fetchSimilar, 500);
+    }
   }, [data]);
 
   return (similar?.length
