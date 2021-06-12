@@ -85,9 +85,6 @@ const DonationsBySessionPage = ({
     (username) => ({ ...userTotals[username], ...{ username } }),
   ).sort((a, b) => b.total - a.total);
   const stats = {
-    donations: Object.keys(userTotals).reduce(
-      (count, u) => count + userTotals[u].donationCount, 0,
-    ),
     totalMatch: totals.donations.reduce((m, d) => m + cmatch(d), 0),
     payments: payments.length,
     users: userTable.length,
@@ -108,20 +105,20 @@ const DonationsBySessionPage = ({
         <h3>Statistics</h3>
         <Row>
           <Col>
-            number of donations : {stats.donations} <br />
+            number of donations : {totals.donations.length} <br />
             number of payments : {payments.length}<br />
-            avg donations/payment : {Math.round(stats.donations * 100 / stats.payments) / 100}<br />
+            avg donations/payment : {Math.round(totals.donations.length * 100 / stats.payments) / 100}<br />
             median donation : {median(totals.donations)}
           </Col>
           <Col>
             number unique users : {stats.users} <br />
-            avg number of donations/user : {Math.round(stats.donations * 100 / stats.users) / 100}<br />
+            avg number of donations/user : {Math.round(totals.donations.length * 100 / stats.users) / 100}<br />
             avg total amount/user : {Math.round(totals.amount * 100 / stats.users) / 100}<br />
             median donations per user : {stats.medianUserDonationCount}
           </Col>
           <Col>
             collectives : {collectiveTable.length} <br />
-            avg donations/collective : {Math.round(stats.donations * 100 / collectiveTable.length) / 100}<br />
+            avg number of donations/collective : {Math.round(totals.donations.length * 100 / collectiveTable.length) / 100}<br />
             avg match/collective : {Math.round(totals.amount * 100 / collectiveTable.length) / 100}<br />
             median donation per collective : {stats.medianCollectiveDonations}
             
