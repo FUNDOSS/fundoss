@@ -2,29 +2,30 @@ import mongoose from 'mongoose';
 import Payment from './paymentModel';
 
 const calculateSybilAttackScore = async (payment) => {
+  let score = 0;
   const sameCard = await Payment
     .aggregate([
       {
         $match: {
-          cardFingerPrint: payment.cardFingerPrint,
-          user: { $ne: mongoose.Types.ObjectId(payment.user) },
+          cardFingerprint: payment.cardFingerprint,
+          user: { $ne: mongoose.Types.ObjectId(payment.user._id || payment.user) },
         },
       },
-      { $group: { _id: { card: '$cardFingerprint', user: '$user' } } },
+      { $group: { _id: null, count: { $sum: 1 }} },
     ]);
   const sameBrowser = await Payment
     .aggregate([
       {
         $match: {
           browserFingerprint: payment.browserFingerprint,
-          user: { $ne: mongoose.Types.ObjectId(payment.user) },
+          user: { $ne: mongoose.Types.ObjectId(payment.user._id || payment.user) },
         },
       },
-      { $group: { _id: { browser: '$browserFingerprint', user: '$user' } } },
+      { $group: { _id: null, count: { $sum: 1 } } },
     ]);
-  const cardScore = sameCard.reduce((s) => s + 1, 0);
-  const browserScore = sameBrowser.reduce((s) => s + 1, 0);
-  return cardScore + browserScore;
+  if (sameCard.length) score += sameCard[0].count;
+  if (sameBrowser.length) score += sameBrowser[0].count;
+  return score;
 };
 
 export default calculateSybilAttackScore;
