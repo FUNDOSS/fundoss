@@ -42,13 +42,22 @@ const DonationsBySessionPage = ({
 
   const userTotals = payments.reduce((totals, p) => p.donations.reduce(
     (totals, d) => {
-      const user = totals[p.user.username] || { donations: {}, total: 0 };
+      const user = totals[p.user.username] || { donations: {}, total: 0, donationCount: 0 };
       user.donations[d.collective.slug] = (user.donations[d.collective.slug] || 0) + d.amount;
+      user.donationCount += 1;
       user.total += d.amount;
       return { ...totals, ...{ [p.user.username]: user } };
     },
     totals,
   ), {});
+
+  const median = (values) => {
+    if (values.length === 0) return 0;
+    values.sort((a, b) => a - b);
+    const half = Math.floor(values.length / 2);
+    if (values.length % 2) return values[half];
+    return (values[half - 1] + values[half]) / 2.0;
+  };
 
   const collectiveTotals = Object.keys(userTotals)
     .reduce((totals, username) => Object.keys(userTotals[username].donations).reduce(
@@ -75,6 +84,16 @@ const DonationsBySessionPage = ({
   const userTable = Object.keys(userTotals).map(
     (username) => ({ ...userTotals[username], ...{ username } }),
   ).sort((a, b) => b.total - a.total);
+  const stats = {
+    donations: Object.keys(userTotals).reduce(
+      (count, u) => count + userTotals[u].donationCount, 0,
+    ),
+    totalMatch: totals.donations.reduce((m, d) => m + cmatch(d), 0),
+    payments: payments.length,
+    users: userTable.length,
+    medianUserDonationCount: median(Object.keys(userTotals).map((u) => userTotals[u].donationCount)),
+    medianCollectiveDonations: median(collectiveTable.map((c) => c.total)),
+  };
 
   return (
     <Layout title="FundOSS | Dashboard" state={state}>
@@ -85,6 +104,29 @@ const DonationsBySessionPage = ({
           <FundingSessionInfo session={session} predicted={state.current.predicted} />
         </div>
         <AdminLinks session={session} all />
+        <hr />
+        <h3>Statistics</h3>
+        <Row>
+          <Col>
+            number of donations : {stats.donations} <br />
+            number of payments : {payments.length}<br />
+            avg donations/payment : {Math.round(stats.donations * 100 / stats.payments) / 100}<br />
+            median donation : {median(totals.donations)}
+          </Col>
+          <Col>
+            number unique users : {stats.users} <br />
+            avg number of donations/user : {Math.round(stats.donations * 100 / stats.users) / 100}<br />
+            avg total amount/user : {Math.round(totals.amount * 100 / stats.users) / 100}<br />
+            median donations per user : {stats.medianUserDonationCount}
+          </Col>
+          <Col>
+            collectives : {collectiveTable.length} <br />
+            avg donations/collective : {Math.round(stats.donations * 100 / collectiveTable.length) / 100}<br />
+            avg match/collective : {Math.round(totals.amount * 100 / collectiveTable.length) / 100}<br />
+            median donation per collective : {stats.medianCollectiveDonations}
+            
+          </Col>
+        </Row>
         <hr />
         <Row>
           <Col md={6}>
