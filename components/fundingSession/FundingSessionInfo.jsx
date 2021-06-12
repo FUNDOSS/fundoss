@@ -74,7 +74,7 @@ const FundingSessionInfo = ({ session, predicted, size = 'md' }) => {
       {started && !ended ? (
         <div>
           <span className="info-span text-center">
-            {totals?.donations.length} {Pluralize('donor', totals?.donations.length)} <br />
+            {totals?.donations.length} {Pluralize('donation', totals?.donations.length)} <br />
             <span className="display-3"> <Currency value={totals?.amount || 0} floor /></span>
           </span>
           <span className="display-4">+&nbsp;</span>
