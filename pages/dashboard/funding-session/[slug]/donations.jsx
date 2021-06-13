@@ -104,19 +104,19 @@ const DonationsBySessionPage = ({
         <hr />
         <h3>Statistics</h3>
         <Row>
-          <Col>
+          <Col md={4}>
             number of donations : {totals.donations.length} <br />
             number of payments : {payments.length}<br />
             avg donations/payment : {Math.round(totals.donations.length * 100 / stats.payments) / 100}<br />
             median donation : {median(totals.donations)}
           </Col>
-          <Col>
+          <Col md={4}>
             number unique users : {stats.users} <br />
             avg number of donations/user : {Math.round(totals.donations.length * 100 / stats.users) / 100}<br />
             avg total amount/user : {Math.round(totals.amount * 100 / stats.users) / 100}<br />
             median donations per user : {stats.medianUserDonationCount}
           </Col>
-          <Col>
+          <Col md={4}>
             collectives : {collectiveTable.length} <br />
             avg number of donations/collective : {Math.round(totals.donations.length * 100 / collectiveTable.length) / 100}<br />
             avg match/collective : {Math.round(totals.amount * 100 / collectiveTable.length) / 100}<br />
