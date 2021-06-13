@@ -40,6 +40,7 @@ const DisbursmentsTablePage = ({
         <br />
         <AdminLinks session={session} all />
         <hr />
+        <Button href={`/api/payment?session=${session._id}`}>↓ Download csv</Button>
         <Row>
           <Col md={{ offset: 3, span: 6 }}>
             <DisbursmentsTable donations={donations} session={session} />
