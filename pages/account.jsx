@@ -33,12 +33,17 @@ const AccountPage = ({ payments, state, subscription }) => {
                 <Image src={user.avatar} roundedCircle width={100} />
                 <h5>Name</h5>
                 {user.name}
-                <h5>
-                  <Icons.Github size={20} />
-                  {' '}
-                  Github Profile
-                </h5>
-                <a href={`https://github.com/${user.username}`}>https://github.com/{user.username}</a>
+                {user.username ? (
+                  <>
+                    <h5>
+                      <Icons.Github size={20} />
+                      {' '}
+                      Github Profile
+                    </h5>
+                    <a href={`https://github.com/${user.username}`}>https://github.com/{user.username}</a>
+                  </>
+                )
+                  : null}
                 <h5>Updates</h5>
                 { user.email }
                 <Form.Check 

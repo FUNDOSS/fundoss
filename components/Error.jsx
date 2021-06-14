@@ -3,7 +3,8 @@ import React from 'react';
 import {
   Container, Row, Col, Button, 
 } from 'react-bootstrap';
-import GithubLoginButton from './auth/GithubLoginButton';
+import LoginButtons from './auth/LoginButtons';
+import OAuthLoginButton from './auth/OAuthLoginButton';
 import Layout from './layout';
 
 const Error = ({ statusCode }) => {
@@ -37,7 +38,7 @@ const Error = ({ statusCode }) => {
                   <p className="lead">
                     Please sign-in
                   </p>
-                  <GithubLoginButton />
+                  <LoginButtons />
                 </div>
               ) : null }
               {statusCode === 403 ? (
@@ -54,7 +55,6 @@ const Error = ({ statusCode }) => {
                     Oops we are having some server issues
                     <Button href="https://github.com/humanific/fundoss/issues" variant="outline-light">🐞Submit Bugs or Issues</Button>
                   </p>
-                  <GithubLoginButton />
                 </div>
               ) : null }
             </Col>
