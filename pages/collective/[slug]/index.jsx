@@ -73,6 +73,9 @@ const collectivePage = ({
                   <Icons.Github size={15} />
                 </Button>
               ) : null }
+                           
+
+
               &nbsp;<div className="d-block d-lg-none" />
               <span style={{ padding: '5px 0 0 10px' }} className="lead">Fiscal Host: Open Source Collective 501(c)(6)</span>
               <div className="collective-content" dangerouslySetInnerHTML={{ __html: longDescription }} style={{ padding: '20px 0' }} />
@@ -133,6 +136,9 @@ const collectivePage = ({
                   </Card.Footer>
                 </Card>
               ) : null}
+              <Button className="airy" block size="sm" variant="primary" target="_blank" href={`https://opencollective.com/${slug}`}>
+                &nbsp;Support us on <img src="/static/sponsors/osc.svg" alt="opensource collectives" />&nbsp;
+              </Button>
               <div style={{ margin: '30px 0', padding: '10px' }}>
                 <h3>Share This Project</h3>
                 <p>Projects that get social boosts from donors have a higher&nbsp;
