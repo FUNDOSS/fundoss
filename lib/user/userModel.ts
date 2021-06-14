@@ -3,10 +3,15 @@ import mongoose, { Document, Schema } from 'mongoose';
 export interface IUserInput {
   _id?: string;
   email?: string;
-  username: string;
+  username?: string;
   avatar?:string;
   name?:string;
   githubid?:string;
+  githubUser?:any;
+  googleid?:string;
+  googleUser?:any;
+  facebookid?:string;
+  facebookUser?:any;
   role?:string;
   githubaccestoken?:string;
   githubrefreshtoken?:string;
@@ -21,6 +26,11 @@ export interface IUser extends Document {
   avatar:string;
   name:string;
   githubid:string;
+  githubUser:any;
+  googleid:string;
+  googleUser:any;
+  facebookid:string;
+  facebookUser:any;
   role:string;
   githubaccestoken?:string;
   githubrefreshtoken?:string;
@@ -43,11 +53,24 @@ const UserSchema = new Schema({
   },
   username: {
     type: String,
-    required: true,
   },
   githubid: {
     type: String,
-    required: true,
+  },
+  githubUser: {
+    type: Schema.Types.Mixed,
+  },
+  googleid: {
+    type: String,
+  },
+  googleUser: {
+    type: Schema.Types.Mixed,
+  },
+  facebookid: {
+    type: String,
+  },
+  facebookUser: {
+    type: Schema.Types.Mixed,
   },
   githubaccestoken: {
     type: String,

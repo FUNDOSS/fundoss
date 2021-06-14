@@ -7,13 +7,12 @@ import {
 import Layout from '../components/layout';
 import middleware from '../middleware/all';
 import CheckoutForm from '../components/checkout/CheckoutForm';
-import GithubLoginButton from '../components/auth/GithubLoginButton';
 import Cart, { cartEvents, getCartTotals } from '../components/cart/Cart';
 import ServerProps from '../lib/serverProps';
-import { formatAmountForDisplay } from '../utils/currency';
 import Icons from '../components/icons';
 import Sponsors from '../components/fundingSession/Sponsors';
 import Currency from '../components/Currency';
+import LoginButtons from '../components/auth/LoginButtons';
 
 const CheckoutPage = ({
   state, stripekey,
@@ -125,7 +124,7 @@ const CheckoutPage = ({
                     FundOSS is only allowing sign-ups through Github at this time.
                     We apologize for the inconvenience this might cause!
                   </p>
-                  <GithubLoginButton variant="outline-light" size="lg" block redirect="/checkout" />
+                  <LoginButtons redirect="/checkout" outline />
                   <p>We’ll save your shopping cart for when you return!</p>
                 </div>
               </Col>

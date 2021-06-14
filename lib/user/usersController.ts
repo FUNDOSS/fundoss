@@ -21,6 +21,16 @@ export async function findByGithubId(githubid:string) {
   return User.findOne({ githubid });
 }
 
+export async function findByGoogleId(googleid:string) {
+  await dbConnect();
+  return User.findOne({ googleid });
+}
+
+export async function findByFacebookId(facebookid:string) {
+  await dbConnect();
+  return User.findOne({ facebookid });
+}
+
 export async function findById(id:string) {
   await dbConnect();
   return User.findOne({ _id: id });
@@ -34,6 +44,10 @@ export default class Users {
     static findById = findById
 
     static findByGithubId = findByGithubId
+
+    static findByGoogleId = findByGoogleId
+
+    static findByFacebookId = findByFacebookId
 
     static update = updateUser
 }

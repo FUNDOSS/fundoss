@@ -15,11 +15,11 @@ passport.deserializeUser((req, id, done) => {
 
 passport.use(new GithubStrategy(
   appConfig.github,
-  async (accessToken, refreshToken, githubProfile: any, cb) => {
+  async (accessToken, refreshToken, githubProfile: any, done) => {
     try {
       const existingUser:IUser = await Users.findByGithubId(githubProfile.id);
       if (existingUser?._id) {
-        cb(null, existingUser);
+        done(null, existingUser);
       } else {
         const userInput:IUserInput = {
           name: githubProfile.displayName,
@@ -38,11 +38,21 @@ passport.use(new GithubStrategy(
         userInput.email = emails.data
           .filter((email) => email.primary)
           .map((email) => email.email).join();
-        const user = await Users.insert(userInput);
-        cb(null, user);
+        const userFromEmail:IUser = await Users.findByEmail(userInput.email);
+        if (userFromEmail?._id) {
+          Users.update({
+            _id: userFromEmail._id,
+            githubid: userInput.githubid,
+            githubUser: githubProfile,
+          });
+          done(null, userFromEmail);
+        } else {
+          const user = await Users.insert(userInput);
+          done(null, user);
+        }
       }
     } catch (e) {
-      cb(e);
+      done(e);
     }
   },
 ));

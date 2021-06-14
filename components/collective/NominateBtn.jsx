@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
-import GithubLoginButton from '../auth/GithubLoginButton';
+import OAuthLoginButton from '../auth/OAuthLoginButton';
 import Icons from '../icons';
 
 const NominateBtn = ({
@@ -37,7 +37,7 @@ const NominateBtn = ({
         </Button>
       ) 
         : (
-          <GithubLoginButton 
+          <OAuthLoginButton 
             size={size}
             block={block}
             variant={variant}
