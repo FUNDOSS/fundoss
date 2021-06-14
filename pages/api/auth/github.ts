@@ -8,13 +8,10 @@ const handler = nextConnect();
 handler.use(session).use(passport.initialize()).use(passport.session());
 
 handler.get((req: any, res: NextApiResponse) => {
-  const { provider, redirect } = req.query;
-  if (!provider) {
-    return { statusCode: 404 };
-  }
-  const state = redirect || Buffer.from(req.headers.referer).toString('base64');
+  const { redirect } = req.query;
+  const state = redirect || Buffer.from(req.headers.referer || '/').toString('base64');
   return passport.authenticate(
-    provider,
+    'github',
     { scope: appConfig.github.scope, state },
   )(req, res);
 });

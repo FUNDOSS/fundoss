@@ -8,13 +8,9 @@ const handler = nextConnect();
 handler.use(all);
 
 handler.get((req: any, res: NextApiResponse) => {
-  const { provider, state } = req.query;
-  if (!provider) {
-    return { statusCode: 404 };
-  }
-
+  const { state } = req.query;
   const redirect = Buffer.from(state as string, 'base64').toString();
-  return passport.authenticate(provider, {
+  return passport.authenticate('github', {
     failureRedirect: '/',
   })(req, res, () => {
     req.session.user = { user: req.user._id };
