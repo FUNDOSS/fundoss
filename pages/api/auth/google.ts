@@ -1,6 +1,5 @@
 import nextConnect from 'next-connect';
 import { NextApiResponse } from 'next';
-import appConfig from '../../../lib/appConfig';
 import session from '../../../middleware/session';
 import passport from '../../../middleware/passportGoogle';
 
