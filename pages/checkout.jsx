@@ -121,8 +121,7 @@ const CheckoutPage = ({
                 <div style={{ maxWidth: '550px', margin: '230px auto' }}>
                   <h3>Register / Login To Finish Donating</h3>
                   <p>
-                    FundOSS is only allowing sign-ups through Github at this time.
-                    We apologize for the inconvenience this might cause!
+                    Please sign in through one of these services to start donating.
                   </p>
                   <LoginButtons redirect="/checkout" outline />
                   <p>We’ll save your shopping cart for when you return!</p>
