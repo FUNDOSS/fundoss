@@ -7,11 +7,11 @@ const calculateSybilAttackScore = async (payment) => {
     .aggregate([
       {
         $match: {
-          $or: {
-            cardFingerprint: payment.cardFingerprint,
-            browserFingerprint: payment.browserFingerprint,
-            ipAddress: payment.ipAddress,
-          },
+          $or: [
+            { cardFingerprint: payment.cardFingerprint },
+            { browserFingerprint: payment.browserFingerprint },
+            { ipAddress: payment.ipAddress },
+          ],
           user: { $ne: mongoose.Types.ObjectId(payment.user._id || payment.user) },
         },
       },

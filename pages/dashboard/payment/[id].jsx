@@ -46,8 +46,12 @@ const PaymentsPage = ({ state, payment }) => {
                 { payment.ipAddress 
                   ? <div>IP address: <Link href={`/dashboard/payment?ipAddress=${payment.ipAddress}`}>{payment.ipAddress}</Link></div>
                   : null}
-                <div>card fingerprint: <Link href={`/dashboard/payment?cardFingerprint=${payment.cardFingerprint}`}>{payment.cardFingerprint}</Link></div>
-                <div>browser fingerprint: <Link href={`/dashboard/payment?browserFingerprint=${payment.browserFingerprint}`}>{payment.browserFingerprint}</Link></div>
+                { payment.cardFingerprint 
+                  ? <div>card fingerprint: <Link href={`/dashboard/payment?cardFingerprint=${payment.cardFingerprint}`}>{payment.cardFingerprint}</Link></div>
+                  : null}
+                { payment.browserFingerprint 
+                  ? <div>browser fingerprint: <Link href={`/dashboard/payment?browserFingerprint=${payment.browserFingerprint}`}>{payment.browserFingerprint}</Link></div>
+                  : null}
                 <h4>{moment(payment.time).format('lll')}</h4>
                 <Button href={`/session/${payment.session.slug}`}>session : {payment.session.name}</Button>
                 &nbsp;
