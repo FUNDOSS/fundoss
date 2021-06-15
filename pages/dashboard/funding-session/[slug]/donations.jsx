@@ -1,24 +1,20 @@
 import React from 'react';
-
-import moment from 'moment';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { Badge, Table } from 'react-bootstrap';
+import { Table } from 'react-bootstrap';
 import ServerProps from '../../../../lib/serverProps';
 import Error from '../../../../components/Error';
 import DashboardNav from '../../../../components/dashboard/DashboardNav';
 import Layout from '../../../../components/layout';
 import middleware from '../../../../middleware/all';
 import serializable from '../../../../lib/serializable';
-import FundingSessions, { getPredictedAverages } from '../../../../lib/fundingSession/fundingSessionController';
+import FundingSessions from '../../../../lib/fundingSession/fundingSessionController';
 import Payments from '../../../../lib/payment/paymentController';
 import FundingSessionInfo from '../../../../components/fundingSession/FundingSessionInfo';
-import Prediction from '../../../../components/fundingSession/Prediction';
 import AdminLinks from '../../../../components/fundingSession/AdminLinks';
 import Qf from '../../../../utils/qf';
 import PaymentsTable from '../../../../components/payment/PaymentsTable';
-import Dump from '../../../../components/dashboard/Dump';
 import { formatAmountForDisplay } from '../../../../utils/currency';
 
 const DonationsBySessionPage = ({
@@ -119,7 +115,7 @@ const DonationsBySessionPage = ({
           <Col md={4}>
             collectives : {collectiveTable.length} <br />
             avg number of donations/collective : {Math.round(totals.donations.length * 100 / collectiveTable.length) / 100}<br />
-            avg match/collective : {Math.round(totals.amount * 100 / collectiveTable.length) / 100}<br />
+            avg match/collective : {Math.round(stats.totalMatch * 100 / collectiveTable.length) / 100}<br />
             median donation per collective : {stats.medianCollectiveDonations}
             
           </Col>

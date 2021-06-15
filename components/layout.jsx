@@ -13,6 +13,7 @@ import Icons from './icons';
 import Qf from '../utils/qf';
 import GdprBar from './GdprBar';
 import Gtag from '../lib/gtag';
+import LoginModal from './auth/LoginModal';
 
 const Layout = ({
   children, meta, title = 'FundOSS | Democratic funding for open-source collectives', hidefooter, 
@@ -100,6 +101,7 @@ const Layout = ({
       </header>
       {children}
       <Footer minimal={hidefooter} state={state} />
+      <LoginModal />
       { cart && current ? (
         <Cart
           cart={cart}

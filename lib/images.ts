@@ -2,6 +2,8 @@ import sharp from 'sharp';
 import got from 'got';
 import path from 'path';
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 const Images = {
   create: async (type:string, params:any) => {
     if (type === 'collective') {
@@ -34,10 +36,10 @@ const Images = {
         await got(payment.user.avatar).buffer(),
       ).resize({ width: 300 }).toBuffer();
 
-      const circleUser = await circle.composite([{input: user, blend: 'in' }])
+      const circleUser = await circle.composite([{ input: user, blend: 'in' }])
         .ensureAlpha(0)
         .toBuffer();
-      const composites = [{ input: circleUser}];
+      const composites = [{ input: circleUser }];
       return image.composite(composites)
         .jpeg({ quality: 100 })
         .toFile(file).catch((err) => console.log(err));
