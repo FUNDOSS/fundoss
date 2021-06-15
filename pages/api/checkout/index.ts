@@ -105,7 +105,7 @@ handler.post(async (req: any, res: NextApiResponse) => {
             ],
           },
         );
-        if (intent.status === 'succeeded') {
+        if (intent.status === 'succeeded' && savedPayment.status !== 'succeeded') {
           // Create donations for each collective and update payment
           const donations = await Cart.get(req.session.cart);
           const paymentMethod = intent.payment_method;
