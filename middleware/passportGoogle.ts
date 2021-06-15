@@ -27,6 +27,17 @@ async (request, accessToken, refreshToken, profile, done) => {
       if (userFromEmail?._id) {
         Users.update({ _id: userFromEmail._id, googleid: profile.id, googleUser: profile });
         done(null, userFromEmail);
+      } else {
+        const userInput:IUserInput = {
+          name: profile.displayName,
+          avatar: profile.picture,
+          googleid: profile.id,
+          googleUser: profile,
+          email: profile.email,
+          role: 'user',
+        };
+        const user = await Users.insert(userInput);
+        done(null, user);
       }
     } else {
       const userInput:IUserInput = {
