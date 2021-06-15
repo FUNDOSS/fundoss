@@ -4,7 +4,7 @@ import Link from 'next/link';
 import FormControl from 'react-bootstrap/FormControl';
 import moment from 'moment';
 import {
-  Card, Image, Alert, Col, Row, Button, Container, Spinner, ButtonGroup, 
+  Card, Image, Alert, Col, Row, Button, Container, Spinner, 
 } from 'react-bootstrap';
 import CollectiveCard from '../collective/CollectiveCard';
 import FeaturedCollectiveCard from '../collective/FeaturedCollectiveCard';
@@ -28,7 +28,7 @@ const FundingSession = ({
     collectives.map((c) => ({ ...c })),
   );
   const [sort, setSort] = useState('desc');
-  const [sortOn, setSortOn] = useState('random');
+  const [setSortOn] = useState('total');
   const [display, setDisplay] = useState(3);
   const [tags, setTags] = useState([]);
   const [search, setSearch] = useState(null);
@@ -81,7 +81,7 @@ const FundingSession = ({
         },
       );
     }
-    if (filters.sortOn === 'amount' && (filters.sort || sort)) {
+    if (filters.sort || sort) {
       const srt = filters.sort || sort;
       list = list.sort((a, b) => {
         let av; let bv;
@@ -96,23 +96,6 @@ const FundingSession = ({
         return srt === 'asc' ? av - bv : bv - av;
       });
     }
-    if (filters.sortOn === 'amount' && (filters.sort || sort)) {
-      const srt = filters.sort || sort;
-      list = list.sort((a, b) => {
-        let av; let bv;
-        if (started) {
-          av = parseInt(a.totals?.amount, 10); 
-          bv = parseInt(b.totals?.amount, 10);
-        } else {
-          av = nominations[a._id] || 0;
-          bv = nominations[b._id] || 0;
-        }
-
-        return srt === 'asc' ? av - bv : bv - av;
-      });
-    }
-
-    if (filters.sortOn === 'random') list = list.sort(() => 0.5 - Math.random());
 
     setCollectivesList(list);
   };
@@ -268,25 +251,21 @@ const FundingSession = ({
             </Col>
             { started ? (
               <Col xs={4} lg={3} className="text-center">
-                <ButtonGroup block style={{ display: 'flex' }}>
+                <div className="sort">
+                  <small className="d-none d-md-inline">Sort by</small>
                   <Button 
-                    style={{ flex: 1 }}
-                    onClick={() => change({ sort: 'none', sortOn: 'random' })}
-                    variant={sortOn === 'random' ? 'outline-primary' : 'outline-scondary'}
+                    size="sm"
+                    style={{ margin: '0 10px' }}
+                    onClick={() => change({ sort: sort === 'desc' ? 'asc' : 'desc' })} 
+                    variant="link"
                   >
-                    <span className="d-inline d-md-none">🔀</span>
-                    <span className="d-none d-md-inline">Random</span>
+                    {sort === 'asc' ? (
+                      <>▴ Funding</>
+                    ) : (
+                      <>▾ Funding</>
+                    )}
                   </Button>
-                  <Button
-                    style={{ flex: 1 }}
-                    className="text-​nowrap"
-                    variant={sortOn === 'amount' ? 'outline-primary' : 'outline-scondary'}
-                    onClick={() => change({ sort: sort === 'desc' ? 'asc' : 'desc', sortOn: 'amount' })}
-                  >{sort === 'asc' ? '↑' : '↓'}&nbsp;
-                    <span className="d-inline d-md-none">💰</span>
-                    <span className="d-none d-md-inline">Funding</span>
-                  </Button>
-                </ButtonGroup>
+                </div>
               </Col>
             ) : null}
             { !started && session.allowNominations ? (
