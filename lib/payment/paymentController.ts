@@ -75,9 +75,12 @@ export async function findById(id:string) {
     });
 }
 
-export async function getPayments(query) {
+export async function getPayments(query, skip = 0, limit = 10000) {
   await dbConnect();
-  return Payment.find(query).select('user session amount donations fee status time sybilAttackScore stripeRisk')
+  const sort = query.sort ? query.sort : '-time';
+  const q = { ...query };
+  delete q.sort;
+  return Payment.find(q).select('user session amount donations fee status time sybilAttackScore stripeRisk')
     .populate({ path: 'session', select: 'name' })
     .populate({ path: 'user', select: 'avatar username' })
     .populate({
@@ -87,7 +90,9 @@ export async function getPayments(query) {
         select: 'slug imageUrl',
       },
     })
-    .sort('field -time');
+    .limit(limit)
+    .skip(skip)
+    .sort(`field ${sort}`);
 }
 
 export async function getDonationsBySession(sessionId) {
