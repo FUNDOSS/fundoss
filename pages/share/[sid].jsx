@@ -9,7 +9,6 @@ import serializable from '../../lib/serializable';
 import Payments from '../../lib/payment/paymentController';
 import Qf from '../../utils/qf';
 import AddMultipleToCartButton from '../../components/cart/AddMultipleToCartButton';
-import Sponsors from '../../components/fundingSession/Sponsors';
 import { formatAmountForDisplay } from '../../utils/currency';
 import ServerProps from '../../lib/serverProps';
 
@@ -22,16 +21,15 @@ const SharePage = ({
       title={`FundOSS | ${title}`}
       state={state}
       meta={{
-        card: 'summary',
-        img: `${state.siteUrl}/static/tw-share-light.jpg`,
+        card: 'summary_large_image',
+        img: payment.shareImage ? state.siteUrl + payment.shareImage : `${state.siteUrl}/api/image/share/${payment.sid}`,
         url: `${state.siteUrl}/share/${payment.sid}`,
         description: 'Support open source collectives and see your donations multiplied',
       }}
     >
       <Container style={{ paddingTop: '40px', margin: '-60px 0' }} fluid>
         <Row className="no-gutter  row-eq-height">
-          <Col md={6} className="illu-hand">
-          </Col>
+          <Col md={6} className="illu-hand" />
           <Col md={{ span: 4, offset: 1 }} className="text-center">
             <div style={{ maxWidth: '550px', margin: '70px auto' }}>
               <Image src={payment.user.avatar} roundedCircle width={100} />
