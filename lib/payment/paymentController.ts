@@ -39,7 +39,7 @@ export async function updatePayment(payment) {
         }),
     );
     FundingSessions.updateSessionTotals(payment.session);
-    paymentUpdates.sybilAttackScore = await calculateSybilAttackScore(payment);
+    //paymentUpdates.sybilAttackScore = await calculateSybilAttackScore(payment);
     paymentUpdates.donations = donations;
     paymentUpdates.browserFingerprint = payment.browserFingerprint;
     paymentUpdates.fee = fee;
