@@ -8,7 +8,7 @@ import PaymentsTable from '../../../components/payment/PaymentsTable';
 import middleware from '../../../middleware/all';
 import serializable from '../../../lib/serializable';
 
-const PaymentsPage = ({ user, payments, sort = '-time' }) => {
+const PaymentsPage = ({ user, payments, query }) => {
   if (!user._id) {
     return <Error statusCode={401} />;
   }
@@ -25,15 +25,15 @@ const PaymentsPage = ({ user, payments, sort = '-time' }) => {
         <ButtonGroup>
           <Button 
             href={`?${getQueryString({ sort: '-sybilAttackScore' })}`}
-          >{sort === '-sybilAttackScore' ? '↓' : ' '} Sybil
+          >{query.sort === '-sybilAttackScore' ? '↓' : ' '} Sybil
           </Button>
           <Button
             href={`?${getQueryString({ sort: '-amount' })}`}
-          >{sort === '-amount' ? '↓' : ' '} Funding
+          >{query.sort === '-amount' ? '↓' : ' '} Funding
           </Button>
           <Button
             href={`?${getQueryString({ sort: '-time' })}`}
-          >{sort === '-time' ? '↓' : ' '} Time
+          >{query.sort === '-time' ? '↓' : ' '} Time
           </Button>
         </ButtonGroup>
         <PaymentsTable payments={payments} />
