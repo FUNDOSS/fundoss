@@ -20,6 +20,7 @@ passport.use(new FacebookStrategy({
 async (accessToken, refreshToken, profile, done) => {
   try {
     const existingUser:IUser = await Users.findByFacebookId(profile.id);
+    console.log(profile);
     if (existingUser?._id) {
       done(null, existingUser);
     } else if (profile._json.email) {
@@ -30,10 +31,10 @@ async (accessToken, refreshToken, profile, done) => {
       } else {
         const userInput:IUserInput = {
           name: profile.displayName,
-          avatar: profile.picture,
+          avatar: profile._json.picture?.data?.url,
           facebookid: profile.id,
           facebookUser: profile,
-          email: profile.email,
+          email: profile._json.email,
           role: 'user',
         };
         const user = await Users.insert(userInput);
@@ -42,10 +43,10 @@ async (accessToken, refreshToken, profile, done) => {
     } else {
       const userInput:IUserInput = {
         name: profile.displayName,
-        avatar: profile.picture,
+        avatar: profile._json.picture?.data?.url,
         facebookid: profile.id,
         facebookUser: profile,
-        email: profile.email,
+        email: profile._json.email,
         role: 'user',
       };
       const user = await Users.insert(userInput);
