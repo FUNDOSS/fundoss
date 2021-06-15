@@ -7,15 +7,6 @@ import dbConnect from '../dbConnect';
 import NominationModel from './NominationModel';
 import Donation from '../payment/donationModel';
 
-export async function findBySlug(slug:string):Promise<any> {
-  await dbConnect();
-  const collective = await Collective.findOne({ slug });
-  if (collective) {
-    collective.sessionTotals = await CollectiveSessionTotals.find({ collective: collective._id });
-  }
-  return collective;
-}
-
 export async function getIdBySlug(slug:string):Promise<any> {
   await dbConnect();
   const collective = await Collective.findOne({ slug }).select('_id');
@@ -203,6 +194,15 @@ export async function getCollective(slug:string):Promise<any> {
     console.log(error);
     return { error: error.response.errors[0].message, slug };
   }
+}
+
+export async function findBySlug(slug:string):Promise<any> {
+  await dbConnect();
+  const collective = await getCollective(slug);
+  if (collective) {
+    collective.sessionTotals = await CollectiveSessionTotals.find({ collective: collective._id });
+  }
+  return collective;
 }
 
 export default class Collectives {
