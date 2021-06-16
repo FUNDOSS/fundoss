@@ -5,7 +5,6 @@ passport.serializeUser((user, done) => {
   done(null, user._id);
 });
 
-// passport#160
 passport.deserializeUser((req, id, done) => {
   Users.findById(id).then((user) => done(null, user), (err) => done(err));
 });
