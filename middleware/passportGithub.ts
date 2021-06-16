@@ -9,7 +9,7 @@ passport.use(new GithubStrategy(
   appConfig.github,
   async (accessToken, refreshToken, githubProfile: any, done) => {
     try {
-      const existingUser:IUser = await Users.findByOauthId(profile.id, 'github');
+      const existingUser:IUser = await Users.findByOauthId(githubProfile.id, 'github');
       if (existingUser?._id) {
         done(null, existingUser);
       } else {
