@@ -1,15 +1,7 @@
 import { Strategy as FacebookStrategy } from 'passport-facebook';
-import passport from 'passport';
+import passport from './passport';
 import Users from '../lib/user/usersController';
 import { IUser, IUserInput } from '../lib/user/userModel';
-
-passport.serializeUser((user, done) => {
-  done(null, user._id);
-});
-
-passport.deserializeUser((req, id, done) => {
-  Users.findByGithubId(id).then((user) => done(null, user), (err) => done(err));
-});
 
 passport.use(new FacebookStrategy({
   clientID: process.env.FACEBOOK_CLIENTID,
@@ -19,7 +11,7 @@ passport.use(new FacebookStrategy({
 },
 async (accessToken, refreshToken, profile, done) => {
   try {
-    const existingUser:IUser = await Users.findByFacebookId(profile.id);
+    const existingUser:IUser = await Users.findByOauthId(profile.id, 'facebook');
     console.log(profile);
     if (existingUser?._id) {
       done(null, existingUser);
