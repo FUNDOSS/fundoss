@@ -10,11 +10,11 @@ export interface IUserInput {
   githubUser?:any;
   googleid?:string;
   googleUser?:any;
+  linkedinid?:string;
+  linkedinUser?:any;
   facebookid?:string;
   facebookUser?:any;
   role?:string;
-  githubaccestoken?:string;
-  githubrefreshtoken?:string;
   billing?: any;
   subscribed?:boolean;
   prototype?: any;
@@ -31,9 +31,9 @@ export interface IUser extends Document {
   googleUser:any;
   facebookid:string;
   facebookUser:any;
+  linkedinid:string;
+  linkedinUser:any;
   role:string;
-  githubaccestoken?:string;
-  githubrefreshtoken?:string;
   subscribed?:boolean;
   billing?: any;
 }
@@ -72,15 +72,15 @@ const UserSchema = new Schema({
   facebookUser: {
     type: Schema.Types.Mixed,
   },
-  githubaccestoken: {
+  linkedinid: {
     type: String,
   },
-  githubrefreshtoken: {
-    type: String,
+  linkedinUser: {
+    type: Schema.Types.Mixed,
   },
   role: {
     type: String,
-    default: 'backer',
+    default: 'user',
   },
   billing: {
     type: Schema.Types.Mixed,

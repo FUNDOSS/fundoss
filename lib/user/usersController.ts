@@ -16,9 +16,9 @@ export async function findByEmail(email:string) {
   return User.findOne({ email });
 }
 
-export async function findByGithubId(githubid:string) {
+export async function findByOauthId(id:string, provider = 'github') {
   await dbConnect();
-  return User.findOne({ githubid });
+  return User.findOne({ [`${provider}id`]: id });
 }
 
 export async function findByGoogleId(googleid:string) {
@@ -43,11 +43,7 @@ export default class Users {
 
     static findById = findById
 
-    static findByGithubId = findByGithubId
-
-    static findByGoogleId = findByGoogleId
-
-    static findByFacebookId = findByFacebookId
+    static findByOauthId = findByOauthId
 
     static update = updateUser
 }
