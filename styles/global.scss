@@ -350,6 +350,10 @@ h1{margin:2rem 0}
    .big {font-size: 2.2rem;}
 }
 
+.btn-outline-linkedin:hover, .btn-linkedin {
+    background-color: #0072b1;
+    color:$white !important;
+}
 .btn-outline-facebook:hover, .btn-facebook {
     background-color: #4267B2;
     color:$white !important;
@@ -361,6 +365,12 @@ h1{margin:2rem 0}
 .btn-outline-github:hover, .btn-github {
     background-color: #333;
     color:$white !important;
+}
+
+.btn-linkedin:hover, .btn-outline-linkedin {
+    color: #0072b1 !important;
+    border-color: #0072b1;
+    background: $white;
 }
 
 .btn-facebook:hover, .btn-outline-facebook {

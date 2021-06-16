@@ -13,12 +13,14 @@
   "author": "Francois Richir",
   "license": "GPL-3.0-or-later",
   "dependencies": {
+    "@babel/eslint-parser": "^7.14.5",
     "@fingerprintjs/fingerprintjs": "^3.1.2",
     "@sendgrid/mail": "^7.4.0",
     "@stripe/react-stripe-js": "^1.4.0",
     "@stripe/stripe-js": "^1.13.1",
     "@tryghost/admin-api": "^1.4.1",
     "@tryghost/content-api": "^1.5.3",
+
     "axios": "^0.21.1",
     "connect-mongo": "^3.2.0",
     "cookie-session": "^1.4.0",
@@ -47,13 +49,14 @@
     "passport-facebook": "^3.0.0",
     "passport-github": "^1.1.0",
     "passport-google-oauth2": "^0.2.0",
+    "passport-linkedin-oauth2": "^2.0.0",
     "passport-local": "^1.0.0",
     "pluralize": "^8.0.0",
     "react": "^17.0.1",
     "react-bootstrap": "^1.5.1",
     "react-dom": "^17.0.1",
     "react-select": "^4.3.0",
-    "sass": "^1.32.8",
+    "sass": "1.32.8",
     "sharp": "^0.28.1",
     "stripe": "^8.138.0",
     "swr": "^0.3.9",
@@ -63,13 +66,12 @@
   "devDependencies": {
     "@babel/core": "^7.13.16",
     "@fullhuman/postcss-purgecss": "^4.0.3",
-    "@types/mongoose": "^5.10.3",
     "@types/node": "^14.14.31",
     "@types/react": "^17.0.2",
     "@typescript-eslint/eslint-plugin": "^4.17.0",
     "@typescript-eslint/parser": "^4.17.0",
+    "@typescript-eslint/typescript-estree": "^4.27.0",
     "autoprefixer": "^10.2.5",
-    "babel-eslint": "^10.1.0",
     "babel-plugin-inline-react-svg": "^2.0.1",
     "bootstrap": "^4.6.0",
     "eslint": "^7.14.0",
@@ -86,7 +88,6 @@
     "postcss-preset-env": "^6.7.0",
     "prettier": "^2.2.1",
     "typescript": "^4.2.3",
-    "typescript-eslint": "^0.0.1-alpha.0",
-    "typescript-eslint-parser": "^22.0.0"
+    "typescript-eslint": "^0.0.1-alpha.0"
   }
 }
