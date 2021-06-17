@@ -295,16 +295,16 @@ h1{margin:2rem 0}
 .alert.small{padding: 4px;}
 
 .session-info{
+    
     .info-span{
-        border: 1px solid $white;
-        border-radius: 5px;
+        @extend .card;
+        @extend .invert;
+        @extend .glass;
+        border-radius: 10px;
         display: inline-block;
         padding: 10px 15px ;
         margin:20px 20px 0 0
     }
-    .info-span.success{border-color: $success;}
-    .info-span.primary{border-color: $primary;}
-    .info-span.danger{border-color: $danger;}
 }
 .session-info.info-sm{
     .display-3{font-size: 1.4rem}
