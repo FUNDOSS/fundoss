@@ -57,7 +57,7 @@ handler.post(async (req: any, res: NextApiResponse) => {
       const stripe = await new Stripe(process.env.STRIPE_SECRET_KEY, {
         apiVersion: '2020-08-27',
       });
-      const intent: Stripe.PaymentIntent = await stripe.paymentIntents.retrieve(
+      const intent: any = await stripe.paymentIntents.retrieve(
         payment.intentId, {
           expand:
           [
