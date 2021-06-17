@@ -57,7 +57,7 @@ const generate = (width, height, num) => {
       x={x}
       height={height}
       dur={Math.round((-i + cnt + 30) / 3)}
-      transform={`scale(${(30 + i) / (cnt + 100)}) 
+      transform={`scale(${(30 + (i*5)) / (( cnt) + 100)}) 
       rotate(${rnd(380)})`}
     />);
   }
@@ -69,7 +69,7 @@ const CoinsAnimation = ({
 }) => {
   const [tags, setTags] = useState([]);
   useEffect(() => {
-    setTags(generate(width, height, num));
+    setTags(generate(width, height, Math.floor(num / 2)));
   }, []);
   return (
     <div suppressHydrationWarning style={style} className={className}>
