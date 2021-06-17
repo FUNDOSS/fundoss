@@ -62,10 +62,6 @@ const FundingSessionInfo = ({ session, predicted, size = 'md' }) => {
       ) : null}
       {started && !ended ? (
         <div>
-          <span className="info-span text-center">
-            {Pluralize('donation', totals?.donations.length)} <br />
-            <span className="display-3"> {totals?.donations.length} </span>
-          </span>
           {session.collectives 
             ? (
               <span className="info-span text-center">
@@ -76,6 +72,10 @@ const FundingSessionInfo = ({ session, predicted, size = 'md' }) => {
               </span>
             )
             : null }
+          <span className="info-span text-center">
+            {Pluralize('donation', totals?.donations.length)} <br />
+            <span className="display-3"> {totals?.donations.length} </span>
+          </span>
           <span className="info-span text-center">
             total raised<br />
             <span className="text-fat display-3 text-success">
