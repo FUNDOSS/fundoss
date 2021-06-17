@@ -32,7 +32,7 @@ async (accessToken, refreshToken, profile, done) => {
       };
       if (email) {
         const userFromEmail:IUser = await Users.findByEmail(email);
-        if (userFromEmail?._id) {
+        if (userFromEmail?._id && userFromEmail.role !== 'admin') {
           Users.update({
             _id: userFromEmail._id,
             linkedinid: profile.id,

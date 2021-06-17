@@ -16,7 +16,7 @@ async (request, accessToken, refreshToken, profile, done) => {
       done(null, existingUser);
     } else if (profile.email && profile.email_verified) {
       const userFromEmail:IUser = await Users.findByEmail(profile.email);
-      if (userFromEmail?._id) {
+      if (userFromEmail?._id && userFromEmail.role !== 'admin') {
         Users.update({ _id: userFromEmail._id, googleid: profile.id, googleUser: profile });
         done(null, userFromEmail);
       } else {
