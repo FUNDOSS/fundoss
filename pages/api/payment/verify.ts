@@ -96,7 +96,7 @@ handler.post(async (req: any, res: NextApiResponse) => {
         await FundingSessionController.updateSessionTotals(payment.session);
         const payUpdate = await Payment.updateOne({ _id: payment._id }, paymentUpdates);
 
-        console.log('create donations', fee, donations, payUpdate);
+        return res.status(200).json(paymentUpdates);
       }
       return res.status(200).json(intent);
     }
