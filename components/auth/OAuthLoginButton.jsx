@@ -8,6 +8,7 @@ const OAuthLoginButton = ({
   <Button
     block={block}
     variant={outline ? `outline-${provider}` : provider}
+    className={minify ? null : 'btn-oauth'}
     size={size || 'md'}
     href={`/api/auth/${provider}${redirect ? `?redirect=${Buffer.from(redirect).toString('base64')}` : ''}`}
   >

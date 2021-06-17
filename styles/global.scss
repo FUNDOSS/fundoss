@@ -350,6 +350,8 @@ h1{margin:2rem 0}
    .big {font-size: 2.2rem;}
 }
 
+.btn-oauth svg{position: absolute; left:30px}
+
 .btn-outline-linkedin:hover, .btn-linkedin {
     background-color: #0072b1;
     color:$white !important;
