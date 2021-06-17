@@ -18,6 +18,7 @@ import serializable from '../../../lib/serializable';
 import { formatAmountForDisplay } from '../../../utils/currency';
 import Dump from '../../../components/dashboard/Dump';
 import CancelPayment from '../../../components/payment/CancelPayment';
+import VerifyPayment from '../../../components/payment/VerifyPayment';
 
 const PaymentsPage = ({ state, payment }) => {
   if (!state.user._id) {
@@ -32,6 +33,7 @@ const PaymentsPage = ({ state, payment }) => {
       <Container style={{ paddingTop: '40px' }}>
         <DashboardNav />
         <h1>Payment Detail</h1>
+        <VerifyPayment payment={payment} />
         <Row>
           <Col>
             &nbsp;

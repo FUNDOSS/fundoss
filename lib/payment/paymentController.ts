@@ -82,7 +82,7 @@ export async function getPayments(query, skip = 0, limit = 10000) {
   delete q.sort;
   return Payment.find(q).select('user session amount donations fee status time sybilAttackScore stripeRisk')
     .populate({ path: 'session', select: 'name' })
-    .populate({ path: 'user', select: 'avatar username' })
+    .populate({ path: 'user', select: 'avatar username name' })
     .populate({
       path: 'donations',
       populate: {

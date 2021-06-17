@@ -1,23 +1,15 @@
 import { Strategy as GithubStrategy } from 'passport-github';
 import axios from 'axios';
-import passport from 'passport';
+import passport from './passport';
 import appConfig from '../lib/appConfig';
 import Users from '../lib/user/usersController';
 import { IUser, IUserInput } from '../lib/user/userModel';
-
-passport.serializeUser((user, done) => {
-  done(null, user._id);
-});
-
-passport.deserializeUser((req, id, done) => {
-  Users.findByGithubId(id).then((user) => done(null, user), (err) => done(err));
-});
 
 passport.use(new GithubStrategy(
   appConfig.github,
   async (accessToken, refreshToken, githubProfile: any, done) => {
     try {
-      const existingUser:IUser = await Users.findByGithubId(githubProfile.id);
+      const existingUser:IUser = await Users.findByOauthId(githubProfile.id, 'github');
       if (existingUser?._id) {
         done(null, existingUser);
       } else {
@@ -26,8 +18,6 @@ passport.use(new GithubStrategy(
           username: githubProfile.username,
           avatar: githubProfile.photos?.[0].value,
           githubid: githubProfile.id,
-          githubaccestoken: accessToken,
-          githubrefreshtoken: refreshToken,
           role: process.env.ADMINS.split(',').indexOf(githubProfile.username) !== -1 ? 'admin' : 'user',
         };
         const emails = await axios.get('https://api.github.com/user/emails', {

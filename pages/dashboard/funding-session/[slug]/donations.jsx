@@ -38,11 +38,12 @@ const DonationsBySessionPage = ({
 
   const userTotals = payments.reduce((totals, p) => p.donations.reduce(
     (totals, d) => {
-      const user = totals[p.user.username] || { donations: {}, total: 0, donationCount: 0 };
+      const userKey = p.user?.username || p.user?.name || 'none';
+      const user = totals[userKey] || { donations: {}, total: 0, donationCount: 0 };
       user.donations[d.collective.slug] = (user.donations[d.collective.slug] || 0) + d.amount;
       user.donationCount += 1;
       user.total += d.amount;
-      return { ...totals, ...{ [p.user.username]: user } };
+      return { ...totals, ...{ [userKey]: user } };
     },
     totals,
   ), {});
