@@ -14,17 +14,6 @@ const FundingSessionInfo = ({ session, predicted, size = 'md' }) => {
 
   const started = moment() > moment(start);
   const ended = moment() > moment(end);
-  const totalMatches = started && !ended ? (totals?.donations || []).reduce(
-    (total, d) => total + Qf.calculate(
-      d, 
-      p.average, 
-      p.match, 
-      session.matchingCurve.exp,
-      p.fudge,
-      session.matchingCurve.symetric,
-    ), 
-    0,
-  ) : session.matchedFunds;
 
   return (
     <div className="session-info">
@@ -74,20 +63,19 @@ const FundingSessionInfo = ({ session, predicted, size = 'md' }) => {
       {started && !ended ? (
         <div>
           <span className="info-span text-center">
-            {totals?.donations.length} {Pluralize('donation', totals?.donations.length)} <br />
-            <span className="display-3"> <Currency value={totals?.amount || 0} floor /></span>
+            {Pluralize('donation', totals?.donations.length)} <br />
+            <span className="display-3"> {totals?.donations.length} </span>
           </span>
-          <span className="display-4">+&nbsp;</span>
-          <span className="info-span text-center">
-            Estimated match<br />
+          <span className="info-span text-center danger">
+            total raised<br />
             <span className="text-fat display-3 text-success">
-              <Currency value={totalMatches} floor />
+              <Currency value={totals?.amount + session.matchedFunds} floor />
             </span>
-          </span>&nbsp;&nbsp;
-          <span className="info-span text-center">
-            Remaining<br />
-            <span className="display-3 text-fat">
-              <Currency value={session.matchedFunds - totalMatches} floor />
+          </span>
+          <span className="info-span text-center success">
+            Collectives<br />
+            <span className="text-fat display-3">
+              {session.collectives.length}
             </span>
           </span>
         </div>
