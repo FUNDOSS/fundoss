@@ -300,6 +300,7 @@ h1{margin:2rem 0}
         @extend .card;
         @extend .invert;
         @extend .glass;
+        color: $white;
         border-radius: 10px;
         display: inline-block;
         padding: 10px 15px ;
