@@ -301,6 +301,8 @@ h1{margin:2rem 0}
     .info-span.card{
         @extend .invert;
         @extend .glass;
+        margin: 0 10px 10px 0;
+        
     }
 }
 .session-info{
@@ -308,16 +310,14 @@ h1{margin:2rem 0}
         font-size: 4rem;
         line-height: 4rem;
         color: $success;
+        margin: 0 10px 0 0;
+        
     }
     .info-span{
-        border-radius: 10px;
         display: inline-block;
-        padding: 5px 10px ;
         margin: 10px 10px 10px 0;
     }
-}
-.session-info.info-sm{
-    .display-3{font-size: 1.4rem}
+    .info-span.card{margin: 0 0 20px 0;padding: 5px 10px }
 }
 
 .sort{

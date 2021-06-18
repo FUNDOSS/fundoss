@@ -4,6 +4,7 @@ import { Badge } from 'react-bootstrap';
 import Pluralize from 'pluralize';
 import Qf from '../../utils/qf';
 import Currency from '../Currency';
+import { formatAmountForDisplay } from '../../utils/currency';
 
 const FundingSessionInfo = ({ session, predicted, size = 'md' }) => {
   const {
@@ -66,23 +67,29 @@ const FundingSessionInfo = ({ session, predicted, size = 'md' }) => {
             ? (
               <span className="info-span text-center card">
                 
-                <span className="display-4">
+                <span className="display-4 text-fat">
                   {session.collectives.length}
                 </span>
-                <br />collectives
+                <br />Collectives
               </span>
             )
             : null }
           <span className="info-span text-center card">
              
-            <span className="display-4"> {totals?.donations.length} </span>
-            <br />{Pluralize('donation', totals?.donations.length)}
+            <span className="display-4 text-fat"> {totals?.donations.length} </span>
+            <br />{Pluralize('Donation', totals?.donations.length)}
           </span>
           <span className="info-span text-center">
-            total raised<br />
+            {
+              formatAmountForDisplay(session.totals.amount)
+            } donations + {
+              formatAmountForDisplay(session.matchedFunds)
+            } matching fund
+            <br /> 
             <span className="current-total text-fat">
               <Currency value={totals?.amount + session.matchedFunds} floor />
-            </span>
+            </span>        
+
           </span>
          
         </div>
