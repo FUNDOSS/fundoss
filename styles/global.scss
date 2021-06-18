@@ -266,6 +266,9 @@ h1{margin:2rem 0}
     animation-direction: alternate;
 }
 
+
+
+
 .invert .final-total{color:$white}
 
 .currency small{font-size: 50%;vertical-align:middle;display:inline-block}
@@ -294,17 +297,23 @@ h1{margin:2rem 0}
 
 .alert.small{padding: 4px;}
 
-.session-info{
-    
-    .info-span{
-        @extend .card;
+.invert .session-info{ 
+    .info-span.card{
         @extend .invert;
         @extend .glass;
-        color: $white;
+    }
+}
+.session-info{
+    .current-total{
+        font-size: 4rem;
+        line-height: 4rem;
+        color: $success;
+    }
+    .info-span{
         border-radius: 10px;
         display: inline-block;
-        padding: 10px 15px ;
-        margin:20px 20px 0 0
+        padding: 5px 10px ;
+        margin: 10px 10px 10px 0;
     }
 }
 .session-info.info-sm{

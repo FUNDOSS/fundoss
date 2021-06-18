@@ -64,24 +64,27 @@ const FundingSessionInfo = ({ session, predicted, size = 'md' }) => {
         <div>
           {session.collectives 
             ? (
-              <span className="info-span text-center">
-                collectives<br />
-                <span className="display-3">
+              <span className="info-span text-center card">
+                
+                <span className="display-4">
                   {session.collectives.length}
                 </span>
+                <br />collectives
               </span>
             )
             : null }
-          <span className="info-span text-center">
-            {Pluralize('donation', totals?.donations.length)} <br />
-            <span className="display-3"> {totals?.donations.length} </span>
+          <span className="info-span text-center card">
+             
+            <span className="display-4"> {totals?.donations.length} </span>
+            <br />{Pluralize('donation', totals?.donations.length)}
           </span>
           <span className="info-span text-center">
             total raised<br />
-            <span className="text-fat display-3 text-success">
+            <span className="current-total text-fat">
               <Currency value={totals?.amount + session.matchedFunds} floor />
             </span>
           </span>
+         
         </div>
       ) : null }
 
