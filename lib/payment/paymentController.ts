@@ -6,6 +6,7 @@ import FundingSessions from '../fundingSession/fundingSessionController';
 import Collectives from '../collectives/CollectivesController';
 import Qf from '../../utils/qf';
 import calculateSybilAttackScore from './sybilAttackScore';
+import donationModel from './donationModel';
 
 export async function insertPayment(payment) {
   await dbConnect();
@@ -79,6 +80,13 @@ export async function getPayments(query, skip = 0, limit = 10000) {
   await dbConnect();
   const sort = query.sort ? query.sort : '-time';
   const q = { ...query };
+  if (q.collective) {
+    const donations = await donationModel.find(
+      { collective: mongoose.Types.ObjectId(q.collective) },
+    );
+    q._id = { $in: donations.map((d) => d.payment) };
+    delete q.collective;
+  }
   delete q.sort;
   return Payment.find(q).select('user session amount donations fee status time sybilAttackScore stripeRisk')
     .populate({ path: 'session', select: 'name' })

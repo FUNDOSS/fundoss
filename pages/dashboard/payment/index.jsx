@@ -16,7 +16,10 @@ const PaymentsPage = ({ user, payments, query }) => {
     return <Error statusCode={403} />;
   }
 
-  const getQueryString = (obj) => Object.keys({ ...query, ...obj }).reduce((a, k) => { a.push(`${k}=${encodeURIComponent(obj[k])}`); return a; }, []).join('&');
+  const getQueryString = (obj) => {
+    const params = { ...query, ...obj };
+    return Object.keys(params).map((p) => `${p}=${encodeURIComponent(params[p])}`, []).join('&');
+  };
   return (
     <Layout title="FundOSS | Dashboard" user={user} hidefooter={1}>
       <Container style={{ paddingTop: '40px' }}>
@@ -45,6 +48,7 @@ const PaymentsPage = ({ user, payments, query }) => {
 export async function getServerSideProps({ query, req, res }) {
   await middleware.run(req, res);
   const payments = await Payments.get(query);
+  console.log(query);
   return {
     props: {
       user: serializable(req.user), 
