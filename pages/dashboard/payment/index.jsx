@@ -39,7 +39,7 @@ const PaymentsPage = ({
       <Container style={{ paddingTop: '40px' }}>
         <DashboardNav />
         <h1>{count} Payments</h1>
-        showing {pageSize} Payments
+
 
         <div>
           <ButtonGroup>
@@ -56,7 +56,8 @@ const PaymentsPage = ({
             >{query.sort === '-time' ? '↓' : ' '} Time
             </Button>
           </ButtonGroup>
-          <hr />
+          <hr />showing {payments.length} of {count} Payments <br />
+          
           {count > page * pageSize ? <Pagination>{items}</Pagination> : null}
           <PaymentsTable payments={payments} />
           {count > page * pageSize ? <Pagination>{items}</Pagination> : null}
