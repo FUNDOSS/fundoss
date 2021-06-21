@@ -55,7 +55,7 @@ const PaymentsPage = ({ state, payment }) => {
                   ? <div>browser fingerprint: <Link href={`/dashboard/payment?browserFingerprint=${payment.browserFingerprint}`}>{payment.browserFingerprint}</Link></div>
                   : null}
                 <h4>{moment(payment.time).format('lll')}</h4>
-                <Button href={`/session/${payment.session.slug}`}>session : {payment.session.name}</Button>
+                <Button href={`/dashboard/payment?session=${payment.session._id}`}>session : {payment.session.name}</Button>
                 &nbsp;
                 <CancelPayment payment={payment} />
               </>
@@ -71,7 +71,7 @@ const PaymentsPage = ({ state, payment }) => {
                 {formatAmountForDisplay(don.amount)}
               </Col>
               <Col xs={3} className="text-fat">
-                <a href={`/collective${don.collective.slug}`}>
+                <a href={`/dashboard/payment/?collective=${don.collective._id}`}>
                   <Image src={don.collective.imageUrl} roundedCircle width={20} />&nbsp;
                   {don.collective.name}
                 </a>

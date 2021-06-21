@@ -19,9 +19,13 @@ const PaymentsTable = ({ payments }) => (
         <td>{ payment.donations.map((don, index) => {
           if (index < 6) {
             return (
-              <Badge key={don.collective.slug} variant="light" style={{ marginRight: '3px' }}>
-                ${don.amount} <Image src={don.collective.imageUrl} roundedCircle width={20} />
-              </Badge>
+              <Link href={`/dashboard/payment/?collective=${don.collective._id}`}>
+                <a>
+                  <Badge key={don.collective.slug} variant="light" style={{ marginRight: '3px' }}>
+                    ${don.amount} <Image src={don.collective.imageUrl} roundedCircle width={20} />
+                  </Badge>
+                </a>
+              </Link>
             ); 
           }
           return (<b key={don.collective.slug}>.</b>);

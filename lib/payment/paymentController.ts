@@ -6,6 +6,7 @@ import FundingSessions from '../fundingSession/fundingSessionController';
 import Collectives from '../collectives/CollectivesController';
 import Qf from '../../utils/qf';
 import calculateSybilAttackScore from './sybilAttackScore';
+import donationModel from './donationModel';
 
 export async function insertPayment(payment) {
   await dbConnect();
@@ -75,10 +76,55 @@ export async function findById(id:string) {
     });
 }
 
+export async function getPage(query, pageSize = 10) {
+  await dbConnect();
+  const sort = query.sort ? query.sort : '-time';
+  const q = { ...query };
+  const page = query.page ? Number(query.page) : 1;
+  if (q.collective) {
+    const donations = await donationModel.find(
+      { collective: mongoose.Types.ObjectId(q.collective) },
+    );
+    q._id = { $in: donations.map((d) => d.payment) };
+    delete q.collective;
+  }
+  delete q.sort;
+  delete q.page;
+  const count = await Payment.aggregate([
+
+    { $match: q },
+    { $group: { _id: null, count: { $sum: 1 } } },
+
+  ]);
+
+  const res = await Payment.find(q).select('user session amount donations fee status time sybilAttackScore stripeRisk')
+    .populate({ path: 'session', select: 'name' })
+    .populate({ path: 'user', select: 'avatar username name' })
+    .populate({
+      path: 'donations',
+      populate: {
+        path: 'collective',
+        select: 'slug imageUrl',
+      },
+    })
+    .limit(pageSize)
+    .skip(pageSize * (page - 1))
+    .sort(`field ${sort}`);
+
+  return { count: count[0].count, payments: res, page };
+}
+
 export async function getPayments(query, skip = 0, limit = 10000) {
   await dbConnect();
   const sort = query.sort ? query.sort : '-time';
   const q = { ...query };
+  if (q.collective) {
+    const donations = await donationModel.find(
+      { collective: mongoose.Types.ObjectId(q.collective) },
+    );
+    q._id = { $in: donations.map((d) => d.payment) };
+    delete q.collective;
+  }
   delete q.sort;
   return Payment.find(q).select('user session amount donations fee status time sybilAttackScore stripeRisk')
     .populate({ path: 'session', select: 'name' })
@@ -272,4 +318,6 @@ export default class Payments {
     static getDonationsBySession = getDonationsBySession
 
     static getSessionTotals = getSessionTotals
+
+    static getPage = getPage
 }
