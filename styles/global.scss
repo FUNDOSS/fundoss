@@ -320,14 +320,8 @@ h1{margin:2rem 0}
     .info-span.card{margin: 0 0 20px 0;padding: 5px 10px }
 }
 
-.sort{
-    @extend .form-control;
-    text-transform: uppercase;
-    border: 1px solid rgba($blue,.5);
-    padding-top: 3px;
-    .btn.btn-link{text-transform: uppercase;text-decoration: none;}
-}
-
+.sort .nav-link.active{color: $primary; font-weight: bold;}
+.sort .nav-link{color: $secondary;}
 .sponsors{
     margin-top: 1rem;
     a{display: block;padding:10px 10px;margin-left: -10px;}
@@ -339,7 +333,6 @@ h1{margin:2rem 0}
     margin-bottom: -60px;
     padding: 40px 0;
 }
-
 
 .donation-card .matches .match, .donation-card .donation{
     font-size: 1.3rem;
