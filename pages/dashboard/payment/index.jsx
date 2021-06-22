@@ -82,7 +82,7 @@ const PaymentsPage = ({
 
 export async function getServerSideProps({ query, req, res }) {
   await middleware.run(req, res);
-  const pageSize = 10;
+  const pageSize = 100;
   const page = await Payments.getPage(query, pageSize);
   return {
     props: {
