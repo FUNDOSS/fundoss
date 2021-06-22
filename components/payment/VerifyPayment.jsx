@@ -44,7 +44,7 @@ const VerifyPayment = ({ payment }) => {
         <Modal.Body>
           <Dump data={intent} />
         </Modal.Body>
-        {payment.status !== 'succeeded' && intent.status === 'succeeded' 
+        {payment.status !== 'succeeded' && intent?.status === 'succeeded' 
           ? (
             <Modal.Footer>
               <Button 
