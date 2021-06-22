@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Container, ButtonGroup, Button, Pagination, 
+  Container, ButtonGroup, Button, Pagination, Nav, NavItem, 
 } from 'react-bootstrap';
 import Error from '../../../components/Error';
 import DashboardNav from '../../../components/dashboard/DashboardNav';
@@ -19,6 +19,10 @@ const PaymentsPage = ({
   if (user?.role !== 'admin') {
     return <Error statusCode={403} />;
   }
+  const sort = query.sort ? {
+    on: query.sort.indexOf('-') === 0 ? query.sort.substring(1) : query.sort, 
+    dir: query.sort.indexOf('-') === 0 ? -1 : 1, 
+  } : { on: 'time', dir: -1 };
 
   const getQueryString = (obj) => {
     const params = { ...query, ...obj };
@@ -33,34 +37,42 @@ const PaymentsPage = ({
       </Pagination.Item>,
     );
   }
-
+  const paging = () => (count > pageSize ? <Pagination>{items}</Pagination> : null);
+  const sortIcon = (key) => {
+    if (sort.on === key) {
+      return sort.dir === -1 ? '↓' : '↑';
+    }
+    return ' ';
+  }
   return (
     <Layout title="FundOSS | Dashboard" user={user} hidefooter={1}>
       <Container style={{ paddingTop: '40px' }}>
         <DashboardNav />
-        <h1>{count} Payments</h1>
-
+        <h1> Payments</h1>
 
         <div>
-          <ButtonGroup>
-            <Button 
-              href={`?${getQueryString({ sort: '-sybilAttackScore' })}`}
-            >{query.sort === '-sybilAttackScore' ? '↓' : ' '} Sybil
-            </Button>
-            <Button
-              href={`?${getQueryString({ sort: '-amount' })}`}
-            >{query.sort === '-amount' ? '↓' : ' '} Funding
-            </Button>
-            <Button
-              href={`?${getQueryString({ sort: '-time' })}`}
-            >{query.sort === '-time' ? '↓' : ' '} Time
-            </Button>
-          </ButtonGroup>
+          <Nav className="float-right sort" activeKey={sort.on}>
+            <Nav.Link  
+              eventKey="sybilAttackScore" 
+              href={`?${getQueryString({ page: 1, sort: sort.dir === -1 ? 'sybilAttackScore' : '-sybilAttackScore' })}`}
+            >{sortIcon('sybilAttackScore')} Sybil
+            </Nav.Link>
+            <Nav.Link
+              eventKey="amount" 
+              href={`?${getQueryString({ page: 1, sort: sort.dir === -1 ? 'amount' : '-amount' })}`}
+            >{sortIcon('amount')} Amount
+            </Nav.Link>
+            <Nav.Link
+              eventKey="time" 
+              href={`?${getQueryString({ page: 1, sort: sort.dir === -1 ? 'time' : '-time' })}`}
+            >{sortIcon('time')} Time
+            </Nav.Link>
+          </Nav>
           <hr />showing {payments.length} of {count} Payments <br />
           
-          {count > page * pageSize ? <Pagination>{items}</Pagination> : null}
+          {paging()}
           <PaymentsTable payments={payments} />
-          {count > page * pageSize ? <Pagination>{items}</Pagination> : null}
+          {paging()}
         </div>
 
       </Container>
@@ -70,14 +82,15 @@ const PaymentsPage = ({
 
 export async function getServerSideProps({ query, req, res }) {
   await middleware.run(req, res);
-  const page = await Payments.getPage(query, 200);
+  const pageSize = 10;
+  const page = await Payments.getPage(query, pageSize);
   return {
     props: {
       user: serializable(req.user), 
       payments: serializable(page.payments),
       count: page.count,
       page: page.page,
-      pageSize: 200,
+      pageSize,
       query, 
     }, 
   };

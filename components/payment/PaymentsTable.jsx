@@ -10,9 +10,9 @@ const PaymentsTable = ({ payments }) => (
       <tr key={payment._id}>
         <td>
           <Link href={`/dashboard/payment/${payment._id}`}>
-            <a><Image src={payment.user?.avatar} roundedCircle width={20} /> {moment(payment.time).format('lll')}</a>
+            <a><Image src={payment.user?.avatar} roundedCircle width={20} /> {moment(payment.time).format('DD/MM/YYYY LTS')}</a>
           </Link> 
-          &nbsp;{payment.user?.username}
+          &nbsp;{payment.user?.username || payment.user?.name}
           <Badge variant={payment.status === 'succeeded' ? 'success' : 'danger'}>{payment.status}</Badge>&nbsp;
           {formatAmountForDisplay(payment.amount)} <small>-{payment.fee} fee</small>
         </td>

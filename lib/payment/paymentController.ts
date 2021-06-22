@@ -88,6 +88,12 @@ export async function getPage(query, pageSize = 10) {
     q._id = { $in: donations.map((d) => d.payment) };
     delete q.collective;
   }
+  if (q.session) {
+    q.session = mongoose.Types.ObjectId(q.session);
+  }
+  if (q.user) {
+    q.user = mongoose.Types.ObjectId(q.user);
+  }
   delete q.sort;
   delete q.page;
   const count = await Payment.aggregate([
