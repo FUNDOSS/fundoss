@@ -51,7 +51,7 @@ const DashboardPage = ({
 
 export async function getServerSideProps({ req, res }) {
   await middleware.run(req, res);
-  const payments = await Payments.get({ status: 'succeeded' });
+  const payments = await Payments.get({ status: 'succeeded' }, 0, 20);
   const state = await ServerProps.getAppState(req.user, req.session.cart);
   
   return {
