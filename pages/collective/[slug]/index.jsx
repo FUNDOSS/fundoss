@@ -178,7 +178,7 @@ const collectivePage = ({
 
 export async function getServerSideProps({ query, req, res }) {
   await middleware.run(req, res);
-  const collective = await collectives.findBySlug(query.slug);
+  const collective = await collectives.findBySlug(query.slug.toLowerCase());
   if (collective) {
     const state = await ServerProps.getAppState(req.user, req.session.cart);
     const sessions = await FundingSessions.getCollectiveSessions(collective._id);
