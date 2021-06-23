@@ -25,7 +25,7 @@ const DashboardPage = ({
   const sessions = [];
   if (state.upcoming._id) sessions.push(state.upcoming);
   if (state.current) sessions.push(state.current);
-  if (finished) sessions.push(finished);
+  if (finished?._id !== state.current?._id) sessions.push(finished);
   return (
     <Layout title="FundOSS | Dashboard" state={state} hidefooter={1}>
       <Container style={{ paddingTop: '40px' }}>

@@ -2,7 +2,6 @@ import React from 'react';
 import { Table, Badge } from 'react-bootstrap';
 import Qf from '../../utils/qf';
 import { formatAmountForDisplay } from '../../utils/currency';
-import Dump from '../dashboard/Dump';
 
 const DisbursmentsTable = ({ donations, session }) => {
   const numDonations = donations.length;
@@ -59,6 +58,7 @@ const DisbursmentsTable = ({ donations, session }) => {
     fee: totals.fee + col.fee,
   }), { donation: 0, matched: 0, fee: 0 });
 
+
   return (
     <div>
       <p className="text-center">
@@ -75,9 +75,9 @@ const DisbursmentsTable = ({ donations, session }) => {
         {disbursments.map((col) => (
           <tr key={col.slug}>
             <td>{col.slug}</td>
-            <td>{formatAmountForDisplay(col.donation, false)} {session.disbursments[col.slug].donation}</td>
-            <td>{formatAmountForDisplay(col.matched, false)} {session.disbursments[col.slug].matched}</td>
-            <td>{formatAmountForDisplay(col.fee, false)} {session.disbursments[col.slug].fee}</td>
+            <td>{formatAmountForDisplay(col.donation, false)}</td>
+            <td>{formatAmountForDisplay(col.matched, false)}</td>
+            <td>{formatAmountForDisplay(col.fee, false)}</td>
           </tr>
         ))}
         <tr className="lead text-fat">

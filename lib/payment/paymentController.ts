@@ -6,7 +6,6 @@ import FundingSessions from '../fundingSession/fundingSessionController';
 import Collectives from '../collectives/CollectivesController';
 import Qf from '../../utils/qf';
 import calculateSybilAttackScore from './sybilAttackScore';
-import donationModel from './donationModel';
 
 export async function insertPayment(payment) {
   await dbConnect();
@@ -179,7 +178,14 @@ export async function getSessionDisbursement(sessionId) {
   const matches = donations.map((d) => ({
     collective: d._id.collective,
     amount: d.amount,
-    match: Qf.calculate(d.amount, averageDonation, averageMatch),
+    match: Qf.calculate(
+      d.amount,
+      averageDonation,
+      averageMatch,
+      session.matchingCurve.exp,
+      1,
+      session.matchingCurve.exp,
+      ),
     fee: d.fee,
   }));
   const totalMatches = matches.reduce((total, m) => total + m.match, 0);
