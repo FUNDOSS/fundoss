@@ -136,7 +136,7 @@ export async function getCurrentSession():Promise<any> {
 export async function getFinishedSession():Promise<any> {
   await dbConnect();
   const session = await FundingSession.findOne({
-    end: { $gte: moment().subtract(5, 'days').toDate() },
+    end: { $gte: moment().subtract(30, 'days').toDate() },
     published: true,
   }).populate('collectives');
   if (session) {
