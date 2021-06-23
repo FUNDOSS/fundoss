@@ -9,6 +9,7 @@ export interface IFundingSession extends Document {
   end: Date;
   name: string;
   description: string;
+  thanks: string;
   tagline?: string;
   matchedFunds: number;
   tags: Array<string>;
@@ -28,6 +29,7 @@ export interface IFundingSessionInput {
   end?: Date;
   name?: string;
   description?: string;
+  thanks?: string;
   tagline?: string;
   matchedFunds?: number;
   collectives?: any;
@@ -68,6 +70,9 @@ const FundingSessionSchema = new Schema({
     type: Schema.Types.Mixed,
   },
   description: {
+    type: String,
+  },
+  thanks: {
     type: String,
   },
   sponsors: {

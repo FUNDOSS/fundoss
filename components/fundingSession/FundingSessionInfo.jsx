@@ -36,7 +36,7 @@ const FundingSessionInfo = ({ session, predicted, size = 'md' }) => {
           </span>
         ) : null}
       </p>
-      { size === 'md' ? <h1 className="tagline no-margin">{session.tagline}</h1> : null }
+      { size === 'md' && !ended ? <h1 className="tagline no-margin">{session.tagline}</h1> : null }
       { size === 'sm' ? <p className="lead no-margin text-fat">{session.tagline}</p> : null }
       {started && ended && totals ? (
         <>
