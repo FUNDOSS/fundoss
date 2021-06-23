@@ -81,7 +81,7 @@ export async function getPage(query, pageSize = 10) {
   const q = { ...query };
   const page = query.page ? Number(query.page) : 1;
   if (q.collective) {
-    const donations = await donationModel.find(
+    const donations = await Donation.find(
       { collective: mongoose.Types.ObjectId(q.collective) },
     );
     q._id = { $in: donations.map((d) => d.payment) };
@@ -124,7 +124,7 @@ export async function getPayments(query, skip = 0, limit = 10000) {
   const sort = query.sort ? query.sort : '-time';
   const q = { ...query };
   if (q.collective) {
-    const donations = await donationModel.find(
+    const donations = await Donation.find(
       { collective: mongoose.Types.ObjectId(q.collective) },
     );
     q._id = { $in: donations.map((d) => d.payment) };
