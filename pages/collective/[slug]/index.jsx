@@ -222,13 +222,13 @@ export async function getServerSideProps({ query, req, res }) {
     }
     if (!state.current) { 
       finishedSession = await ServerProps.getFinished();
-      collective.totals = collective.sessionTotals.filter((t) => t.session == finishedSession._id)[0];
-
+      if (finishedSession) {
+        collective.totals = collective.sessionTotals.filter((t) => t.session == finishedSession._id)[0];
+      }
     } 
     const hasNominated = req.user?._id 
       ? (await collectives.hasNominated(collective._id, state.upcoming._id, req.user?._id)) > 0
       : false;
-    console.log(sessions, collective.sessionTotals);
     return {
       props: {
         state,

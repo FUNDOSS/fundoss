@@ -15,6 +15,7 @@ export interface IFundingSession extends Document {
   collectives: Array<ICollective>;
   predictedAverage:number;
   allowNominations:boolean;
+  disbursments: any,
   published:boolean;
   predictedDonations:number;
   predicted:any;
@@ -31,6 +32,7 @@ export interface IFundingSessionInput {
   matchedFunds?: number;
   collectives?: any;
   allowNominations?:boolean;
+  disbursments?: any,
   published?:boolean;
   protytype?: any;
   tags?: Array<string>;

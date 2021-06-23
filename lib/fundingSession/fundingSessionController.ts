@@ -133,19 +133,19 @@ export async function getCurrentSession():Promise<any> {
   return false;
 }
 
-export async function getFinishedSession():Promise<any> {
+export async function getFinishedSession(computeDisbursments = false):Promise<any> {
   await dbConnect();
   const session = await FundingSession.findOne({
     end: { $gte: moment().subtract(30, 'days').toDate() },
     published: true,
   }).populate('collectives');
   if (session) {
-    if (!session.disbursments) {
+    if (!session.disbursments || computeDisbursments) {
       const disbursments = (await Payments.getSessionDisbursement(session._id))
         .reduce((obj, col) => (
           { ...obj, ...{ [col.slug]: col } }
         ), {});
-      FundingSession.updateOne({ _id: session._id, disbursments });
+      await FundingSession.updateOne({ _id: session._id, disbursments });
       session.disbursments = disbursments;
     }
     const sessionData = await setCollectiveTotals(session);

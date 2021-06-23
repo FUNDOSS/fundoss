@@ -2,6 +2,7 @@ import React from 'react';
 import { Table, Badge } from 'react-bootstrap';
 import Qf from '../../utils/qf';
 import { formatAmountForDisplay } from '../../utils/currency';
+import Dump from '../dashboard/Dump';
 
 const DisbursmentsTable = ({ donations, session }) => {
   const numDonations = donations.length;
@@ -27,6 +28,7 @@ const DisbursmentsTable = ({ donations, session }) => {
     (cols, col) => ({ ...cols, ...{ [col._id]: { donation: 0, match: 0, fee: 0 } } }),
     {},
   );
+
   const collectiveTotals = matches.reduce((totals, m) => {
     const tot = totals[m.collective] ? totals[m.collective] : { donation: 0, match: 0, fee: 0 };
     const collective = {
@@ -36,6 +38,7 @@ const DisbursmentsTable = ({ donations, session }) => {
     };
     return { ...totals, ...{ [m.collective]: collective } };
   }, collectivesTotalsInit);
+
   const disbursments = session.collectives.map((c) => {
     const totals = collectiveTotals[c._id];
     collectiveTotals[c._id].found = true;
@@ -72,9 +75,9 @@ const DisbursmentsTable = ({ donations, session }) => {
         {disbursments.map((col) => (
           <tr key={col.slug}>
             <td>{col.slug}</td>
-            <td>{formatAmountForDisplay(col.donation, false)}</td>
-            <td>{formatAmountForDisplay(col.matched, false)}</td>
-            <td>{formatAmountForDisplay(col.fee, false)}</td>
+            <td>{formatAmountForDisplay(col.donation, false)} {session.disbursments[col.slug].donation}</td>
+            <td>{formatAmountForDisplay(col.matched, false)} {session.disbursments[col.slug].matched}</td>
+            <td>{formatAmountForDisplay(col.fee, false)} {session.disbursments[col.slug].fee}</td>
           </tr>
         ))}
         <tr className="lead text-fat">
@@ -84,7 +87,6 @@ const DisbursmentsTable = ({ donations, session }) => {
           <td>{formatAmountForDisplay(totals.fee, false)}</td>
         </tr>
       </Table>
-      
       {Object.keys(collectiveTotals).map(
         (key) => (!collectiveTotals[key].found ? (
           <b><a href={`/dashboard/payment?collective=${key}`}>{key}</a> {formatAmountForDisplay(collectiveTotals[key].match)}<br /></b>
