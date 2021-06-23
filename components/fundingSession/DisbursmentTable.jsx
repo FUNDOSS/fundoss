@@ -87,7 +87,7 @@ const DisbursmentsTable = ({ donations, session }) => {
       
       {Object.keys(collectiveTotals).map(
         (key) => (!collectiveTotals[key].found ? (
-          <b>{key} {formatAmountForDisplay(collectiveTotals[key].match)}<br /></b>
+          <b><a href={`/dashboard/payment?collective=${key}`}>{key}</a> {formatAmountForDisplay(collectiveTotals[key].match)}<br /></b>
         ) : null), 
       )}
     </div>
