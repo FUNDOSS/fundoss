@@ -17,7 +17,7 @@ const DisbursmentsTable = ({ donations, session }) => {
       averageMatch, 
       session.matchingCurve.exp, 
       1,
-      session.matchingCurve.exp,
+      session.matchingCurve.symetric,
     ),
     fee: d.fee,
   }));
@@ -27,6 +27,7 @@ const DisbursmentsTable = ({ donations, session }) => {
     (cols, col) => ({ ...cols, ...{ [col._id]: { donation: 0, match: 0, fee: 0 } } }),
     {},
   );
+
   const collectiveTotals = matches.reduce((totals, m) => {
     const tot = totals[m.collective] ? totals[m.collective] : { donation: 0, match: 0, fee: 0 };
     const collective = {
@@ -36,6 +37,7 @@ const DisbursmentsTable = ({ donations, session }) => {
     };
     return { ...totals, ...{ [m.collective]: collective } };
   }, collectivesTotalsInit);
+
   const disbursments = session.collectives.map((c) => {
     const totals = collectiveTotals[c._id];
     collectiveTotals[c._id].found = true;
@@ -55,6 +57,7 @@ const DisbursmentsTable = ({ donations, session }) => {
     matched: totals.matched + col.matched,
     fee: totals.fee + col.fee,
   }), { donation: 0, matched: 0, fee: 0 });
+
 
   return (
     <div>
@@ -84,10 +87,9 @@ const DisbursmentsTable = ({ donations, session }) => {
           <td>{formatAmountForDisplay(totals.fee, false)}</td>
         </tr>
       </Table>
-      
       {Object.keys(collectiveTotals).map(
         (key) => (!collectiveTotals[key].found ? (
-          <b>{key} {formatAmountForDisplay(collectiveTotals[key].match)}<br /></b>
+          <b><a href={`/dashboard/payment?collective=${key}`}>{key}</a> {formatAmountForDisplay(collectiveTotals[key].match)}<br /></b>
         ) : null), 
       )}
     </div>

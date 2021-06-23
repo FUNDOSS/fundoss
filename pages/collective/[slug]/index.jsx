@@ -1,8 +1,9 @@
 /* eslint-disable react/no-danger */
 import React from 'react';
 import Pluralize from 'pluralize';
+import moment from 'moment';
 import {
-  Button, Image, Col, Row, Container, Card, 
+  Button, Image, Col, Row, Container, Card, Badge,
 } from 'react-bootstrap';
 import Link from 'next/link';
 import Error from '../../../components/Error';
@@ -20,12 +21,14 @@ import NominateBtn from '../../../components/collective/NominateBtn';
 import FundingSessionInfo from '../../../components/fundingSession/FundingSessionInfo';
 import Sponsors from '../../../components/fundingSession/Sponsors';
 import Subscriptionform from '../../../components/SubscriptionForm';
+import Currency from '../../../components/Currency';
 
 const collectivePage = ({
   collective, state, 
   similar, sessions, 
   predicted, hasNominated,
-  hostingUrl,
+  hostingUrl, finishedSession,
+  
 }) => {
   if (!collective) {
     return <Error statusCode={404} />;
@@ -41,6 +44,7 @@ const collectivePage = ({
     members, website, githubHandle, twitterHandle, shareImage,
   } = collective;
 
+  const disbursments = finishedSession ? finishedSession.disbursments[collective.slug] : null;
   return (
     <div className="bg1">
       <Layout
@@ -104,7 +108,36 @@ const collectivePage = ({
                   predicted={predicted}
                 />
               ) : null}
-              {!isInCurrentSession && sessions.length ? (
+              {finishedSession && !isInCurrentSession ? (
+                <Card>
+                  <Card.Header>
+                    <p className="lead name text-center">
+                        {finishedSession.name}&nbsp;ended <Badge variant="danger"> {moment(finishedSession.end).fromNow()}</Badge>
+                      </p>
+                  </Card.Header>
+                  <Card.Body>
+                    <div className="text-center">
+
+                      <h3>Thanks to you, we raised</h3>
+                      <div>🎉
+                        <span className="match display-4">
+                          <Currency value={disbursments.total} floor />
+                        </span>🎉
+                      </div>
+                      <b><Currency value={disbursments.donation} floor /></b> +&nbsp;
+                      <b className="text-success"><Currency value={disbursments.matched} floor /></b> match from&nbsp;
+                      <b>{collective.totals.donations.length}</b> {Pluralize('donor', collective.totals.donations.length)}
+
+                    </div>
+
+                  </Card.Body>
+                  <Card.Footer>
+                    <p className="text-center">Sign up to be notified for our next funding round.</p>
+                    <Subscriptionform user={state.user} />
+                  </Card.Footer>
+                </Card>
+              ) : null }
+              {!isInCurrentSession && sessions.length && !finishedSession ? (
                 <Card className="invert">
                   <Card.Header className="text-center content">
                     <FundingSessionInfo session={state.upcoming} size="sm" />
@@ -179,6 +212,7 @@ const collectivePage = ({
 export async function getServerSideProps({ query, req, res }) {
   await middleware.run(req, res);
   const collective = await collectives.findBySlug(query.slug.toLowerCase());
+  let finishedSession
   if (collective) {
     const state = await ServerProps.getAppState(req.user, req.session.cart);
     const sessions = await FundingSessions.getCollectiveSessions(collective._id);
@@ -186,10 +220,15 @@ export async function getServerSideProps({ query, req, res }) {
     if (state.current) {
       collective.totals = collective.sessionTotals.filter((t) => t.session == state.current._id)[0];
     }
+    if (!state.current) { 
+      finishedSession = await ServerProps.getFinished();
+      if (finishedSession) {
+        collective.totals = collective.sessionTotals.filter((t) => t.session == finishedSession._id)[0];
+      }
+    } 
     const hasNominated = req.user?._id 
       ? (await collectives.hasNominated(collective._id, state.upcoming._id, req.user?._id)) > 0
       : false;
-  
     return {
       props: {
         state,
@@ -200,6 +239,7 @@ export async function getServerSideProps({ query, req, res }) {
         ) : false,
         sessions: serializable(sessions),
         hostingUrl: process.env.HOSTING_URL,
+        finishedSession,
       },
     };
   }

@@ -6,7 +6,6 @@ import FundingSessions from '../fundingSession/fundingSessionController';
 import Collectives from '../collectives/CollectivesController';
 import Qf from '../../utils/qf';
 import calculateSybilAttackScore from './sybilAttackScore';
-import donationModel from './donationModel';
 
 export async function insertPayment(payment) {
   await dbConnect();
@@ -82,7 +81,7 @@ export async function getPage(query, pageSize = 10) {
   const q = { ...query };
   const page = query.page ? Number(query.page) : 1;
   if (q.collective) {
-    const donations = await donationModel.find(
+    const donations = await Donation.find(
       { collective: mongoose.Types.ObjectId(q.collective) },
     );
     q._id = { $in: donations.map((d) => d.payment) };
@@ -125,7 +124,7 @@ export async function getPayments(query, skip = 0, limit = 10000) {
   const sort = query.sort ? query.sort : '-time';
   const q = { ...query };
   if (q.collective) {
-    const donations = await donationModel.find(
+    const donations = await Donation.find(
       { collective: mongoose.Types.ObjectId(q.collective) },
     );
     q._id = { $in: donations.map((d) => d.payment) };
@@ -179,7 +178,14 @@ export async function getSessionDisbursement(sessionId) {
   const matches = donations.map((d) => ({
     collective: d._id.collective,
     amount: d.amount,
-    match: Qf.calculate(d.amount, averageDonation, averageMatch),
+    match: Qf.calculate(
+      d.amount,
+      averageDonation,
+      averageMatch,
+      session.matchingCurve.exp,
+      1,
+      session.matchingCurve.symetric,
+    ),
     fee: d.fee,
   }));
   const totalMatches = matches.reduce((total, m) => total + m.match, 0);

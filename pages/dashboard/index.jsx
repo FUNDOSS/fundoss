@@ -14,7 +14,7 @@ import serializable from '../../lib/serializable';
 import ServerProps from '../../lib/serverProps';
 
 const DashboardPage = ({
-  state, payments, 
+  state, payments, finished,
 }) => {
   if (!state.user._id) {
     return <Error statusCode={401} />;
@@ -25,6 +25,7 @@ const DashboardPage = ({
   const sessions = [];
   if (state.upcoming._id) sessions.push(state.upcoming);
   if (state.current) sessions.push(state.current);
+  if (finished?._id !== state.current?._id) sessions.push(finished);
   return (
     <Layout title="FundOSS | Dashboard" state={state} hidefooter={1}>
       <Container style={{ paddingTop: '40px' }}>
@@ -53,11 +54,12 @@ export async function getServerSideProps({ req, res }) {
   await middleware.run(req, res);
   const payments = await Payments.get({ status: 'succeeded' }, 0, 20);
   const state = await ServerProps.getAppState(req.user, req.session.cart);
-  
+  const finished = await ServerProps.getFinished();
   return {
     props: {
       state,
       payments: serializable(payments),
+      finished,
     },
   };
 }
