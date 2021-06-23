@@ -17,7 +17,7 @@ const DisbursmentsTable = ({ donations, session }) => {
       averageMatch, 
       session.matchingCurve.exp, 
       1,
-      session.matchingCurve.exp,
+      session.matchingCurve.symetric,
     ),
     fee: d.fee,
   }));

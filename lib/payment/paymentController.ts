@@ -184,8 +184,8 @@ export async function getSessionDisbursement(sessionId) {
       averageMatch,
       session.matchingCurve.exp,
       1,
-      session.matchingCurve.exp,
-      ),
+      session.matchingCurve.symetric,
+    ),
     fee: d.fee,
   }));
   const totalMatches = matches.reduce((total, m) => total + m.match, 0);
