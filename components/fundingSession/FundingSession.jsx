@@ -22,7 +22,7 @@ const FundingSession = ({
   session, user, predicted, state, nominations = { user: [] }, featured,
 }) => {
   const {
-    name, description, collectives, start, end, sponsors, 
+    name, description, collectives, start, end, sponsors, thanks,
   } = session;
 
   const [collectivesList, setCollectivesList] = useState(
@@ -225,7 +225,7 @@ const FundingSession = ({
                   </div>
                 ) : (
                   <>
-                    <div className="session-description" dangerouslySetInnerHTML={{ __html: description }} />
+                    <div className="session-description" dangerouslySetInnerHTML={{ __html: ended ? thanks : description }} />
                     <p>
                       <Link href="/democratic-funding">Learn More about Democratic Funding</Link><br className="d-block d-sm-none" /> or share on   
                       <span>

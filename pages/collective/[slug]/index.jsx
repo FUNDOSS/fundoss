@@ -110,23 +110,34 @@ const collectivePage = ({
               ) : null}
               {finishedSession && !isInCurrentSession ? (
                 <Card>
-                  <Card.Header>
+                  <Card.Header className="text-center">
                     <p className="lead name text-center">
-                        {finishedSession.name}&nbsp;ended <Badge variant="danger"> {moment(finishedSession.end).fromNow()}</Badge>
-                      </p>
+                      {finishedSession.name}&nbsp;ended <Badge variant="danger"> {moment(finishedSession.end).fromNow()}</Badge>
+
+                    </p>
+                    <p className="name text-center">
+                      <Link href="/">
+                        <Button size="sm" variant="outline-primary">Find out more</Button>
+                      </Link>
+                    </p>
+                    <p className="name text-center">{finishedSession.thanks}</p>
                   </Card.Header>
                   <Card.Body>
                     <div className="text-center">
 
-                      <h3>Thanks to you, we raised</h3>
-                      <div>🎉
-                        <span className="match display-4">
-                          <Currency value={disbursments.total} floor />
-                        </span>🎉
-                      </div>
-                      <b><Currency value={disbursments.donation} floor /></b> +&nbsp;
-                      <b className="text-success"><Currency value={disbursments.matched} floor /></b> match from&nbsp;
-                      <b>{collective.totals.donations.length}</b> {Pluralize('donor', collective.totals.donations.length)}
+                      {collective.totals && disbursments.total ? (
+                        <div>
+                          <h3>Thanks to you, {name} raised</h3>
+                          <div>🎉
+                            <span className="match display-3">
+                              <Currency value={disbursments.total} floor />
+                            </span>🎉
+                          </div>
+                          <b><Currency value={disbursments.donation} floor /></b> +&nbsp;
+                          <b className="text-success"><Currency value={disbursments.matched} floor /></b> match from&nbsp;
+                          <b>{collective.totals?.donations.length}</b> {Pluralize('donor', collective.totals?.donations.length)}
+                        </div>
+                      ) : null }
 
                     </div>
 
@@ -212,7 +223,7 @@ const collectivePage = ({
 export async function getServerSideProps({ query, req, res }) {
   await middleware.run(req, res);
   const collective = await collectives.findBySlug(query.slug.toLowerCase());
-  let finishedSession
+  let finishedSession;
   if (collective) {
     const state = await ServerProps.getAppState(req.user, req.session.cart);
     const sessions = await FundingSessions.getCollectiveSessions(collective._id);
