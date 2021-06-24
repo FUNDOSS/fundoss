@@ -1,7 +1,5 @@
 import React from 'react';
-import { Table, Badge } from 'react-bootstrap';
-import Qf from '../../utils/qf';
-import { formatAmountForDisplay } from '../../utils/currency';
+import { Table } from 'react-bootstrap';
 
 const DisbursmentsTable = ({ session }) => {
   const totals = Object.keys(session.disbursments).reduce(
@@ -10,8 +8,9 @@ const DisbursmentsTable = ({ session }) => {
       matched: t.matched + session.disbursments[slug].matched,
       fee: t.fee + session.disbursments[slug].fee,
     }), 
-    {donation:0, matched:0, fee:0}
+    { donation: 0, matched: 0, fee: 0 },
   );
+  const numberFormat = new Intl.NumberFormat(['en-US']);
   return (
     <div>
       <Table size="sm">
@@ -19,16 +18,16 @@ const DisbursmentsTable = ({ session }) => {
         {Object.keys(session.disbursments).map((slug) => (
           <tr key={slug}>
             <td>{slug}</td>
-            <td>{formatAmountForDisplay(session.disbursments[slug].donation, false)}</td>
-            <td>{formatAmountForDisplay(session.disbursments[slug].matched, false)}</td>
-            <td>{formatAmountForDisplay(session.disbursments[slug].fee, false)}</td>
+            <td>{numberFormat.format(session.disbursments[slug].donation)}</td>
+            <td>{numberFormat.format(session.disbursments[slug].matched)}</td>
+            <td>{numberFormat.format(session.disbursments[slug].fee)}</td>
           </tr>
         ))}
         <tr className="lead text-fat">
           <td />
-          <td>{formatAmountForDisplay(totals.donation, false)}</td>
-          <td>{formatAmountForDisplay(totals.matched, false)}</td>
-          <td>{formatAmountForDisplay(totals.fee, false)}</td>
+          <td>{numberFormat.format(totals.donation)}</td>
+          <td>{numberFormat.format(totals.matched)}</td>
+          <td>{numberFormat.format(totals.fee)}</td>
         </tr>
       </Table>
     </div>

@@ -52,7 +52,7 @@ export async function getServerSideProps({ req, res, query }) {
   await middleware.run(req, res);
   const session = await FundingSessions.getBySlug(query.slug);
   const state = await ServerProps.getAppState(req.user, req.session.cart);
-  const disbursments = await FundingSessions.computeDisbursments(session);
+  const disbursments = await FundingSessions.computeDisbursments(session, true);
   return {
     props: { 
       state, 

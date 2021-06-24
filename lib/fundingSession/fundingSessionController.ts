@@ -135,11 +135,13 @@ export async function getCurrentSession():Promise<any> {
 
 export async function computeDisbursments(session):Promise<any> {
   await dbConnect();
-  const disbursments = (await Payments.getSessionDisbursement(session._id))
+  const data = (await Payments.getSessionDisbursement(session._id))
+  const disbursments = data.disbursments
     .reduce((obj, col) => (
       { ...obj, ...{ [col.slug]: col } }
     ), {});
-  await FundingSession.updateOne({ _id: session._id, disbursments });
+  delete data.disbursments;
+  await FundingSession.updateOne({ _id: session._id, disbursments, finalStats: data });
   return disbursments;
 }
 

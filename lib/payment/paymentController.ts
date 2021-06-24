@@ -217,7 +217,9 @@ export async function getSessionDisbursement(sessionId) {
     };
   });
   disbursments.sort((a, b) => (b.donation + b.matched) - (a.donation + a.matched));
-  return disbursments;
+  return {
+    disbursments, totalDonations, averageDonation, averageMatch, matchRatio,
+  };
 }
 
 export async function getPaymentsByUser(userId:string) {
