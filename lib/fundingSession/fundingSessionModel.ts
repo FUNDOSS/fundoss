@@ -101,6 +101,9 @@ const FundingSessionSchema = new Schema({
   totals: {
     type: Schema.Types.Mixed,
   },
+  finalStats: {
+    type: Schema.Types.Mixed,
+  },
 });
 
 FundingSessionSchema.plugin(mongooseSlugPlugin, { tmpl: '<%=name%>' });

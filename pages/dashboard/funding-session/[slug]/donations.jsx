@@ -28,10 +28,10 @@ const DonationsBySessionPage = ({
 
   const cmatch = (d) => Qf.calculate(
     d,
-    state.current.predicted.average, 
-    state.current.predicted.match,
+    session.predicted.average, 
+    session.predicted.match,
     session.matchingCurve.exp,
-    state.current.predicted.fudge,
+    session.predicted.fudge,
     session.matchingCurve.symetric,
   );
 
@@ -99,7 +99,7 @@ const DonationsBySessionPage = ({
         <DashboardNav />
         <div className="text-center">
           <h1>Donations Summary</h1>
-          <FundingSessionInfo session={session} predicted={state.current.predicted} />
+          <FundingSessionInfo session={session} predicted={state.current?.predicted || session.predicted} />
         </div>
         <AdminLinks session={session} all />
         <hr />
@@ -134,9 +134,9 @@ const DonationsBySessionPage = ({
               {userTable.map((u, i) => (i <= 100 ? (
                 <tr key={u.username}>
                   <td><a href={`/dashboard/payment/?user=${u._id}`}>{u.username}</a></td>
-                  <td className="text-fat">{formatAmountForDisplay(u.total)}</td>
+                  <td className="text-fat">{formatAmountForDisplay(u.total, false)}</td>
                   <td className="text-fat text-success">
-                    {formatAmountForDisplay(u.match)}
+                    {formatAmountForDisplay(u.match, false)}
                   </td>
                 </tr>
               ) : null))}
@@ -149,9 +149,9 @@ const DonationsBySessionPage = ({
               {collectiveTable.map((c) => (
                 <tr key={c.slug}>
                   <td>{c.slug}</td>
-                  <td className="text-fat">{formatAmountForDisplay(c.total)}</td>
+                  <td className="text-fat">{formatAmountForDisplay(c.total, false)}</td>
                   <td className="text-fat text-success">
-                    {formatAmountForDisplay(c.match)}
+                    {formatAmountForDisplay(c.match, false)}
                   </td>
                 </tr>
               ))}
@@ -169,11 +169,17 @@ export async function getServerSideProps({ req, res, query }) {
   const state = await ServerProps.getAppState(req.user, req.session.cart);
   const totals = await Payments.getSessionTotals(session._id);
   const payments = await Payments.get({ session: session._id, status: 'succeeded' });
+  const predicted = state.current ? state.current.predicted : {
+    average: session.finalStats.averageDonation, 
+    match: session.finalStats.averageMatch, 
+    fudge: 1/session.finalStats.matchRatio,
+  }
+    ;
   return {
     props: { 
       state, 
       totals,
-      session: { ...serializable(session), ...{ predicted: state.current.predicted } }, 
+      session: { ...serializable(session), ...{ predicted } }, 
       payments: serializable(payments), 
     }, 
   };

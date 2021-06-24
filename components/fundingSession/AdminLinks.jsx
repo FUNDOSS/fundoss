@@ -27,7 +27,7 @@ const AdminLinks = ({
             <Button variant="outline-secondary">view</Button>
           </Link>
         ) : null }
-      {(donations || all) && moment(start) < moment() && moment(end) > moment() ? (
+      {(donations || all) && moment(start) < moment() ? (
         <>
           <Link href={`/dashboard/funding-session/${slug}/donations`}>
             <Button variant="outline-secondary">donations</Button>

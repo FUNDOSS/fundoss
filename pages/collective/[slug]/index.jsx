@@ -123,12 +123,14 @@ const collectivePage = ({
                           <h3>Thanks to you, {name} raised</h3>
                           <div>🎉
                             <span className="match display-3">
-                              <Currency value={disbursments.total} floor />
-                            </span>🎉
+                              <Currency value={ disbursments.donation + disbursments.matched } />
+                            </span>*🎉
+                            
                           </div>
-                          <b><Currency value={disbursments.donation} floor /></b> +&nbsp;
-                          <b className="text-success"><Currency value={disbursments.matched} floor /></b> match from&nbsp;
-                          <b>{collective.totals?.donations.length}</b> {Pluralize('donor', collective.totals?.donations.length)}
+                          <b><Currency value={disbursments.donation}  /></b>&nbsp;
+                           from <b>{collective.totals?.donations.length}</b> {Pluralize('donor', collective.totals?.donations.length)} +&nbsp; 
+                          <b className="text-success"><Currency value={disbursments.matched} /></b> match 
+                          <br />*<small>-Stripe fees</small>
                         </div>
                       ) : null }
 
