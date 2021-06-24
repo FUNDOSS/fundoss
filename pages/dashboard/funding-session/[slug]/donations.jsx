@@ -14,7 +14,6 @@ import Payments from '../../../../lib/payment/paymentController';
 import FundingSessionInfo from '../../../../components/fundingSession/FundingSessionInfo';
 import AdminLinks from '../../../../components/fundingSession/AdminLinks';
 import Qf from '../../../../utils/qf';
-import PaymentsTable from '../../../../components/payment/PaymentsTable';
 import { formatAmountForDisplay } from '../../../../utils/currency';
 
 const DonationsBySessionPage = ({
@@ -39,7 +38,10 @@ const DonationsBySessionPage = ({
   const userTotals = payments.reduce((totals, p) => p.donations.reduce(
     (totals, d) => {
       const userKey = p.user?.username || p.user?.name || 'none';
-      const user = totals[userKey] || { donations: {}, total: 0, donationCount: 0, match: 0 };
+      const user = totals[userKey] 
+      || {
+        donations: {}, total: 0, donationCount: 0, match: 0, _id: d.user, 
+      };
       user.donations[d.collective.slug] = (user.donations[d.collective.slug] || 0) + d.amount;
       user.donationCount += 1;
       user.total += d.amount;
@@ -129,9 +131,9 @@ const DonationsBySessionPage = ({
             <h3>Donations by user</h3>
             <Table size="sm">
               <tr><th>user</th><th>donation</th><th>est match</th></tr>
-              {userTable.map((u, i) => (i <= 50 ? (
+              {userTable.map((u, i) => (i <= 100 ? (
                 <tr key={u.username}>
-                  <td>{u.username}</td>
+                  <td><a href={`/dashboard/payment/?user=${u._id}`}>{u.username}</a></td>
                   <td className="text-fat">{formatAmountForDisplay(u.total)}</td>
                   <td className="text-fat text-success">
                     {formatAmountForDisplay(u.match)}
