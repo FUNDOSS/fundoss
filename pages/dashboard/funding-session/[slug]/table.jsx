@@ -52,7 +52,6 @@ export async function getServerSideProps({ req, res, query }) {
   await middleware.run(req, res);
   const session = await FundingSessions.getBySlug(query.slug);
   const state = await ServerProps.getAppState(req.user, req.session.cart);
-  const donations = await Payments.getDonationsBySession(session._id);
   const disbursments = await FundingSessions.computeDisbursments(session);
   return {
     props: { 
@@ -61,7 +60,6 @@ export async function getServerSideProps({ req, res, query }) {
         ...serializable(session), 
         ...{ predicted: getPredictedAverages(session), disbursments }, 
       }, 
-      donations: serializable(donations), 
     }, 
   };
 }
