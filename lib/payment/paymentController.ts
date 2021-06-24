@@ -216,7 +216,7 @@ export async function getSessionDisbursement(sessionId) {
       total: Math.round((donation + matched - fee) * 100) / 100,
     };
   });
-
+  disbursments.sort((a, b) => (b.donation + b.matched) - (a.donation + a.matched));
   return disbursments;
 }
 

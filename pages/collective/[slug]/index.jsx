@@ -115,16 +115,9 @@ const collectivePage = ({
                       {finishedSession.name}&nbsp;ended <Badge variant="danger"> {moment(finishedSession.end).fromNow()}</Badge>
 
                     </p>
-                    <p className="name text-center">
-                      <Link href="/">
-                        <Button size="sm" variant="outline-primary">Find out more</Button>
-                      </Link>
-                    </p>
-                    <p className="name text-center">{finishedSession.thanks}</p>
                   </Card.Header>
                   <Card.Body>
                     <div className="text-center">
-
                       {collective.totals && disbursments.total ? (
                         <div>
                           <h3>Thanks to you, {name} raised</h3>

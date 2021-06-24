@@ -39,10 +39,11 @@ const DonationsBySessionPage = ({
   const userTotals = payments.reduce((totals, p) => p.donations.reduce(
     (totals, d) => {
       const userKey = p.user?.username || p.user?.name || 'none';
-      const user = totals[userKey] || { donations: {}, total: 0, donationCount: 0 };
+      const user = totals[userKey] || { donations: {}, total: 0, donationCount: 0, match: 0 };
       user.donations[d.collective.slug] = (user.donations[d.collective.slug] || 0) + d.amount;
       user.donationCount += 1;
       user.total += d.amount;
+      user.match += cmatch(d.amount);
       return { ...totals, ...{ [userKey]: user } };
     },
     totals,
@@ -63,6 +64,7 @@ const DonationsBySessionPage = ({
         ...{
           [slug]: {
             total: (totals[slug] ? totals[slug].total : 0) + userTotals[username].donations[slug],
+            match: (totals[slug] ? totals[slug].match : 0) + cmatch(userTotals[username].donations[slug]),
             donations: [
               ...(totals[slug] ? totals[slug].donations : []), 
               ...[userTotals[username].donations[slug]],
@@ -76,11 +78,11 @@ const DonationsBySessionPage = ({
 
   const collectiveTable = Object.keys(collectiveTotals).map(
     (slug) => ({ ...collectiveTotals[slug], ...{ slug } }),
-  ).sort((a, b) => b.total - a.total);
+  ).sort((a, b) => (b.total + b.match) - (a.total + a.match));
 
   const userTable = Object.keys(userTotals).map(
     (username) => ({ ...userTotals[username], ...{ username } }),
-  ).sort((a, b) => b.total - a.total);
+  ).sort((a, b) => (b.total + b.match) - (a.total + a.match));
   const stats = {
     totalMatch: totals.donations.reduce((m, d) => m + cmatch(d), 0),
     payments: payments.length,
@@ -127,18 +129,15 @@ const DonationsBySessionPage = ({
             <h3>Donations by user</h3>
             <Table size="sm">
               <tr><th>user</th><th>donation</th><th>est match</th></tr>
-              {userTable.map((u) => (
+              {userTable.map((u, i) => (i <= 50 ? (
                 <tr key={u.username}>
                   <td>{u.username}</td>
                   <td className="text-fat">{formatAmountForDisplay(u.total)}</td>
                   <td className="text-fat text-success">
-                    {formatAmountForDisplay(Object.keys(u.donations).reduce(
-                      (total, slug) => total + cmatch(u.donations[slug]), 
-                      0,
-                    ))}
+                    {formatAmountForDisplay(u.match)}
                   </td>
                 </tr>
-              ))}
+              ) : null))}
             </Table>
           </Col>
           <Col md={6}>
@@ -150,19 +149,13 @@ const DonationsBySessionPage = ({
                   <td>{c.slug}</td>
                   <td className="text-fat">{formatAmountForDisplay(c.total)}</td>
                   <td className="text-fat text-success">
-                    {formatAmountForDisplay(c.donations.reduce(
-                      (total, d) => total + cmatch(d),
-                      0,
-                    ))}
+                    {formatAmountForDisplay(c.match)}
                   </td>
                 </tr>
               ))}
             </Table>
           </Col>
         </Row>
-        <h3>All payments for this session</h3>
-        <PaymentsTable payments={payments} />
-
       </Container>
     </Layout>
   );
