@@ -132,6 +132,8 @@ const DonationsBySessionPage = ({
   ), {});
   const cumulativeChart = Object.keys(chartData).map((k) => chartData[k]);
   cumulativeChart[cumulativeChart.length - 1].ctotal = totals.amount + session.matchedFunds;
+  cumulativeChart[cumulativeChart.length - 1].cmatch = session.matchedFunds;
+  cumulativeChart[cumulativeChart.length - 1].cdonation = totals.amount;
   const colors = '#6B37FF,#3A00AD,#9451EB,#8D62E3,#E6DFFF,#0E0C4D,#e83e8c,#dc3545,#E76127,#EEC142,#02E2AC,#20c997,#17a2b8'.split(',')
   return (
     <Layout title="FundOSS | Dashboard" state={state}>
