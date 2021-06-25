@@ -3,7 +3,8 @@ import {
   Table, Col, Row, Container, 
 } from 'react-bootstrap';
 import {
-  LineChart, BarChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Bar,
+  LineChart, BarChart, ScatterChart, Line, ZAxis, XAxis, Scatter,
+  YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Bar,
 } from 'recharts';
 import moment from 'moment';
 import ServerProps from '../../../../lib/serverProps';
@@ -70,6 +71,7 @@ const DonationsBySessionPage = ({
           [slug]: {
             total: (totals[slug] ? totals[slug].total : 0) + userTotals[username].donations[slug],
             match: (totals[slug] ? totals[slug].match : 0) + cmatch(userTotals[username].donations[slug]),
+            donationCount: (totals[slug] ? totals[slug].donationCount : 0) + 1,
             donations: [
               ...(totals[slug] ? totals[slug].donations : []), 
               ...[userTotals[username].donations[slug]],
@@ -82,12 +84,13 @@ const DonationsBySessionPage = ({
     {});
 
   const collectiveTable = Object.keys(collectiveTotals).map(
-    (slug) => ({ ...collectiveTotals[slug], ...{ slug } }),
+    (slug) => ({ ...collectiveTotals[slug], ...{ slug, ratio: collectiveTotals[slug].match / collectiveTotals[slug].total } }),
   ).sort((a, b) => (b.total + b.match) - (a.total + a.match));
 
   const userTable = Object.keys(userTotals).map(
-    (username) => ({ ...userTotals[username], ...{ username } }),
+    (username) => ({ ...userTotals[username], ...{ username, ratio: userTotals[username].match / userTotals[username].total } }),
   ).sort((a, b) => (b.total + b.match) - (a.total + a.match));
+
   const stats = {
     totalMatch: totals.donations.reduce((m, d) => m + cmatch(d), 0),
     payments: payments.length,
@@ -134,7 +137,7 @@ const DonationsBySessionPage = ({
   cumulativeChart[cumulativeChart.length - 1].ctotal = totals.amount + session.matchedFunds;
   cumulativeChart[cumulativeChart.length - 1].cmatch = session.matchedFunds;
   cumulativeChart[cumulativeChart.length - 1].cdonation = totals.amount;
-  const colors = '#6B37FF,#3A00AD,#9451EB,#8D62E3,#E6DFFF,#0E0C4D,#e83e8c,#dc3545,#E76127,#EEC142,#02E2AC,#20c997,#17a2b8'.split(',')
+  const colors = '#6B37FF,#E76127,#3A00AD,#EEC142,#9451EB,#e83e8c,#02E2AC,#8D62E3,#E6DFFF,#0E0C4D,#dc3545,#20c997,#17a2b8'.split(',');
   return (
     <Layout title="FundOSS | Dashboard" state={state}>
       <Container style={{ paddingTop: '40px' }}>
@@ -243,12 +246,13 @@ const DonationsBySessionPage = ({
             <h3>Donations by user</h3>
             <Table size="sm">
               <thead>
-                <tr><th>user</th><th>donation</th><th>est match</th></tr>
+                <tr><th>user</th><th>#</th><th>donation</th><th>match</th></tr>
               </thead>
               <tbody>
                 {userTable.map((u, i) => (i <= 100 ? (
                   <tr key={u._id}>
                     <td><a href={`/dashboard/payment/?user=${u._id}`}>{u.name}</a></td>
+                    <td className="text-fat">{u.donationCount}</td>
                     <td className="text-fat">{formatAmountForDisplay(u.total, false)}</td>
                     <td className="text-fat text-success">
                       {formatAmountForDisplay(u.match, false)}
@@ -262,12 +266,13 @@ const DonationsBySessionPage = ({
             <h3>Donations by collective</h3>
             <Table size="sm">
               <thead>
-                <tr><th>collective</th><th>donation</th><th>est match</th></tr>
+                <tr><th>collective</th><th>contributors</th><th>donation</th><th>match</th></tr>
               </thead>
               <tbody>
                 {collectiveTable.map((c) => (
                   <tr key={c.slug}>
-                    <td>{c.slug}</td>
+                    <td><a href={`/dashboard/payment?collective=${c.slug}`}>{c.slug}</a></td>
+                    <td className="text-fat">{c.donationCount}</td>
                     <td className="text-fat">{formatAmountForDisplay(c.total, false)}</td>
                     <td className="text-fat text-success">
                       {formatAmountForDisplay(c.match, false)}
