@@ -3,7 +3,7 @@ import {
   Table, Col, Row, Container, 
 } from 'react-bootstrap';
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, 
+  ComposedChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Bar,
 } from 'recharts';
 import moment from 'moment';
 import ServerProps from '../../../../lib/serverProps';
@@ -95,25 +95,36 @@ const DonationsBySessionPage = ({
     medianUserDonationCount: median(Object.keys(userTotals).map((u) => userTotals[u].donationCount)),
     medianCollectiveDonations: median(collectiveTable.map((c) => c.total)),
   };
-
-  const cumulativeChart = payments.reduce((data, p) => p.donations.reduce(
+  
+  const cumulative = {
+    donation: 0, match: 0, count: 0, total: 0, 
+  };
+  const r = (a) => Math.round(a * 100) / 100;
+  const chartData = payments.reduce((data, p) => p.donations.reduce(
     (data, d) => {
-      const day = moment(p.time).day();
+      const day = moment(p.time).format('M/D');
       const slot = data[day] || {
         donation: 0, match: 0, total: 0, count: 0, 
       };
-      const match = Math.round(cmatch(d.amount) * 100) / 100;
-      slot.day = `day ${day}`;
+      const match = cmatch(d.amount);
+      cumulative.match += r(match);
+      cumulative.donation += r(d.amount);
+      cumulative.total += r(d.amount + match);
+      cumulative.count += 1;
+      slot.day = day;
       slot.donation += d.amount;
-      slot.match += match;
-      slot.total += match + d.amount;
+      slot.match += r(match);
+      slot.total += r(match + d.amount);
       slot.count += 1;
-      data[day] = slot;
-      return data;
+      slot.cdonation = r(cumulative.donation);
+      slot.cmatch = r(cumulative.match);
+      slot.ctotal = r(cumulative.total);
+      slot.ccount = r(cumulative.count);
+      return { ...data, ...{ [day]: slot } };
     },
     data,
-  ), []);
-
+  ), {});
+  const cumulativeChart = Object.keys(chartData).map((k) => chartData[k]);
   console.log(cumulativeChart);
 
   return (
@@ -127,7 +138,7 @@ const DonationsBySessionPage = ({
         <AdminLinks session={session} all />
         <hr />
         <ResponsiveContainer width="100%" height="100%" minHeight={350}>
-          <LineChart
+          <ComposedChart
             width={500}
             height={350}
             data={cumulativeChart}
@@ -143,10 +154,12 @@ const DonationsBySessionPage = ({
             <YAxis />
             <Tooltip />
             <Legend />
-            <Line type="monotone" dataKey="total" stroke="#dc3545" />
-            <Line type="monotone" dataKey="match" stroke="#02E2AC" />
-            <Line type="monotone" dataKey="donation" stroke="#3A00AD" />
-          </LineChart>
+            <Line type="monotone" dataKey="ctotal" name="cum. total" stroke="#dc3545" />
+            <Line type="monotone" dataKey="cmatch" name="cum. match" stroke="#02E2AC" />
+            <Line type="monotone" dataKey="cdonation" name="cum. donation" stroke="#3A00AD" />
+            <Bar dataKey="match" stackId="x" fill="#02E2AC" />
+            <Bar dataKey="donation" stackId="x" fill="#3A00AD" />
+          </ComposedChart>
         </ResponsiveContainer>
         <h3>Statistics</h3>
         <Row>
@@ -221,7 +234,7 @@ export async function getServerSideProps({ req, res, query }) {
   const session = await FundingSessions.getBySlug(query.slug);
   const state = await ServerProps.getAppState(req.user, req.session.cart);
   const totals = await Payments.getSessionTotals(session._id);
-  const payments = await Payments.get({ session: session._id, status: 'succeeded' });
+  const payments = await Payments.get({ session: session._id, status: 'succeeded', sort: 'time' });
   const predicted = state.current ? state.current.predicted : {
     average: session.finalStats.averageDonation, 
     match: session.finalStats.averageMatch, 
