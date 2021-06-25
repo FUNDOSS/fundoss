@@ -1,8 +1,11 @@
 import React from 'react';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import { Table } from 'react-bootstrap';
+import {
+  Table, Col, Row, Container, 
+} from 'react-bootstrap';
+import {
+  ComposedChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Bar,
+} from 'recharts';
+import moment from 'moment';
 import ServerProps from '../../../../lib/serverProps';
 import Error from '../../../../components/Error';
 import DashboardNav from '../../../../components/dashboard/DashboardNav';
@@ -37,10 +40,10 @@ const DonationsBySessionPage = ({
 
   const userTotals = payments.reduce((totals, p) => p.donations.reduce(
     (totals, d) => {
-      const userKey = p.user?.username || p.user?.name || 'none';
+      const userKey = p.user?._id || 'none';
       const user = totals[userKey] 
       || {
-        donations: {}, total: 0, donationCount: 0, match: 0, _id: d.user, 
+        donations: {}, total: 0, donationCount: 0, match: 0, name: p.user?.username || p.user?.name, _id: p.user?._id,
       };
       user.donations[d.collective.slug] = (user.donations[d.collective.slug] || 0) + d.amount;
       user.donationCount += 1;
@@ -92,6 +95,36 @@ const DonationsBySessionPage = ({
     medianUserDonationCount: median(Object.keys(userTotals).map((u) => userTotals[u].donationCount)),
     medianCollectiveDonations: median(collectiveTable.map((c) => c.total)),
   };
+  
+  const cumulative = {
+    donation: 0, match: 0, count: 0, total: 0, 
+  };
+  const r = (a) => Math.round(a * 100) / 100;
+  const chartData = payments.reduce((data, p) => p.donations.reduce(
+    (data, d) => {
+      const day = moment(p.time).format('M/D');
+      const slot = data[day] || {
+        donation: 0, match: 0, total: 0, count: 0, 
+      };
+      const match = cmatch(d.amount);
+      cumulative.match += r(match);
+      cumulative.donation += r(d.amount);
+      cumulative.total += r(d.amount + match);
+      cumulative.count += 1;
+      slot.day = day;
+      slot.donation += d.amount;
+      slot.match = r(match + slot.match);
+      slot.total += r(match + d.amount);
+      slot.count += 1;
+      slot.cdonation = r(cumulative.donation);
+      slot.cmatch = r(cumulative.match);
+      slot.ctotal = r(cumulative.total);
+      slot.ccount = r(cumulative.count);
+      return { ...data, ...{ [day]: slot } };
+    },
+    data,
+  ), {});
+  const cumulativeChart = Object.keys(chartData).map((k) => chartData[k]);
 
   return (
     <Layout title="FundOSS | Dashboard" state={state}>
@@ -103,6 +136,30 @@ const DonationsBySessionPage = ({
         </div>
         <AdminLinks session={session} all />
         <hr />
+        <ResponsiveContainer width="100%" height="100%" minHeight={350}>
+          <ComposedChart
+            width={500}
+            height={350}
+            data={cumulativeChart}
+            margin={{
+              top: 5,
+              right: 30,
+              left: 20,
+              bottom: 5,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="day" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Line type="monotone" dataKey="ctotal" name="cum. total" stroke="#dc3545" />
+            <Line type="monotone" dataKey="cmatch" name="cum. match" stroke="#02E2AC" />
+            <Line type="monotone" dataKey="cdonation" name="cum. donation" stroke="#3A00AD" />
+            <Bar dataKey="match" stackId="x" fill="#02E2AC" />
+            <Bar dataKey="donation" stackId="x" fill="#3A00AD" />
+          </ComposedChart>
+        </ResponsiveContainer>
         <h3>Statistics</h3>
         <Row>
           <Col md={4}>
@@ -130,31 +187,39 @@ const DonationsBySessionPage = ({
           <Col md={6}>
             <h3>Donations by user</h3>
             <Table size="sm">
-              <tr><th>user</th><th>donation</th><th>est match</th></tr>
-              {userTable.map((u, i) => (i <= 100 ? (
-                <tr key={u.username}>
-                  <td><a href={`/dashboard/payment/?user=${u._id}`}>{u.username}</a></td>
-                  <td className="text-fat">{formatAmountForDisplay(u.total, false)}</td>
-                  <td className="text-fat text-success">
-                    {formatAmountForDisplay(u.match, false)}
-                  </td>
-                </tr>
-              ) : null))}
+              <thead>
+                <tr><th>user</th><th>donation</th><th>est match</th></tr>
+              </thead>
+              <tbody>
+                {userTable.map((u, i) => (i <= 100 ? (
+                  <tr key={u._id}>
+                    <td><a href={`/dashboard/payment/?user=${u._id}`}>{u.name}</a></td>
+                    <td className="text-fat">{formatAmountForDisplay(u.total, false)}</td>
+                    <td className="text-fat text-success">
+                      {formatAmountForDisplay(u.match, false)}
+                    </td>
+                  </tr>
+                ) : null))}
+              </tbody>
             </Table>
           </Col>
           <Col md={6}>
             <h3>Donations by collective</h3>
             <Table size="sm">
-              <tr><th>collective</th><th>donation</th><th>est match</th></tr>
-              {collectiveTable.map((c) => (
-                <tr key={c.slug}>
-                  <td>{c.slug}</td>
-                  <td className="text-fat">{formatAmountForDisplay(c.total, false)}</td>
-                  <td className="text-fat text-success">
-                    {formatAmountForDisplay(c.match, false)}
-                  </td>
-                </tr>
-              ))}
+              <thead>
+                <tr><th>collective</th><th>donation</th><th>est match</th></tr>
+              </thead>
+              <tbody>
+                {collectiveTable.map((c) => (
+                  <tr key={c.slug}>
+                    <td>{c.slug}</td>
+                    <td className="text-fat">{formatAmountForDisplay(c.total, false)}</td>
+                    <td className="text-fat text-success">
+                      {formatAmountForDisplay(c.match, false)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
             </Table>
           </Col>
         </Row>
@@ -168,13 +233,13 @@ export async function getServerSideProps({ req, res, query }) {
   const session = await FundingSessions.getBySlug(query.slug);
   const state = await ServerProps.getAppState(req.user, req.session.cart);
   const totals = await Payments.getSessionTotals(session._id);
-  const payments = await Payments.get({ session: session._id, status: 'succeeded' });
+  const payments = await Payments.get({ session: session._id, status: 'succeeded', sort: 'time' });
   const predicted = state.current ? state.current.predicted : {
     average: session.finalStats.averageDonation, 
     match: session.finalStats.averageMatch, 
-    fudge: 1/session.finalStats.matchRatio,
-  }
-    ;
+    fudge: 1 / session.finalStats.matchRatio,
+  };
+
   return {
     props: { 
       state, 
