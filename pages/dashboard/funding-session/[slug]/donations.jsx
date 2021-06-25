@@ -113,7 +113,7 @@ const DonationsBySessionPage = ({
       cumulative.count += 1;
       slot.day = day;
       slot.donation += d.amount;
-      slot.match += r(match);
+      slot.match = r(match + slot.match);
       slot.total += r(match + d.amount);
       slot.count += 1;
       slot.cdonation = r(cumulative.donation);
@@ -125,7 +125,6 @@ const DonationsBySessionPage = ({
     data,
   ), {});
   const cumulativeChart = Object.keys(chartData).map((k) => chartData[k]);
-  console.log(cumulativeChart);
 
   return (
     <Layout title="FundOSS | Dashboard" state={state}>
