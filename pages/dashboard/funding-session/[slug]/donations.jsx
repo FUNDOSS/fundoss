@@ -271,7 +271,7 @@ const DonationsBySessionPage = ({
               <tbody>
                 {collectiveTable.map((c) => (
                   <tr key={c.slug}>
-                    <td><a href={`/dashboard/payment?collective=${c.slug}`}>{c.slug}</a></td>
+                    <td><a href={`/dashboard/payment?collective=${c._id}`}>{c.slug}</a></td>
                     <td className="text-fat">{c.donationCount}</td>
                     <td className="text-fat">{formatAmountForDisplay(c.total, false)}</td>
                     <td className="text-fat text-success">
