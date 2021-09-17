@@ -148,7 +148,7 @@ export async function computeDisbursments(session):Promise<any> {
 export async function getFinishedSession():Promise<any> {
   await dbConnect();
   const session = await FundingSession.findOne({
-    end: { $gte: moment().subtract(30, 'days').toDate() },
+    end: { $gte: moment().subtract(10, 'days').toDate() },
     published: true,
   }).populate('collectives');
   if (session) {
@@ -162,6 +162,22 @@ export async function getFinishedSession():Promise<any> {
   return false;
 }
 
+export async function getLastFinishedSession():Promise<any> {
+  await dbConnect();
+  const session = await FundingSession.findOne({
+    end: { $gte: moment().subtract(50000, 'days').toDate() },
+    published: true,
+  }).populate('collectives');
+  if (session) {
+    if (!session.disbursments || computeDisbursments) {
+      session.disbursments = await computeDisbursments(session);
+    }
+    const sessionData = await setCollectiveTotals(session);
+    sessionData.collectives = session.collectives.sort(() => 0.5 - Math.random());
+    return sessionData;
+  }
+  return false;
+}
 
 
 export async function getUpcomingSessionInfo():Promise<any> {
@@ -305,6 +321,8 @@ export default class FundingSessionController {
     static insert = insertSession
 
     static getFinished = getFinishedSession
+
+    static getLast = getLastFinishedSession
 
     static getCurrent = getCurrentSession
 

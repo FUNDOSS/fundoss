@@ -207,7 +207,7 @@ const FundingSession = ({
 
             <Col xs={{ order: 1, span: 12 }} lg={{ order: 2, span: 7, offset: 1 }} className="content text-center text-lg-left">
               <FundingSessionInfo session={session} predicted={predicted} />
-              {user.role === 'admin' ? <AdminLinks disbursments edit session={session} /> : null}
+              {user.role === 'admin' ? <AdminLinks disbursments edit donations session={session} /> : null}
               {user.donations?.length 
                 ? (
                   <div style={{ margin: '15px 0' }}>Your donnations : <br />{userDonations.map( 
