@@ -39,6 +39,9 @@ export async function getServerSideProps({ req, res }) {
     session = await ServerProps.getUpcoming();
     nominations = await ServerProps.getNominations(session?._id, state.user._id);
   }
+  if (!session) {
+    session = await ServerProps.getLast();
+  } 
   const featured = session && session.collectives.length
     ? session.collectives[Math.floor(Math.random() * session.collectives.length)] 
     : false;

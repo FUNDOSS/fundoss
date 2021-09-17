@@ -4,7 +4,7 @@ import Link from 'next/link';
 import FormControl from 'react-bootstrap/FormControl';
 import moment from 'moment';
 import {
-  Card, Image, Alert, Col, Row, Button, Container, Spinner, 
+  Card, Image, Alert, Col, Row, Button, Container, Spinner, Nav, 
 } from 'react-bootstrap';
 import CollectiveCard from '../collective/CollectiveCard';
 import FeaturedCollectiveCard from '../collective/FeaturedCollectiveCard';
@@ -16,19 +16,20 @@ import AdminLinks from './AdminLinks';
 import ShareButton from '../social/ShareButton';
 import Subscriptionform from '../SubscriptionForm';
 import CoinsAnimation from '../illustration/CoinsAnimation';
+import Icons from '../icons';
 
 const FundingSession = ({
   session, user, predicted, state, nominations = { user: [] }, featured,
 }) => {
   const {
-    name, description, collectives, start, end, sponsors, 
+    name, description, collectives, start, end, sponsors, thanks,
   } = session;
 
   const [collectivesList, setCollectivesList] = useState(
     collectives.map((c) => ({ ...c })),
   );
   const [sort, setSort] = useState('desc');
-  const [setSortOn] = useState('total');
+  const [sortOn, setSortOn] = useState('random');
   const [display, setDisplay] = useState(3);
   const [tags, setTags] = useState([]);
   const [search, setSearch] = useState(null);
@@ -81,7 +82,7 @@ const FundingSession = ({
         },
       );
     }
-    if (filters.sort || sort) {
+    if (filters.sortOn === 'amount' && (filters.sort || sort)) {
       const srt = filters.sort || sort;
       list = list.sort((a, b) => {
         let av; let bv;
@@ -96,6 +97,23 @@ const FundingSession = ({
         return srt === 'asc' ? av - bv : bv - av;
       });
     }
+    if (filters.sortOn === 'amount' && (filters.sort || sort)) {
+      const srt = filters.sort || sort;
+      list = list.sort((a, b) => {
+        let av; let bv;
+        if (started) {
+          av = parseInt(a.totals?.amount, 10); 
+          bv = parseInt(b.totals?.amount, 10);
+        } else {
+          av = nominations[a._id] || 0;
+          bv = nominations[b._id] || 0;
+        }
+
+        return srt === 'asc' ? av - bv : bv - av;
+      });
+    }
+
+    if (filters.sortOn === 'random') list = list.sort(() => 0.5 - Math.random());
 
     setCollectivesList(list);
   };
@@ -189,7 +207,7 @@ const FundingSession = ({
 
             <Col xs={{ order: 1, span: 12 }} lg={{ order: 2, span: 7, offset: 1 }} className="content text-center text-lg-left">
               <FundingSessionInfo session={session} predicted={predicted} />
-              {user.role === 'admin' ? <AdminLinks disbursments edit session={session} /> : null}
+              {user.role === 'admin' ? <AdminLinks disbursments edit donations session={session} /> : null}
               {user.donations?.length 
                 ? (
                   <div style={{ margin: '15px 0' }}>Your donnations : <br />{userDonations.map( 
@@ -207,7 +225,7 @@ const FundingSession = ({
                   </div>
                 ) : (
                   <>
-                    <div className="session-description" dangerouslySetInnerHTML={{ __html: description }} />
+                    <div className="session-description" dangerouslySetInnerHTML={{ __html: ended ? thanks : description }} />
                     <p>
                       <Link href="/democratic-funding">Learn More about Democratic Funding</Link><br className="d-block d-sm-none" /> or share on   
                       <span>
@@ -250,22 +268,25 @@ const FundingSession = ({
               />
             </Col>
             { started ? (
-              <Col xs={4} lg={3} className="text-center">
-                <div className="sort">
-                  <small className="d-none d-md-inline">Sort by</small>
-                  <Button 
-                    size="sm"
-                    style={{ margin: '0 10px' }}
-                    onClick={() => change({ sort: sort === 'desc' ? 'asc' : 'desc' })} 
-                    variant="link"
+              <Col xs={4} lg={4} className="text-center">
+                
+                <Nav className="justify-content-center sort" activeKey={sortOn} >
+                  <Nav.Link disabled className="d-none d-md-inline">Sort</Nav.Link>
+                  <Nav.Link
+                    eventKey="random" 
+                    onClick={() => change({ sort: 'none', sortOn: 'random' })}
                   >
-                    {sort === 'asc' ? (
-                      <>▴ Funding</>
-                    ) : (
-                      <>▾ Funding</>
-                    )}
-                  </Button>
-                </div>
+                    <Icons.Random size={13} />&nbsp;
+                    <span className="d-none d-lg-inline">Random</span>
+                  </Nav.Link>
+                  <Nav.Link
+                    eventKey="amount"
+                    onClick={() => change({ sort: sort === 'desc' ? 'asc' : 'desc', sortOn: 'amount' })}
+                  >{sort === 'asc' ? '↑' : '↓'}&nbsp;
+                    <span className="d-inline d-md-none">💰</span>
+                    <span className="d-none d-md-inline">Funding</span>
+                  </Nav.Link>
+                </Nav>
               </Col>
             ) : null}
             { !started && session.allowNominations ? (

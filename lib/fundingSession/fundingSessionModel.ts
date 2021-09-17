@@ -9,12 +9,14 @@ export interface IFundingSession extends Document {
   end: Date;
   name: string;
   description: string;
+  thanks: string;
   tagline?: string;
   matchedFunds: number;
   tags: Array<string>;
   collectives: Array<ICollective>;
   predictedAverage:number;
   allowNominations:boolean;
+  disbursments: any,
   published:boolean;
   predictedDonations:number;
   predicted:any;
@@ -27,10 +29,12 @@ export interface IFundingSessionInput {
   end?: Date;
   name?: string;
   description?: string;
+  thanks?: string;
   tagline?: string;
   matchedFunds?: number;
   collectives?: any;
   allowNominations?:boolean;
+  disbursments?: any,
   published?:boolean;
   protytype?: any;
   tags?: Array<string>;
@@ -68,6 +72,9 @@ const FundingSessionSchema = new Schema({
   description: {
     type: String,
   },
+  thanks: {
+    type: String,
+  },
   sponsors: {
     type: String,
   },
@@ -92,6 +99,9 @@ const FundingSessionSchema = new Schema({
     of: Schema.Types.Mixed,
   },
   totals: {
+    type: Schema.Types.Mixed,
+  },
+  finalStats: {
     type: Schema.Types.Mixed,
   },
 });

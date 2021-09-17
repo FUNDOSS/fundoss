@@ -4,6 +4,7 @@ import { Badge } from 'react-bootstrap';
 import Pluralize from 'pluralize';
 import Qf from '../../utils/qf';
 import Currency from '../Currency';
+import { formatAmountForDisplay } from '../../utils/currency';
 
 const FundingSessionInfo = ({ session, predicted, size = 'md' }) => {
   const {
@@ -14,17 +15,6 @@ const FundingSessionInfo = ({ session, predicted, size = 'md' }) => {
 
   const started = moment() > moment(start);
   const ended = moment() > moment(end);
-  const totalMatches = started && !ended ? (totals?.donations || []).reduce(
-    (total, d) => total + Qf.calculate(
-      d, 
-      p.average, 
-      p.match, 
-      session.matchingCurve.exp,
-      p.fudge,
-      session.matchingCurve.symetric,
-    ), 
-    0,
-  ) : session.matchedFunds;
 
   return (
     <div className="session-info">
@@ -46,7 +36,7 @@ const FundingSessionInfo = ({ session, predicted, size = 'md' }) => {
           </span>
         ) : null}
       </p>
-      { size === 'md' ? <h1 className="tagline no-margin">{session.tagline}</h1> : null }
+      { size === 'md' && !ended ? <h1 className="tagline no-margin">{session.tagline}</h1> : null }
       { size === 'sm' ? <p className="lead no-margin text-fat">{session.tagline}</p> : null }
       {started && ended && totals ? (
         <>
@@ -73,23 +63,35 @@ const FundingSessionInfo = ({ session, predicted, size = 'md' }) => {
       ) : null}
       {started && !ended ? (
         <div>
-          <span className="info-span text-center">
-            {totals?.donations.length} {Pluralize('donation', totals?.donations.length)} <br />
-            <span className="display-3"> <Currency value={totals?.amount || 0} floor /></span>
+          {session.collectives 
+            ? (
+              <span className="info-span text-center card">
+                
+                <span className="display-4 text-fat">
+                  {session.collectives.length}
+                </span>
+                <br />Collectives
+              </span>
+            )
+            : null }
+          <span className="info-span text-center card">
+             
+            <span className="display-4 text-fat"> {totals?.donations.length} </span>
+            <br />{Pluralize('Donation', totals?.donations.length)}
           </span>
-          <span className="display-4">+&nbsp;</span>
           <span className="info-span text-center">
-            Estimated match<br />
-            <span className="text-fat display-3 text-success">
-              <Currency value={totalMatches} floor />
-            </span>
-          </span>&nbsp;&nbsp;
-          <span className="info-span text-center">
-            Remaining<br />
-            <span className="display-3 text-fat">
-              <Currency value={session.matchedFunds - totalMatches} floor />
-            </span>
+            {
+              formatAmountForDisplay(session.totals.amount)
+            } donations + {
+              formatAmountForDisplay(session.matchedFunds)
+            } matching fund
+            <br /> 
+            <span className="current-total text-fat">
+              <Currency value={totals?.amount + session.matchedFunds} floor />
+            </span>        
+
           </span>
+         
         </div>
       ) : null }
 

@@ -133,20 +133,27 @@ export async function getCurrentSession():Promise<any> {
   return false;
 }
 
+export async function computeDisbursments(session):Promise<any> {
+  await dbConnect();
+  const data = (await Payments.getSessionDisbursement(session._id))
+  const disbursments = data.disbursments
+    .reduce((obj, col) => (
+      { ...obj, ...{ [col.slug]: col } }
+    ), {});
+  delete data.disbursments;
+  await FundingSession.updateOne({ _id: session._id, disbursments, finalStats: data });
+  return disbursments;
+}
+
 export async function getFinishedSession():Promise<any> {
   await dbConnect();
   const session = await FundingSession.findOne({
-    end: { $gte: moment().subtract(5, 'days').toDate() },
+    end: { $gte: moment().subtract(10, 'days').toDate() },
     published: true,
   }).populate('collectives');
   if (session) {
-    if (!session.disbursments) {
-      const disbursments = (await Payments.getSessionDisbursement(session._id))
-        .reduce((obj, col) => (
-          { ...obj, ...{ [col.slug]: col } }
-        ), {});
-      FundingSession.updateOne({ _id: session._id, disbursments });
-      session.disbursments = disbursments;
+    if (!session.disbursments || computeDisbursments) {
+      session.disbursments = await computeDisbursments(session);
     }
     const sessionData = await setCollectiveTotals(session);
     sessionData.collectives = session.collectives.sort(() => 0.5 - Math.random());
@@ -154,6 +161,24 @@ export async function getFinishedSession():Promise<any> {
   }
   return false;
 }
+
+export async function getLastFinishedSession():Promise<any> {
+  await dbConnect();
+  const session = await FundingSession.findOne({
+    end: { $gte: moment().subtract(50000, 'days').toDate() },
+    published: true,
+  }).populate('collectives');
+  if (session) {
+    if (!session.disbursments || computeDisbursments) {
+      session.disbursments = await computeDisbursments(session);
+    }
+    const sessionData = await setCollectiveTotals(session);
+    sessionData.collectives = session.collectives.sort(() => 0.5 - Math.random());
+    return sessionData;
+  }
+  return false;
+}
+
 
 export async function getUpcomingSessionInfo():Promise<any> {
   await dbConnect();
@@ -288,13 +313,16 @@ export async function updateSessionTotals(sessionId) {
       amount: acc.amount + don.amount,
     }), { donations: [], amount: 0 });
 
-  await FundingSession.updateOne({ _id: sessionId }, { totals: sessionTotals });
+  await FundingSession.updateOne({ _id: sessionId },
+    { totals: sessionTotals, disbursments: false });
 }
 
 export default class FundingSessionController {
     static insert = insertSession
 
     static getFinished = getFinishedSession
+
+    static getLast = getLastFinishedSession
 
     static getCurrent = getCurrentSession
 
@@ -325,4 +353,6 @@ export default class FundingSessionController {
     static getDonationsConfig = getDonationsConfig
 
     static updateSessionTotals = updateSessionTotals
+
+    static computeDisbursments = computeDisbursments
 }

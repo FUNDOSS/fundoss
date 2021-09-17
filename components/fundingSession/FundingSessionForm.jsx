@@ -260,6 +260,18 @@ const FundingSessionForm = ({ sessionData }) => {
             />
             <Form.Control.Feedback type="invalid">{errors.description}</Form.Control.Feedback>
           </Form.Group>
+          <Form.Group controlId="thanks">
+            <Form.Label>Thank you message</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={3}
+              value={values.thanks}
+              onChange={handleChange}
+              isValid={touched.thanks && !errors.thanks}
+              isInvalid={touched.thanks && errors.thanks}
+            />
+            <Form.Control.Feedback type="invalid">{errors.thanks}</Form.Control.Feedback>
+          </Form.Group>
           <Form.Group controlId="start">
             <Form.Label>Start Date</Form.Label>
             <Form.Control

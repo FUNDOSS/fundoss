@@ -1,6 +1,4 @@
 import React from 'react';
-
-import moment from 'moment';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -15,7 +13,6 @@ import FundingSessions, { getPredictedAverages } from '../../../../lib/fundingSe
 import Payments from '../../../../lib/payment/paymentController';
 import DisbursmentsTable from '../../../../components/fundingSession/DisbursmentTable';
 import FundingSessionInfo from '../../../../components/fundingSession/FundingSessionInfo';
-import Prediction from '../../../../components/fundingSession/Prediction';
 import AdminLinks from '../../../../components/fundingSession/AdminLinks';
 
 const DisbursmentsTablePage = ({
@@ -55,12 +52,14 @@ export async function getServerSideProps({ req, res, query }) {
   await middleware.run(req, res);
   const session = await FundingSessions.getBySlug(query.slug);
   const state = await ServerProps.getAppState(req.user, req.session.cart);
-  const donations = await Payments.getDonationsBySession(session._id);
+  const disbursments = await FundingSessions.computeDisbursments(session, true);
   return {
     props: { 
       state, 
-      session: { ...serializable(session), ...{ predicted: getPredictedAverages(session) } }, 
-      donations: serializable(donations), 
+      session: {
+        ...serializable(session), 
+        ...{ predicted: getPredictedAverages(session), disbursments }, 
+      }, 
     }, 
   };
 }

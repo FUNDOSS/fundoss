@@ -73,18 +73,18 @@ const CollectiveCard = ({
 
       </Card.Header>
       <Card.Body>
-        <Card.Text className="text-center" style={{ maxHeight: '80px', overflow: 'hidden' }}>
+        <Card.Text className="text-center" style={{ maxHeight: '88px', overflow: 'hidden' }}>
           {ended && totals.donations.length > 0 ? (
             <div className="text-center">
               <div>🎉
                 <span className="match display-4">
-                  <Currency value={disbursments.total} floor />
-                </span>🎉
+                  <Currency value={disbursments.donation + disbursments.matched} floor />
+                </span>*🎉
               </div>
               <b><Currency value={disbursments.donation} floor /></b> +&nbsp;
               <b className="text-success"><Currency value={disbursments.matched} floor /></b> match from&nbsp;
               <b>{totals.donations.length}</b> {Pluralize('donor', totals.donations.length)}
-
+              <br />*<small>-Stripe fees</small>
             </div>
           ) : description } 
         </Card.Text>
